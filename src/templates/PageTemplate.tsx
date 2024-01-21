@@ -1,9 +1,23 @@
-import styled from "styled-components";
+import { ReactNode } from 'react';
 
-export const PageTemplate = styled.div`
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-`
+import NavBar from "organisms/NavBar";
+import Footer from "organisms/Footer";
+
+interface Props {
+    children: ReactNode;
+}
+
+const PageTemplate: React.FC<Props> = ({ children }) => {
+    return (
+        <div>
+            <NavBar/>
+
+            { children }
+
+            <Footer/>
+        </div>
+    )
+
+}
+
+export default PageTemplate;

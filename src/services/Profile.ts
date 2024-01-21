@@ -9,7 +9,7 @@ export const getProfile = async () => {
      * the UID from the JWT and correctly passing back the user profile.
      */
     try {
-        const response = await get("http://localhost:8000/api/user_profile");
+        const response = await get("http://localhost:8000/api/v1/profile/");
     
         return response.status === 200 ? response.data : null
       } catch (error) {
@@ -25,7 +25,7 @@ export const createProfile = async (name: string): Promise<boolean> => {
    */
   try {
       const response = await post(
-          "http://localhost:8000/api/user_profile", 
+          "http://localhost:8000/api/v1/profile/", 
           {"name": name}
       );
 

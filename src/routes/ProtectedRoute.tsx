@@ -12,10 +12,9 @@ import useAuthContext from "context/AuthContext";
  * would be each loaded page.
  */
 const ProtectedRoute = () => {
-	const { userIsLoggedIn, signOutUser } = useAuthContext();
+	const { userIsLoggedIn } = useAuthContext();
 	return (
 		<div>
-			<button onClick={ signOutUser } className="bg-white"> Logout </button>
 			{ userIsLoggedIn ? <Outlet /> : <Navigate to="/login"  replace/> }
 		</div>
 	);

@@ -6,11 +6,11 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Reset } from "styled-reset";
 
-
 import { AuthProvider }  from "context/AuthContext";
-import Home from "routes/Home";
+import HomePage from "routes/HomePage.tsx";
 import LoginPage from "routes/LoginPage";
 import ProtectedRoute from "routes/ProtectedRoute";
+import WeightTrackingPage from "routes/WeightTrackingPage.tsx";
 
 
 const router = createBrowserRouter([
@@ -23,8 +23,12 @@ const router = createBrowserRouter([
     children: [
     {
       path: "/",
-      element: <Home/>,
-  }]
+      element: <HomePage/>,
+    },
+    {
+      path: "weight_tracking",
+      element: <WeightTrackingPage/>
+    }]
   }
 ]);
 
