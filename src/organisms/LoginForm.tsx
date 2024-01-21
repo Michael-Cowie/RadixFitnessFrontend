@@ -45,7 +45,7 @@ export const LoginForm = () => {
 
             { loginError && <ErrorMessage errorMessage="Invalid Email or Password"/> }
 
-            <FlexingArmButton label="Log in" />
+            <FlexingArmButton label="Log in"/>
         </form>
       </div>
   );

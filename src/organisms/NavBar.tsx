@@ -1,15 +1,25 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
 
 import useAuthContext from "context/AuthContext";
 
+
 const NavBar = () => {
     const { signOutUser } = useAuthContext();
+
+    const navigate = useNavigate();
+
+    const goToHome = () => {
+        navigate("/");
+    }
+
 
     return (
         <NavbarContainer>
             <div className="navbar bg-slate-900">
                 <div className="flex-1">
-                    <a className="text-white font-bold text-2xl ml-4"> Home </a>
+                    <a onClick={ goToHome } className="text-white font-bold text-2xl ml-4 cursor-pointer"> Home </a>
                 </div>
                 <div className="flex-none gap-2">
                     <div className="dropdown dropdown-end">

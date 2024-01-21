@@ -15,7 +15,7 @@ export const InputWithLabel: React.FC<Props> = ({ label, name, type="text", plac
           </Label>
 
           <input
-            className="border-2 input input-bordered w-full max-w-xs"
+            className="border-2 input input-bordered"
             name={ name } 
             type={ type }
             placeholder={ placeholder }
@@ -28,6 +28,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+  width: 100%;
 `
 
 const Label = styled.div`

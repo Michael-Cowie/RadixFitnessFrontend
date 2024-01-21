@@ -1,3 +1,6 @@
+import styled from "styled-components";
+import EqualWidthContainer from "atoms/EqualWidthContainer";
+
 import CenterContainer from "atoms/CenterContainer";
 import CreateProfile from "molecules/CreateProfile";
 import PageTemplate from "templates/PageTemplate";
@@ -22,10 +25,12 @@ const HomePage = () => {
         <PageTemplate>
             { createProfile && <CreateProfile/> }
             <CenterContainer>
-                <button className="btn btn-active btn-neutral mt-4 mb-4"> Workout </button>
-                <RouterButton button_text="Track my weight" route="/weight_tracking"/>
-                <button className="btn btn-active btn-neutral mt-4 mb-4"> Food analysis </button>
-                <button className="btn btn-active btn-neutral mt-4 mb-4"> Education </button>
+                <EqualWidthContainer>
+                    <button className="btn btn-active btn-neutral mt-4 mb-4 w-full"> Workout </button>
+                    <RouterButton button_text="Track my weight" route="/weight_tracking"/>
+                    <button className="btn btn-active btn-neutral mt-4 mb-4 w-full"> Food analysis </button>
+                    <button className="btn btn-active btn-neutral mt-4 mb-4 w-full"> Education </button>
+                </EqualWidthContainer>
             </CenterContainer>
         </PageTemplate> 
     );
