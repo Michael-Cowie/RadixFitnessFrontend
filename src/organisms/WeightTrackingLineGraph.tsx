@@ -30,7 +30,7 @@ interface ToolTip {
 }
 
 function plottingData(initialData: DateToWeight, dateRange: number, unit: string): [string[], (string | null)[]] {
-  const minimum_future_days = 3;
+  const minimum_future_days = 2;
   const minimum_number_days = 7;
 
   let data: (string | null)[] = [];
@@ -51,7 +51,7 @@ function plottingData(initialData: DateToWeight, dateRange: number, unit: string
       /**
        * Initial check if we have a weight for today.
        */
-      data.unshift(initialData[formattedDate] || null);
+      data.unshift(convertToUnit(unit, initialData[formattedDate]) || null);
       labels.push(MM_DD_formatteDate())
 
       /**
@@ -61,7 +61,7 @@ function plottingData(initialData: DateToWeight, dateRange: number, unit: string
         currentOffset -= 1;
         formattedDate = YYYY_MM_DD_formattedDate(currentOffset);
 
-        data.unshift(initialData[formattedDate] || null);
+        data.unshift(convertToUnit(unit, initialData[formattedDate]) || null);
         labels.unshift(MM_DD_formatteDate(currentOffset));
       }
     }

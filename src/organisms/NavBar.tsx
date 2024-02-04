@@ -1,8 +1,12 @@
 import useAuthContext from 'context/AuthContext';
+import UpdateProfile from 'molecules/UserProfile/UpdateProfile';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const NavBar = () => {
+    let [updatingProfile, setUpdatingProfile] = useState(false);
+
     const { signOutUser } = useAuthContext();
 
     const navigate = useNavigate();
@@ -11,9 +15,10 @@ const NavBar = () => {
         navigate("/");
     }
 
-
     return (
         <NavbarContainer>
+            { updatingProfile && <UpdateProfile onSuccess={ () => setUpdatingProfile(false) }/> }
+
             <div className="navbar bg-slate-900">
                 <div className="flex-1">
                     <a onClick={ goToHome } className="text-white font-bold text-2xl ml-4 cursor-pointer"> Home </a>
@@ -26,7 +31,7 @@ const NavBar = () => {
                         </div>
                     </div>
                         <ul tabIndex={ 0 } className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-                            <li><a> Settings </a></li>
+                            <li><a onClick={ () => setUpdatingProfile(true) }> Settings </a></li>
                             <li><a onClick={ signOutUser }> Logout </a></li>
                         </ul>
                     </div>

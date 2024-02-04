@@ -1,7 +1,7 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import { FlexingArmButton } from 'atoms/FlexingArmButton';
+import { ValidatedInputWithLabel } from 'atoms/inputs/ValidatedInputWithLabel';
 import Title from 'atoms/Title';
-import { ValidatedInputWithLabel } from 'atoms/ValidatedInputWithLabel';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { createNewUser } from 'services/FirebaseUtils';

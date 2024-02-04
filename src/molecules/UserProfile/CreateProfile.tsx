@@ -1,31 +1,25 @@
 import ErrorMessage from 'atoms/ErrorMessage';
+import SelectionInput from 'atoms/inputs/SelectionInput';
+import { ValidatedInputWithLabel } from 'atoms/inputs/ValidatedInputWithLabel';
 import Title from 'atoms/Title';
-import { ValidatedInputWithLabel } from 'atoms/ValidatedInputWithLabel';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { createProfile } from 'services/Profile';
-import styled from 'styled-components';
-import { z } from 'zod';
 
-import { zodResolver } from '@hookform/resolvers/zod';
+import { FormContainer } from './shared';
 
-const schema = z.object({
-    name: z
-          .string()
-          .regex(/^[a-zA-Z]*$/, 'Name must only contain alpha characters'),
-});
+const selectionOptions = ['Metric', 'Imperial'];
 
 const CreateProfile = () => {
     const [showModal, setShowModal] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const selectionOptionsName = 'selectionOptionsName';
 
-    const methods = useForm({
-        resolver: zodResolver(schema),
-    });
+    const methods = useForm();
 
     const attemptCreateNewProfile = async(data: any): Promise<void> => {
         // @ts-ignore
-        const success = await createProfile(data.name);
+        const success = await createProfile(data.name, data.selectionOptionsName);
         if (success) {
             setShowModal(false)
         }
@@ -40,12 +34,16 @@ const CreateProfile = () => {
                         <FormContainer>
                             <Title> It's time to create your profile! </Title>
                             <form onSubmit={ methods.handleSubmit(attemptCreateNewProfile) }>
-                                <div className="mb-5">
-                                    <ValidatedInputWithLabel 
-                                        label="Name" 
-                                        name="name"
-                                    />
-                                </div>
+                                <ValidatedInputWithLabel 
+                                    label="Name" 
+                                    name="name"
+                                />
+
+                                <SelectionInput 
+                                    name={ selectionOptionsName } 
+                                    label='Default unit' 
+                                    options={ selectionOptions }
+                                />
 
                                 <div className="w-100 text-center">
                                     <button type="submit" className="btn w-32"> Continue </button>
@@ -60,12 +58,5 @@ const CreateProfile = () => {
         </div> 
     );
 }
-
-const FormContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`
 
 export default CreateProfile;

@@ -23,7 +23,7 @@ export const AuthProvider: React.FC<Props> = ({ children}) => {
              /** ----- DEBUGGING ----- */
             console.log("Access Token: ", new_user?.accessToken);
 
-             /* 
+            /* 
               Retrieve the idToken from Firebase and then finish loading.
 
               The user is unitialized and null when first loading the webpage. Hence, we set the loading

@@ -1,7 +1,7 @@
 export function convertToUnit(unit: string, weight: string): string {
   if (unit === 'lbs') {
     const kg_to_lbs = 2.20462;
-    return String(Number(weight) * kg_to_lbs);
+    return String((Number(weight) * kg_to_lbs).toFixed(2));
   }
   return weight;
 }

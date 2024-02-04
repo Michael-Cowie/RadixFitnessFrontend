@@ -21,3 +21,7 @@ The `src/services` folder contains files that talk to the backend and contain lo
 # Import sorting
 
 The order of imports is defined by using the extension [TypeScript Import Sorter](https://marketplace.visualstudio.com/items?itemName=mike-co.import-sorter)
+
+# Coding Style
+
+JavaScript uses camelCase :)

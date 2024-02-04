@@ -1,4 +1,4 @@
-import { get, post } from 'services/DataService';
+import { get, patch, post } from 'services/DataService';
 
 export const getProfile = async () => {
     /**
@@ -17,19 +17,45 @@ export const getProfile = async () => {
       }
 };
 
-export const createProfile = async (name: string): Promise<boolean> => {
+export const createProfile = async (name: string, preferred_unit: string): Promise<boolean> => {
   /**
    * Create a user profile with the provided parameters.
    * 
    * @param { string } name -  The users name.
+   * @param { string } preferred_unit - The default unit used through the application.
    */
   try {
       const response = await post(
           "http://localhost:8000/api/v1/profile/", 
-          {"name": name}
+          {
+            "name": name, 
+            "preferred_unit": preferred_unit
+          }
       );
 
       return response.status === 201
+    } catch (error) {
+      return false;
+  }
+}
+
+export const updateProfile = async (name: string, preferred_unit: string) => {
+    /**
+   * Update a user profile with the provided parameters.
+   * 
+   * @param { string } name -  The users name.
+   * @param { string } preferred_unit - The default unit used through the application.
+   */
+    try {
+      const response = await patch(
+          "http://localhost:8000/api/v1/profile/", 
+          {
+            "name": name, 
+            "preferred_unit": preferred_unit
+          }
+      );
+
+      return response.status === 200
     } catch (error) {
       return false;
   }
