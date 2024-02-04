@@ -1,8 +1,8 @@
-import Seperator from "atoms/Seperator";
-import { LoginForm } from "organisms/LoginForm";
-import CreateAccountComponent from "molecules/CreateAccount";
-import EqualWidthContainer from "atoms/EqualWidthContainer";
-import CenterContainer from "atoms/CenterContainer";
+import CenterContainer from 'atoms/CenterContainer';
+import EqualWidthContainer from 'atoms/EqualWidthContainer';
+import Seperator from 'atoms/Seperator';
+import CreateAccountComponent from 'molecules/CreateAccount';
+import { LoginForm } from 'organisms/LoginForm';
 
 const LoginPage = () => {
   return (

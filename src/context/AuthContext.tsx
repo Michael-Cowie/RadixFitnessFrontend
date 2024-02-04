@@ -1,8 +1,8 @@
-import { getAuth, onAuthStateChanged, User} from 'firebase/auth';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { loginUser, signOutUser } from 'services/FirebaseUtils';
 
-import { Props, AuthProviderContextData } from "./AuthContextInterfaces";
-import { loginUser, signOutUser} from 'services/FirebaseUtils';
+import { AuthProviderContextData, Props } from './AuthContextInterfaces';
 
 const auth = getAuth(); // getAuth() returns the same object each time, hence, only call it once.
 

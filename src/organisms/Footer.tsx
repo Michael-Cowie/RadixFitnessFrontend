@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const Footer = () => {
     return (
@@ -11,7 +11,7 @@ const Footer = () => {
                 <CenteredLogo>
                     <span className="mr-1 font-bold"> Radix Fitness </span>
                     <a href="https://github.com/Michael-Cowie/RadixFitnessFrontend" target="_blank">
-                        <img alt="Github" src="public/github-11-24.png"></img>
+                        <img alt="Github" src="public/github-11-24.png"/>
                     </a>
                 </CenteredLogo>
             </footer>

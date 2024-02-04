@@ -1,4 +1,4 @@
-import { get, post } from "services/DataService";
+import { get, post } from 'services/DataService';
 
 export const getProfile = async () => {
     /**

@@ -1,6 +1,5 @@
-import { Navigate, Outlet } from "react-router-dom";
-
-import useAuthContext from "context/AuthContext";
+import useAuthContext from 'context/AuthContext';
+import { Navigate, Outlet } from 'react-router-dom';
 
 /**
  * The ProtectedRoute component implements logic that only allows the user to access

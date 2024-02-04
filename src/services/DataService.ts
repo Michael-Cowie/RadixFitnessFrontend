@@ -7,8 +7,8 @@
  *  prevents each calling code to pass the ID token. 
  */
 
+import axios from 'axios';
 import { getAuth } from 'firebase/auth';
-import axios from "axios";
 
 const auth = getAuth();
 
@@ -70,4 +70,20 @@ export const post = async (url: string, body: any) => {
         }
     }
     return await axios.post(url, body, header);
+}
+
+export const patch = async (url: string, body: any) => {
+    /**
+     * Utilizes axios.patch(url, body, header) but also passes the logged in user ID token
+     * in the Autorization field in the header.
+     * 
+     * @param { string } url - The URL to which the HTTP request will be.
+     * @param { any } body - The body of the HTTP request
+    */
+    const header = {
+        headers: {
+            "Authorization": await getIdTokenFromCurrentUser()
+        }
+    }
+    return await axios.patch(url, body, header);
 }

@@ -17,3 +17,7 @@ Organisms are groups of molecules and atoms that form a complete functional sect
 ### Services
 
 The `src/services` folder contains files that talk to the backend and contain logic that performs HTTP requests to retrieve user data.
+
+# Import sorting
+
+The order of imports is defined by using the extension [TypeScript Import Sorter](https://marketplace.visualstudio.com/items?itemName=mike-co.import-sorter)

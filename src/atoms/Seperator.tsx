@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const Seperator = styled.div`
   border-top: 2px solid #dadde1;

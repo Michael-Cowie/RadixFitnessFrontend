@@ -1,12 +1,10 @@
-import styled from "styled-components";
-import EqualWidthContainer from "atoms/EqualWidthContainer";
-
-import CenterContainer from "atoms/CenterContainer";
-import CreateProfile from "molecules/CreateProfile";
-import PageTemplate from "templates/PageTemplate";
-import { useEffect, useState } from "react";
-import { getProfile } from "services/Profile";
-import RouterButton from "atoms/RouterButton";
+import CenterContainer from 'atoms/CenterContainer';
+import EqualWidthContainer from 'atoms/EqualWidthContainer';
+import RouterButton from 'atoms/RouterButton';
+import CreateProfile from 'molecules/CreateProfile';
+import { useEffect, useState } from 'react';
+import { getProfile } from 'services/Profile';
+import PageTemplate from 'templates/PageTemplate';
 
 const HomePage = () => {
     const [createProfile, setCreateProfile] = useState<boolean>(false);

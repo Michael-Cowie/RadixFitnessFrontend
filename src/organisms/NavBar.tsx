@@ -1,9 +1,6 @@
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-
-
-import useAuthContext from "context/AuthContext";
-
+import useAuthContext from 'context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 const NavBar = () => {
     const { signOutUser } = useAuthContext();
@@ -28,9 +25,9 @@ const NavBar = () => {
                         <img alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
                         </div>
                     </div>
-                        <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                        <ul tabIndex={ 0 } className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                             <li><a> Settings </a></li>
-                            <li><a onClick={signOutUser}> Logout </a></li>
+                            <li><a onClick={ signOutUser }> Logout </a></li>
                         </ul>
                     </div>
                 </div>

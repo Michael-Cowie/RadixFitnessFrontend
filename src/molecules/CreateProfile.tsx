@@ -1,12 +1,13 @@
-import {  useState } from "react";
-import { createProfile } from "services/Profile";
-import { useForm, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import ErrorMessage from 'atoms/ErrorMessage';
+import Title from 'atoms/Title';
+import { ValidatedInputWithLabel } from 'atoms/ValidatedInputWithLabel';
+import { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { createProfile } from 'services/Profile';
+import styled from 'styled-components';
 import { z } from 'zod';
-import { ValidatedInputWithLabel } from "atoms/ValidatedInputWithLabel";
-import ErrorMessage from "atoms/ErrorMessage";
-import Title from "atoms/Title";
-import styled from "styled-components";
+
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const schema = z.object({
     name: z

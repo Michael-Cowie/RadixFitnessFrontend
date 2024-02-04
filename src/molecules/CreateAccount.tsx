@@ -1,15 +1,14 @@
+import ErrorMessage from 'atoms/ErrorMessage';
+import { FlexingArmButton } from 'atoms/FlexingArmButton';
+import Title from 'atoms/Title';
+import { ValidatedInputWithLabel } from 'atoms/ValidatedInputWithLabel';
 import { useState } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import styled from "styled-components";
+import { FormProvider, useForm } from 'react-hook-form';
+import { createNewUser } from 'services/FirebaseUtils';
+import styled from 'styled-components';
 import { z } from 'zod';
 
-import { FlexingArmButton } from 'atoms/FlexingArmButton';
-import { ValidatedInputWithLabel } from "atoms/ValidatedInputWithLabel";
-
-import { createNewUser } from "services/FirebaseUtils";
-import ErrorMessage from 'atoms/ErrorMessage';
-import Title from 'atoms/Title';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 const schema = z.object({
     email: z

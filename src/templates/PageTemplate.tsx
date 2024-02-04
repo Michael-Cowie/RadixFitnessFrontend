@@ -1,7 +1,6 @@
+import Footer from 'organisms/Footer';
+import NavBar from 'organisms/NavBar';
 import { ReactNode } from 'react';
-
-import NavBar from "organisms/NavBar";
-import Footer from "organisms/Footer";
 
 interface Props {
     children: ReactNode;

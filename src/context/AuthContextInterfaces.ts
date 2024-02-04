@@ -1,6 +1,5 @@
+import { User } from 'firebase/auth';
 import { ReactNode } from 'react';
-import { User } from 'firebase/auth'
-
 
 export interface AuthProviderContextData {
     user: User | null,
