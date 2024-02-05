@@ -2,6 +2,7 @@ import ErrorMessage from 'atoms/ErrorMessage';
 import SelectionInput from 'atoms/inputs/SelectionInput';
 import { ValidatedInputWithLabel } from 'atoms/inputs/ValidatedInputWithLabel';
 import Title from 'atoms/Title';
+import useProfileContext from 'context/ProfileContext';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { updateProfile } from 'services/Profile';
@@ -17,18 +18,22 @@ const selectionOptions = ['Metric', 'Imperial'];
 
 const UpdateProfile: React.FC<Props> = ({ onSuccess }) => {
     const [errorMessage, setErrorMessage] = useState<string>('');
-    const selectionOptionsName = 'selectionOptionsName';
+
+    const {updateProfileContext, name, preferredUnit } = useProfileContext();
 
     const methods = useForm();
 
+    const preferredUnitName = 'preferredUnitName';
+
     const attemptUpdateProfile = async(data: any): Promise<void> => {
         // @ts-ignore
-        const success = await updateProfile(data.name, data.selectionOptionsName);
+        const success = await updateProfile(data.name, data.preferredUnitName);
         if (success) {
+            updateProfileContext(data.name, data.preferredUnitName)
             onSuccess()
         }
         setErrorMessage('Unable to update profile')
-      };
+    };
 
     return (
         <div>
@@ -46,12 +51,14 @@ const UpdateProfile: React.FC<Props> = ({ onSuccess }) => {
                                 <ValidatedInputWithLabel 
                                     label="Name" 
                                     name="name"
+                                    defaultValue={ name }
                                 />
 
                                 <SelectionInput 
-                                    name={ selectionOptionsName } 
+                                    name={ preferredUnitName } 
                                     label='Default unit' 
                                     options={ selectionOptions }
+                                    defaultIndex={ selectionOptions.indexOf(preferredUnit) }
                                 />
 
                                 <div className="w-100 text-center">

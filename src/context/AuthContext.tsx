@@ -1,8 +1,19 @@
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { loginUser, signOutUser } from 'services/FirebaseUtils';
 
-import { AuthProviderContextData, Props } from './AuthContextInterfaces';
+import { ProfileContextComponent } from './ProfileContext';
+
+export interface AuthProviderContextData {
+    user: User | null,
+    userIsLoggedIn: boolean,
+    loginUser: (email: string, password: string) => Promise<boolean>,
+    signOutUser: () => Promise<void>
+}
+
+export interface Props {
+    children: ReactNode;
+}
 
 const auth = getAuth(); // getAuth() returns the same object each time, hence, only call it once.
 
@@ -55,7 +66,11 @@ export const AuthProvider: React.FC<Props> = ({ children}) => {
          will destruct and pull "userIsLoggedIn" from the object.
         */
         <AuthContext.Provider value={{ user, userIsLoggedIn, loginUser, signOutUser }} >
-            { loading ? <p> YOURE'RE LOADING </p>: children }
+            { loading ? <p> YOURE'RE LOADING </p> :
+                <ProfileContextComponent>
+                    { children  }
+                </ProfileContextComponent>
+            }
         </AuthContext.Provider>
     )
 }

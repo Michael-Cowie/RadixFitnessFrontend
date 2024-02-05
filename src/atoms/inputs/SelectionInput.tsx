@@ -5,7 +5,8 @@ import { Label } from './shared';
 interface Props {
     name: string, 
     label: string,
-    options: string[]
+    options: string[],
+    defaultIndex?: number
 }
 
 
@@ -18,8 +19,9 @@ interface Props {
  * @param { string } name  - The name for the input
  * @param { string } label - The label to be displayed above the input.
  * @param { string[] } options  - A list of strings that will be selectable options.
+ * @param { number } defaultIndex - The index of the default selection option.
  */
-export const SelectionInput: React.FC<Props> = ({ name, label, options }) => {
+export const SelectionInput: React.FC<Props> = ({ name, label, options, defaultIndex = 0 }) => {
   const { register } = useFormContext();
 
   return (
@@ -31,7 +33,8 @@ export const SelectionInput: React.FC<Props> = ({ name, label, options }) => {
                 required: true
               })}
               className="select select-bordered w-full max-w-xs mb-5"
-              name={ name } 
+              name={ name }
+              defaultValue={options[defaultIndex]}
           >
               {options.map((option, i) => (
                   <option value={ option } key={ i }> { option } </option>

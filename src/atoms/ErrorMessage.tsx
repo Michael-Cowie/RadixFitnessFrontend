@@ -8,7 +8,7 @@ const ErrorMessage: React.FC<Props> = ({ errorMessage }) => {
         'color': 'red',
         'marginTop': '10px',
         'marginBottom': '10px',
-        'fontFamily': 'sans-serif'
+        'fontFamily': 'sans-serif',
     }
 	return (
         errorMessage ? <p style={ errorMessageStyle }> { errorMessage } </p> : <div/>

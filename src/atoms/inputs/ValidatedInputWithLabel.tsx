@@ -9,6 +9,7 @@ interface Props {
   name: string,
   type?: string,
   placeholder?: string
+  defaultValue?: string
 }
 
 /**
@@ -20,8 +21,10 @@ interface Props {
  * @param { string } label - The label to be displayed above the input.
  * @param { string } name  - The name for the input
  * @param { string } type  - The input type, e.g. text or password.
+ * @param { string } placeholder - The default value that appears before typing into the box and will disappear when typing.
+ * @param { string } defaultValue - The default value that appears as user editable text, overwrites the placeHolder if present.
  */
-export const ValidatedInputWithLabel: React.FC<Props> = ({ label, name, type="text", placeholder="Type Here" }) => {
+export const ValidatedInputWithLabel: React.FC<Props> = ({ label, name, type="text", placeholder="Type Here", defaultValue="" }) => {
   const { register, formState: { errors }} = useFormContext();
 
   const error_for = errors[name]
@@ -43,6 +46,7 @@ export const ValidatedInputWithLabel: React.FC<Props> = ({ label, name, type="te
         name={ name } 
         type={ type }
         placeholder={ placeholder }
+        defaultValue={ defaultValue }
       />
 
       <ErrorMessage errorMessage={ error_message } />
