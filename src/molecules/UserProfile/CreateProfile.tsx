@@ -33,7 +33,7 @@ const CreateProfile = () => {
                     <FormProvider { ...methods }>
                         <FormContainer>
                             <Title> It's time to create your profile! </Title>
-                            <form onSubmit={ methods.handleSubmit(attemptCreateNewProfile) }>
+                            <form className="w-80" onSubmit={ methods.handleSubmit(attemptCreateNewProfile) }>
                                 <ValidatedInputWithLabel 
                                     label="Name" 
                                     name="name"

@@ -32,7 +32,7 @@ export const SelectionInput: React.FC<Props> = ({ name, label, options, defaultI
               { ...register(name, {
                 required: true
               })}
-              className="select select-bordered w-full max-w-xs mb-5"
+              className="select select-bordered w-full mb-5"
               name={ name }
               defaultValue={options[defaultIndex]}
           >

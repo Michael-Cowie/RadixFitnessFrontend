@@ -47,7 +47,7 @@ const UpdateProfile: React.FC<Props> = ({ onSuccess }) => {
                             > ✕ </button>
 
                             <Title> Updating Profile </Title>
-                            <form onSubmit={ methods.handleSubmit(attemptUpdateProfile) }>
+                            <form className="w-80" onSubmit={ methods.handleSubmit(attemptUpdateProfile) }>
                                 <ValidatedInputWithLabel 
                                     label="Name" 
                                     name="name"
@@ -56,12 +56,12 @@ const UpdateProfile: React.FC<Props> = ({ onSuccess }) => {
 
                                 <SelectionInput 
                                     name={ preferredUnitName } 
-                                    label='Default unit' 
+                                    label="Default unit"
                                     options={ selectionOptions }
                                     defaultIndex={ selectionOptions.indexOf(preferredUnit) }
                                 />
 
-                                <div className="w-100 text-center">
+                                <div className="text-center">
                                     <button type="submit" className="btn w-32"> Submit </button>
                                 </div>
                             
