@@ -1,5 +1,6 @@
 import CenterContainer from 'atoms/CenterContainer';
 import SelectableButton from 'atoms/SelectableButton';
+import useProfileContext from 'context/ProfileContext';
 import { findLatestDate } from 'lib/utils';
 import CreateWeight from 'molecules/CreateWeight';
 import WeightTrackingLineGraph from 'organisms/WeightTrackingLineGraph';
@@ -31,9 +32,11 @@ function getDefaultValue(existingWeight: DateToWeight): string {
 }
 
 const WeightTrackingPage = () => {
+  const { preferredUnit } = useProfileContext();
+
   let [dateData, setDateData] = useState<DateToWeight>({});
   let [createWeight, setCreateWeight] = useState<boolean>(false);
-  let [displayUnit, setDisplayUnit] = useState<string>('kg');
+  let [displayUnit, setDisplayUnit] = useState<string>("kg");
   let [selectedDateRange, setSelectedDateRange] = useState<number>(7);
 
   useEffect(() => {
@@ -44,6 +47,11 @@ const WeightTrackingPage = () => {
           dateToWeight[userWeightEntry.date] = userWeightEntry.weight_kg;
         }
         setDateData(dateToWeight);
+        if (preferredUnit === "Metric") {
+          setDisplayUnit("kg");
+        } else if (preferredUnit === "Imperial") {
+          setDisplayUnit("lbs");
+        }
       })
       .catch(error => {
         console.log(error);

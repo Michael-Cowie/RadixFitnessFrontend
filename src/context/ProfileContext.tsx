@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useState } from 'react
 import { getProfile } from 'services/Profile';
 
 interface Profile {
+    loading: boolean,
     updateProfileContext: (name: string, preferredUnit: string) => void;
     name: string,
     preferredUnit: string
@@ -12,13 +13,14 @@ export interface Props {
 }
 
 const ProfileContext = createContext<Profile>({
+    loading: true,
     updateProfileContext: () => null,
     name: "",
     preferredUnit: ""
 });
 
-
-export const ProfileContextComponent: React.FC<Props> = ({ children}) => {
+export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
+    const [loading, setLoading] = useState(true);
     const [name, setName] = useState('');
     const [preferredUnit, setPreferredUnit] = useState('');
 
@@ -30,7 +32,9 @@ export const ProfileContextComponent: React.FC<Props> = ({ children}) => {
             })
             .catch(error => {
                 console.log(error);
+                
             })
+            .finally(() => setLoading(false));
         
     }, []) // Pass an array, so that that is called when we have been added to the DOM (first render) and not each re-render.
 
@@ -40,7 +44,7 @@ export const ProfileContextComponent: React.FC<Props> = ({ children}) => {
     }
 
     return (
-        <ProfileContext.Provider value={ { updateProfileContext, name, preferredUnit } } >
+        <ProfileContext.Provider value={ { loading, updateProfileContext, name, preferredUnit } } >
             { children }
         </ProfileContext.Provider>
     )

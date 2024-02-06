@@ -13,3 +13,7 @@
 Notes TODO
 1. [[prototype]]
 2. Destructing objects
+
+-- Q
+
+useContext works for profile context refreshing but not the weight tracking page

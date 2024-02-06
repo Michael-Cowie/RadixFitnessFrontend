@@ -49,7 +49,7 @@ const UpdateProfile: React.FC<Props> = ({ onSuccess }) => {
                             <Title> Updating Profile </Title>
                             <form className="w-80" onSubmit={ methods.handleSubmit(attemptUpdateProfile) }>
                                 <ValidatedInputWithLabel 
-                                    label="Name" 
+                                    label="Name"
                                     name="name"
                                     defaultValue={ name }
                                 />

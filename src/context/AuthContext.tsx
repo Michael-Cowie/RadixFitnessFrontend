@@ -2,9 +2,8 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { loginUser, signOutUser } from 'services/FirebaseUtils';
 
-import { ProfileContextComponent } from './ProfileContext';
-
 export interface AuthProviderContextData {
+    loading: boolean,
     user: User | null,
     userIsLoggedIn: boolean,
     loginUser: (email: string, password: string) => Promise<boolean>,
@@ -18,6 +17,7 @@ export interface Props {
 const auth = getAuth(); // getAuth() returns the same object each time, hence, only call it once.
 
 const AuthContext = createContext<AuthProviderContextData>({
+    "loading": true,
     "user": null,
     "userIsLoggedIn": false,
     "loginUser": loginUser,
@@ -25,7 +25,7 @@ const AuthContext = createContext<AuthProviderContextData>({
 });
 
 
-export const AuthProvider: React.FC<Props> = ({ children}) => {
+export const AuthContextComponent: React.FC<Props> = ({ children}) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [user, setUser] = useState<User | null>(null);
 
@@ -65,12 +65,8 @@ export const AuthProvider: React.FC<Props> = ({ children}) => {
 
          will destruct and pull "userIsLoggedIn" from the object.
         */
-        <AuthContext.Provider value={{ user, userIsLoggedIn, loginUser, signOutUser }} >
-            { loading ? <p> YOURE'RE LOADING </p> :
-                <ProfileContextComponent>
-                    { children  }
-                </ProfileContextComponent>
-            }
+        <AuthContext.Provider value={{ loading, user, userIsLoggedIn, loginUser, signOutUser }} >
+            { children }
         </AuthContext.Provider>
     )
 }

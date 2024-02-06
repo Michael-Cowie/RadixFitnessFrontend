@@ -1,17 +1,15 @@
-import "./firebase.ts"; // Initializes Firebase
-import "./index.css";   // Initializes Tailwind CSS
+import './firebase.ts'; // Initializes Firebase
+import './index.css'; // Initializes Tailwind CSS
 
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Reset } from "styled-reset";
-
-import { AuthProvider }  from "context/AuthContext";
-import HomePage from "routes/HomePage.tsx";
-import LoginPage from "routes/LoginPage";
-import ProtectedRoute from "routes/ProtectedRoute";
-import WeightTrackingPage from "routes/WeightTrackingPage.tsx";
-
+import AppContextComponent from 'context/AppContext.tsx';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import HomePage from 'routes/HomePage.tsx';
+import LoginPage from 'routes/LoginPage';
+import ProtectedRoute from 'routes/ProtectedRoute';
+import WeightTrackingPage from 'routes/WeightTrackingPage.tsx';
+import { Reset } from 'styled-reset';
 
 const router = createBrowserRouter([
   {
@@ -35,8 +33,8 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Reset/>
-    <AuthProvider>
+    <AppContextComponent>
       <RouterProvider router={ router } />
-    </AuthProvider>
+    </AppContextComponent>
   </React.StrictMode>
 );
