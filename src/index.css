@@ -16,3 +16,7 @@ img{
    -webkit-user-select: none;
    user-select: none;
 }
+
+input[type="checkbox"]:focus{
+   outline:0;
+}

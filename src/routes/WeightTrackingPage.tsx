@@ -44,10 +44,11 @@ function convert(system: string) {
 const WeightTrackingPage = () => {
   const { preferredUnit } = useProfileContext();
 
-  let [dateData, setDateData] = useState<DateToWeight>({});
-  let [createWeight, setCreateWeight] = useState<boolean>(false);
-  let [displayUnit, setDisplayUnit] = useState<string>("kg");
-  let [selectedDateRange, setSelectedDateRange] = useState<number>(7);
+  const [dateData, setDateData] = useState<DateToWeight>({});
+  const [createWeight, setCreateWeight] = useState<boolean>(false);
+  const [displayUnit, setDisplayUnit] = useState<string>("kg");
+  const [selectedDateRange, setSelectedDateRange] = useState<number>(7);
+  const [trendLineEnabled, setTrendLineEnabled] = useState(true);
 
   useEffect(() => {
     getAllWeights()
@@ -90,11 +91,22 @@ const WeightTrackingPage = () => {
                 displayUnit={ displayUnit } 
                 dateRange={ selectedDateRange }
                 initialData={ dateData }
+                trendLineEnabled= { trendLineEnabled }
               />
 
               <ImageContainer>
                 <img alt="Github" src="add_weight_icon.png" onClick={() => setCreateWeight(true)}/>
               </ImageContainer>
+
+              <div className="mt-2">
+                <span className="label-text mr-2 font-bold"> Enable trendline</span>
+                <input 
+                  className="focus:ring-0"
+                  type="checkbox"
+                  checked={ trendLineEnabled }
+                  onChange={ () => setTrendLineEnabled(!trendLineEnabled )}
+                />
+              </div>
 
               <RowAlignmentContainer>
                 {dataSelectionRange.map((dateRange, i) => (

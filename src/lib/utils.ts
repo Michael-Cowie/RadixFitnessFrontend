@@ -5,7 +5,6 @@ export function convertToUnit(unit: string, weight: string): string {
   }
   return weight;
 }
- 
   
 export function YYYY_MM_DD_formattedDate(offset: number = 0): string {
   let date = new Date();

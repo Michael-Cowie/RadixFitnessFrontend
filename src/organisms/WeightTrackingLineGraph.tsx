@@ -1,6 +1,7 @@
 import {
     CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip
 } from 'chart.js';
+import chartTrendline from 'chartjs-plugin-trendline';
 import {
     convertToUnit, findFurtherestDate, MM_DD_formatteDate, YYYY_MM_DD_formattedDate
 } from 'lib/utils';
@@ -9,6 +10,7 @@ import { DateToWeight } from 'routes/WeightTrackingPage';
 import styled from 'styled-components';
 
 ChartJS.register(
+  chartTrendline,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -20,8 +22,9 @@ ChartJS.register(
 
 interface Props {
     displayUnit: string,
-    dateRange: number
-    initialData: DateToWeight
+    dateRange: number,
+    initialData: DateToWeight,
+    trendLineEnabled: boolean
 }
 
 interface ToolTip {
@@ -51,8 +54,12 @@ function plottingData(initialData: DateToWeight, dateRange: number, unit: string
       /**
        * Initial check if we have a weight for today.
        */
-      data.unshift(convertToUnit(unit, initialData[formattedDate]) || null);
-      labels.push(MM_DD_formatteDate())
+      if (formattedDate in initialData) {
+        data.unshift(convertToUnit(unit, initialData[formattedDate]));
+      } else {
+        data.unshift(null);
+      }
+      labels.push(MM_DD_formatteDate(currentOffset))
 
       /**
        * Continually iterate from Today until the furtherest date.
@@ -60,8 +67,11 @@ function plottingData(initialData: DateToWeight, dateRange: number, unit: string
       while (formattedDate !== furtherestDate) {
         currentOffset -= 1;
         formattedDate = YYYY_MM_DD_formattedDate(currentOffset);
-
-        data.unshift(convertToUnit(unit, initialData[formattedDate]) || null);
+        if (formattedDate in initialData) {
+          data.unshift(convertToUnit(unit, initialData[formattedDate]));
+        } else {
+          data.unshift(null);
+        }
         labels.unshift(MM_DD_formatteDate(currentOffset));
       }
     }
@@ -84,11 +94,11 @@ const options = {
   responsive: true,
   plugins: {
     title: {
-      display: true,
+      display: false,
       text: 'Current progress!',
     },
     legend: {
-      display: true,
+      display: false,
       onClick: () => null,
     },
     tooltip: {
@@ -101,7 +111,7 @@ const options = {
   },
 };
 
-const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, initialData }) => {
+const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, initialData, trendLineEnabled }) => {
 
   function determine_tooltip(tooltipItem: ToolTip) {
       const label = tooltipItem.label;
@@ -109,12 +119,32 @@ const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, init
 
       return `On ${label}, you weighed ${weight_kg}${displayUnit}!`;
   }
-
   // @ts-ignore
   options.plugins.tooltip.callbacks.label = determine_tooltip
 
   const [labels, graphData] = plottingData(initialData, dateRange, displayUnit);
-  
+
+  /**
+   * We need to reset this to null to remove it, if it has been previously displayed. 
+   * Conditionally adding it such as ,
+   * 
+   * ...(createTrendLine && {
+   *      trendlineLinear: {
+   *        ...
+   * }})
+   * 
+   * will not remove it from the canvas after it had been rendered.
+   */
+  let trendLineData = null;
+  if (trendLineEnabled && graphData.some((value) => value !== null)) {
+    trendLineData = {
+        colorMin: "green",
+        colorMax: "green",
+        lineStyle: "dotted",
+        width: 3
+    }
+  }
+
   const data = {
       labels,
       datasets: [
@@ -124,6 +154,7 @@ const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, init
             borderColor: 'rgb(53, 162, 235)',
             backgroundColor: 'rgba(53, 162, 235, 0.5)',
             spanGaps: true, // Connect the line for null points
+            trendlineLinear: trendLineData
           }
       ]
   };
