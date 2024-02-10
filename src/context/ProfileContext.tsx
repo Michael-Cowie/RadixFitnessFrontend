@@ -1,29 +1,32 @@
 import useAuthContext from 'context/AuthContext';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { getProfile } from 'services/Profile';
+import { MeasurementSystem } from 'services/WeightTracking/WeightTrackingInterfaces';
 
 interface Profile {
     loading: boolean,
-    updateProfileContext: (name: string, preferredUnit: string) => void;
+    updateProfileContext: (name: string, measurementSystem: MeasurementSystem) => void;
     name: string,
-    preferredUnit: string
+    measurementSystem: MeasurementSystem
 }
 
 export interface Props {
     children: ReactNode;
 }
 
+const defaultMeasurementSystem = "Metric";
+
 const ProfileContext = createContext<Profile>({
     loading: true,
     updateProfileContext: () => null,
     name: "",
-    preferredUnit: ""
+    measurementSystem: defaultMeasurementSystem
 });
 
 export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [name, setName] = useState('');
-    const [preferredUnit, setPreferredUnit] = useState('');
+    const [measurementSystem, setMeasurementSystem] = useState<MeasurementSystem>(defaultMeasurementSystem);
 
     const {loading: authLoading, userIsLoggedIn, user } = useAuthContext();
 
@@ -36,7 +39,7 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
          */
         if (!authLoading && !userIsLoggedIn) {
             setName('');
-            setPreferredUnit('');
+            setMeasurementSystem(defaultMeasurementSystem);
         }
 
         if (!userIsLoggedIn || authLoading) return;
@@ -46,7 +49,7 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
         getProfile()
             .then(data => {
                 setName(data.name);
-                setPreferredUnit(data.preferred_unit);
+                setMeasurementSystem(data.measurement_system);
             })
             .catch(error => {
                 console.log(error);
@@ -69,13 +72,13 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
      */
     }, [authLoading, userIsLoggedIn, user]);
 
-    function updateProfileContext(name: string, preferredUnit: string) {
+    function updateProfileContext(name: string, measurementSystem: MeasurementSystem) {
         setName(name);
-        setPreferredUnit(preferredUnit);
+        setMeasurementSystem(measurementSystem);
     }
 
     return (
-        <ProfileContext.Provider value={ { loading, updateProfileContext, name, preferredUnit } } >
+        <ProfileContext.Provider value={ { loading, updateProfileContext, name, measurementSystem } } >
             { children }
         </ProfileContext.Provider>
     )

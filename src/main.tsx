@@ -8,7 +8,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from 'routes/HomePage.tsx';
 import LoginPage from 'routes/LoginPage';
 import ProtectedRoute from 'routes/ProtectedRoute';
-import WeightTrackingPage from 'routes/WeightTrackingPage.tsx';
+import WeightTrackingPage from 'routes/WeightTrackingPage/WeightTrackingPage.tsx';
 import { Reset } from 'styled-reset';
 
 const router = createBrowserRouter([

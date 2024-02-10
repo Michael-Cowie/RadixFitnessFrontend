@@ -19,17 +19,17 @@ const selectionOptions = ['Metric', 'Imperial'];
 const UpdateProfile: React.FC<Props> = ({ onSuccess }) => {
     const [errorMessage, setErrorMessage] = useState<string>('');
 
-    const {updateProfileContext, name, preferredUnit } = useProfileContext();
+    const {updateProfileContext, name, measurementSystem } = useProfileContext();
 
     const methods = useForm();
 
-    const preferredUnitName = 'preferredUnitName';
+    const measurementSystemName = 'measurementSystemName';
 
     const attemptUpdateProfile = async(data: any): Promise<void> => {
         // @ts-ignore
-        const success = await updateProfile(data.name, data.preferredUnitName);
+        const success = await updateProfile(data.name, data.measurementSystemName);
         if (success) {
-            updateProfileContext(data.name, data.preferredUnitName)
+            updateProfileContext(data.name, data.measurementSystemName)
             onSuccess()
         }
         setErrorMessage('Unable to update profile')
@@ -55,10 +55,10 @@ const UpdateProfile: React.FC<Props> = ({ onSuccess }) => {
                                 />
 
                                 <SelectionInput 
-                                    name={ preferredUnitName } 
+                                    name={ measurementSystemName } 
                                     label="Default unit"
                                     options={ selectionOptions }
-                                    defaultIndex={ selectionOptions.indexOf(preferredUnit) }
+                                    defaultIndex={ selectionOptions.indexOf(measurementSystem) }
                                 />
 
                                 <div className="text-center">

@@ -17,19 +17,19 @@ export const getProfile = async () => {
       }
 };
 
-export const createProfile = async (name: string, preferred_unit: string): Promise<boolean> => {
+export const createProfile = async (name: string, measurement_system: string): Promise<boolean> => {
   /**
    * Create a user profile with the provided parameters.
    * 
    * @param { string } name -  The users name.
-   * @param { string } preferred_unit - The default unit used through the application.
+   * @param { string } measurement_system - The default unit used through the application.
    */
   try {
       const response = await post(
           "http://localhost:8000/api/v1/profile/", 
           {
             "name": name, 
-            "preferred_unit": preferred_unit
+            "measurement_system": measurement_system
           }
       );
 
@@ -39,19 +39,19 @@ export const createProfile = async (name: string, preferred_unit: string): Promi
   }
 }
 
-export const updateProfile = async (name: string, preferred_unit: string) => {
+export const updateProfile = async (name: string, measurement_system: string) => {
     /**
    * Update a user profile with the provided parameters.
    * 
    * @param { string } name -  The users name.
-   * @param { string } preferred_unit - The default unit used through the application.
+   * @param { string } measurement_system - The default unit used through the application.
    */
     try {
       const response = await patch(
           "http://localhost:8000/api/v1/profile/", 
           {
             "name": name, 
-            "preferred_unit": preferred_unit
+            "measurement_system": measurement_system
           }
       );
 

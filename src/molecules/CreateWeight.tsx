@@ -1,7 +1,7 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import Title from 'atoms/Title';
 import { SyntheticEvent, useState } from 'react';
-import { createNewWeight, updateWeight } from 'services/WeightTracking';
+import { createNewWeight, updateWeight } from 'services/WeightTracking/WeightTracking';
 import styled from 'styled-components';
 
 function getResultsFromForm(event: SyntheticEvent): string {
