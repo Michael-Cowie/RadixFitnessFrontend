@@ -1,5 +1,5 @@
-import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { getAuth, onAuthStateChanged, Unsubscribe, User } from 'firebase/auth';
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { loginUser, signOutUser } from 'services/FirebaseUtils';
 
 export interface AuthProviderContextData {
@@ -26,13 +26,24 @@ const AuthContext = createContext<AuthProviderContextData>({
 
 
 export const AuthContextComponent: React.FC<Props> = ({ children}) => {
+    /**
+     * The authentication loading state could potentially be renamed to initializing,
+     * as it will be initialized to True and will be set to False when the Firebase
+     * callbacks and initiailization is complete. Once the loading state is set
+     * to False, it will not be set back to True, even if the users logs out
+     * and then back in again. The handling of contexts from logging in and out
+     * will be done using the user and userIsLoggedIn states.
+     */
     const [loading, setLoading] = useState<boolean>(true);
+
+
     const [user, setUser] = useState<User | null>(null);
+    const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        onAuthStateChanged(auth, (new_user: User | null) => {
+        onAuthStateChanged(auth, (newUser: User | null) => {
              /** ----- DEBUGGING ----- */
-            console.log("Access Token: ", new_user?.accessToken);
+            console.log("Access Token: ", newUser?.accessToken);
 
             /* 
               Retrieve the idToken from Firebase and then finish loading.
@@ -47,13 +58,12 @@ export const AuthContextComponent: React.FC<Props> = ({ children}) => {
               will only be made to the Firebase API if the token is expired, calling getIdToken
               will cache it for future use.
             */
-            setUser(new_user);
+            setUser(newUser);
             setLoading(false);
+            setUserIsLoggedIn(!!newUser);
         })
     }, []) // Pass an array, so that that is called when we have been added to the DOM (first render) and not each re-render.
 
-
-    const userIsLoggedIn = user !== null;
     return (
         /*
          Calling useContext(AuthContext) will return the value of "value" here. Hence, 

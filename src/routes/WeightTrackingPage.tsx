@@ -31,6 +31,16 @@ function getDefaultValue(existingWeight: DateToWeight): string {
   }
 }
 
+function convert(system: string) {
+  if (system === "Metric") {
+    return "kg";
+  }
+
+  if (system === "Imperial") {
+    return "lbs"
+  }
+}
+
 const WeightTrackingPage = () => {
   const { preferredUnit } = useProfileContext();
 
@@ -100,7 +110,7 @@ const WeightTrackingPage = () => {
               <RowAlignmentContainer>
                 {availableUnits.map((unit, i) => (
                   <SelectableButton 
-                    selected={ unit === displayUnit } 
+                    selected={ unit === convert(preferredUnit) } 
                     displayText={ unit }
                     onClick={ () => setDisplayUnit(unit) }
                     key={ i }

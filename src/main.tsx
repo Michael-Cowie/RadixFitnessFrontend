@@ -33,6 +33,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Reset/>
+
     <AppContextComponent>
       <RouterProvider router={ router } />
     </AppContextComponent>
