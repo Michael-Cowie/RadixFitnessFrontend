@@ -4,6 +4,13 @@ export function YYYYMMDDFormattedDate(offset: number = 0): string {
   
   return date.toISOString().split('T')[0]
 }
+
+export function YYYYMMDDDateWithOffset(YYYYMMDDDate: string, offset: number = 0): string {
+  let date = new Date(YYYYMMDDDate);
+  date.setDate(date.getDate() + offset);
+  
+  return date.toISOString().split('T')[0]
+}
   
 export function MMDDFormattedDate(offset: number = 0): string {
   let date = new Date();
@@ -13,16 +20,7 @@ export function MMDDFormattedDate(offset: number = 0): string {
   return `${month} - ${day}`;
 }
 
-export function findLatestDate(dateStrings: string[]): string {
-  const sortedDates = dateStrings.sort();
-  const latestDate = sortedDates[sortedDates.length - 1];
-
-  return latestDate;
-}
-
-export function findFurtherestDate(dateStrings: string[]): string {
-  const sortedDates = dateStrings.sort();
-  const latestDate = sortedDates[0];
-
-  return latestDate;
+export function YYYYMMDDToMMDD(YYYYMMDDDate: string) : string {
+  let [year, month, day] = YYYYMMDDDate.split("-");
+  return `${month} - ${day}`;
 }
