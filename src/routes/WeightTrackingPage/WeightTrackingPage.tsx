@@ -13,7 +13,7 @@ import styled from 'styled-components';
 import PageTemplate from 'templates/PageTemplate';
 
 import { createDisplayText, getDefaultValue } from './WeightTrackingPageAlgorithms';
-import { DateToWeight } from './WeightTrackingPageInterfaces';
+import { DateToUserData, DateToWeight } from './WeightTrackingPageInterfaces';
 
 const today: string = new Date().toISOString().slice(0, 10);
 const availableUnits: AvailableWeightUnits[] = ['kg', 'lbs'];
@@ -22,7 +22,8 @@ const dataSelectionRange = [7, 14, 30, 90, Infinity];
 const WeightTrackingPage = () => {
   const { measurementSystem } = useProfileContext();
 
-  const [dateData, setDateData] = useState<DateToWeight>({});
+  const [dateToWeight, setDateToWeight] = useState<DateToWeight>({});
+  const [dateToUserData, setDateToUserData] = useState<DateToUserData>({});
   const [createWeight, setCreateWeight] = useState<boolean>(false);
   const [displayUnit, setDisplayUnit] = useState<AvailableWeightUnits>(measurementSystemToUnit(measurementSystem));
   const [selectedDateRange, setSelectedDateRange] = useState<number>(7);
@@ -32,19 +33,33 @@ const WeightTrackingPage = () => {
     getAllWeights()
       .then((responseData: WeightEntry[]) => {
         let dateToWeight: DateToWeight = {};
+        let dateToUserData: DateToUserData = {};
+
         for (let userWeightEntry of responseData) {
           dateToWeight[userWeightEntry.date] = userWeightEntry.weight_kg;
+          dateToUserData[userWeightEntry.date] = {
+            'weight_kg': userWeightEntry.weight_kg,
+            'notes': userWeightEntry.notes
+          }
         }
-        setDateData(dateToWeight);
+
+        setDateToWeight(dateToWeight);
+        setDateToUserData(dateToUserData);
       })
       .catch(error => {
         console.log(error);
       })
   }, [])
 
-  function onClose(weight: string) {
-    dateData[today] = weight;
-    setDateData(dateData);
+  function onSuccess(weight: string, notes:string) {
+    dateToWeight[today] = weight;
+
+    dateToUserData[today] = {
+      'weight_kg': weight,
+      'notes': notes
+    };
+    setDateToWeight(dateToWeight);
+    setDateToUserData(dateToUserData);
     setCreateWeight(false);
   }
 
@@ -54,16 +69,16 @@ const WeightTrackingPage = () => {
               { createWeight && 
                 <CreateWeight 
                   displayUnit={ displayUnit } 
-                  onClose={ onClose  }
-                  today={ today }
-                  updating={ today in dateData }
-                  defaultValue={ getDefaultValue(dateData) }
+                  onSuccess={ onSuccess  }
+                  closeModalWindow={ () => setCreateWeight(false) }
+                  dateData={ dateToUserData }
+                  defaultValue={ getDefaultValue(dateToWeight) }
                 />
               }
               <WeightTrackingLineGraph 
                 displayUnit={ displayUnit } 
                 dateRange={ selectedDateRange }
-                initialData={ dateData }
+                dateToWeight={ dateToWeight }
                 trendLineEnabled= { trendLineEnabled }
               />
 

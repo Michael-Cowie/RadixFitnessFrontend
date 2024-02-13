@@ -5,7 +5,7 @@ import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInte
 export interface Props {
     displayUnit: AvailableWeightUnits,
     dateRange: number,
-    initialData: DateToWeight,
+    dateToWeight: DateToWeight,
     trendLineEnabled: boolean
 }
 

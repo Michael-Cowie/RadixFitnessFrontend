@@ -1,14 +1,9 @@
+import { findLatestDate } from 'lib/dateUtils';
+
 import { DateToWeight } from './WeightTrackingPageInterfaces';
 
-export function findLatestDate(dateStrings: string[]): string {
-    const sortedDates = dateStrings.sort();
-    const latestDate = sortedDates[sortedDates.length - 1];
-
-    return latestDate;
-}
-
 export function createDisplayText(range: number): string {
-    if (range === Infinity) return "All days";
+    if (range === Infinity) return "All";
     return `${range} days`;
 }
   

@@ -41,12 +41,12 @@ const options = {
   },
 };
 
-const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, initialData, trendLineEnabled }) => {
+const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, dateToWeight, trendLineEnabled }) => {
 
   // @ts-ignore
   options.plugins.tooltip.callbacks.label = determine_tooltip(displayUnit);
 
-  const [labels, graphData] = plottingData(initialData, dateRange, displayUnit);
+  const [labels, graphData] = plottingData(dateToWeight, dateRange, displayUnit);
 
   /**
    * We need to reset this to null to remove it, if it has been previously displayed. 

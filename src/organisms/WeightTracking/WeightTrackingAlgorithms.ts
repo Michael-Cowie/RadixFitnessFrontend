@@ -1,7 +1,7 @@
 import {
-    MMDDFormattedDate, YYYYMMDDDateWithOffset, YYYYMMDDFormattedDate, YYYYMMDDToMMDD
-} from 'lib/utils';
-import { findLatestDate } from 'routes/WeightTrackingPage/WeightTrackingPageAlgorithms';
+    findFurtherestDate, findLatestDate, formattedDateWithOffset, formattedDateWithOffsetFrom,
+    removeYearFromDate
+} from 'lib/dateUtils';
 import { DateToWeight } from 'routes/WeightTrackingPage/WeightTrackingPageInterfaces';
 import { convertKgTo } from 'services/WeightTracking/utils';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
@@ -18,14 +18,7 @@ export function determine_tooltip(displayUnit: AvailableWeightUnits){
     return inner;
 }
 
-function findFurtherestDate(dateStrings: string[]): string {
-    const sortedDates = dateStrings.sort();
-    const latestDate = sortedDates[0];
-
-    return latestDate;
-}
-
-export function plottingData(initialData: DateToWeight, dateRange: number, unit: AvailableWeightUnits): [string[], (string | null)[]] {
+export function plottingData(dateToWeight: DateToWeight, dateRange: number, unit: AvailableWeightUnits): [string[], (string | null)[]] {
     const minimumFutureDays = 1;
     const minimumNumberDays = 7;
 
@@ -33,32 +26,32 @@ export function plottingData(initialData: DateToWeight, dateRange: number, unit:
     const labels: string[] = [];
 
     const addDataPoint = (formattedDate: string): void => {
-        data.push(formattedDate in initialData ? convertKgTo(unit, initialData[formattedDate]) : null);
-        labels.push(YYYYMMDDToMMDD(formattedDate));
+        data.push(formattedDate in dateToWeight ? convertKgTo(unit, dateToWeight[formattedDate]) : null);
+        labels.push(removeYearFromDate(formattedDate));
     };
 
     if (dateRange === Infinity) {
-        const datesWithWeight: string[] = Object.keys(initialData);
+        const datesWithWeight: string[] = Object.keys(dateToWeight);
 
         if (datesWithWeight.length === 0) {
             for (let dateOffset = -minimumNumberDays; dateOffset <= 0; dateOffset++) {
-              addDataPoint(YYYYMMDDFormattedDate(dateOffset));
+              addDataPoint(formattedDateWithOffset(dateOffset));
             }
         } else {
             let furtherestDate = findFurtherestDate(datesWithWeight);
             let closestDate = findLatestDate(datesWithWeight);
             let currentOffset = 0;
             
-            addDataPoint(YYYYMMDDDateWithOffset(furtherestDate, currentOffset));
+            addDataPoint(formattedDateWithOffsetFrom(furtherestDate, currentOffset));
 
-            while (YYYYMMDDDateWithOffset(furtherestDate, currentOffset) !== closestDate) {
+            while (formattedDateWithOffsetFrom(furtherestDate, currentOffset) !== closestDate) {
                 currentOffset += 1;
-                addDataPoint(YYYYMMDDDateWithOffset(furtherestDate, currentOffset));
+                addDataPoint(formattedDateWithOffsetFrom(furtherestDate, currentOffset));
             }
         }
     } else {
         for (let dateOffset = -dateRange; dateOffset <= minimumFutureDays; dateOffset++) {
-            addDataPoint(YYYYMMDDFormattedDate(dateOffset));
+            addDataPoint(formattedDateWithOffset(dateOffset));
         }
     }
 

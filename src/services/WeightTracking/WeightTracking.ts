@@ -1,12 +1,13 @@
 import { get, patch, post } from 'services/DataService';
 
-export const createNewWeight = async (date: string, weight_kg: string) => {
+export const createNewWeight = async (date: string, weight_kg: string, notes: string) => {
     /**
      * Create a weight entry for the current user on the specified date with the provided weight in kilograms.
      */
     const body = {
         'date': date,
-        'weight_kg': weight_kg
+        'weight_kg': weight_kg,
+        'notes': notes
     }
     try {
         const response = await post("http://localhost:8000/api/v1/measurements/weights/", body);
@@ -30,13 +31,14 @@ export const getAllWeights = async () => {
     }
 }
 
-export const updateWeight = async(date: string, weight_kg: string): Promise<boolean> => {
+export const updateWeight = async(date: string, weight_kg: string, notes: string): Promise<boolean> => {
     /**
      * Retrieve all of the existing weight entries for the current user.
      */
     const body = {
         'date': date,
-        'weight_kg': weight_kg
+        'weight_kg': weight_kg,
+        'notes': notes
     }
 
     try {
