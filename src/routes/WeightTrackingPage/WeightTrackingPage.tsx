@@ -77,7 +77,7 @@ const WeightTrackingPage = () => {
                   dateData={ dateToUserData }
                 />
               }
-              <WeightTrackingLineGraph 
+              <WeightTrackingLineGraph
                 displayUnit={ displayUnit } 
                 dateRange={ selectedDateRange }
                 dateToWeight={ dateToWeight }

@@ -16,3 +16,4 @@ Notes TODO
 
 https://stackoverflow.com/questions/44321326/property-value-does-not-exist-on-type-eventtarget-in-typescript
 https://felixgerschau.com/react-typescript-oninput-event-type/
+https://www.reddit.com/r/typescript/comments/1apq78o/why_is_everything_a_syntheticbaseevent_when/

@@ -9,6 +9,7 @@ const ErrorMessage: React.FC<Props> = ({ errorMessage }) => {
         'marginTop': '10px',
         'marginBottom': '10px',
         'fontFamily': 'sans-serif',
+        'fontWeight': '600',
 
     }
 	return (

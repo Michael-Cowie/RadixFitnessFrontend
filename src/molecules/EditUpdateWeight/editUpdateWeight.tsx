@@ -77,7 +77,7 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                                         className="w-32"
                                         type="number"
                                         name="weightInput"
-                                        step="0.10"
+                                        step="0.01"
                                         min="1"
                                         max="1000"
                                         key={ defaultValue }
@@ -103,7 +103,7 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                             defaultValue={ getNotesFromDate(dateData, formattedDate) }
                         />
 
-                        <div className="w-100 text-center">
+                        <div className="w-100 text-center mb-1">
                             <button type="submit" className="btn w-32"> Submit </button>
                         </div>
                     </form>
