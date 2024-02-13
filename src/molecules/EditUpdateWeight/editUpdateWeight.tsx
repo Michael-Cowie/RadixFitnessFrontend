@@ -10,7 +10,7 @@ import styled from 'styled-components';
 
 import styles from './editUpdate.module.css';
 import {
-    getDefaultValue, getNotesFromDate, getResultsFromForm, getWeightText
+    getDefaultValue, getNotesFromDate, getResultsFromForm, getWeightText, validateInput
 } from './editUpdateAlgorithms';
 import { Props } from './editUpdateInterfaces';
 
@@ -39,19 +39,6 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
             setErrorMessage(`Unable to ${updating ? 'update' : 'add'} weight`);
         }
     };
-
-    function validateInput(event: FormEvent<HTMLInputElement>) {
-        const input = event.target as HTMLInputElement;
-        const value = input.value.toString();
-        
-        const isValid = /^\d+(\.\d{1,2})?$/.test(value);
-        
-        if (!isValid) {
-            input.setCustomValidity("Please enter a number with no more than 2 decimal places.");
-        } else {
-            input.setCustomValidity("");
-        }
-    }
 
     return (
         <dialog id="my_modal" className={"modal modal-open"}>
