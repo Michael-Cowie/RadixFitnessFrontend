@@ -66,7 +66,6 @@ const CreateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, defau
         }
     };
 
-    const weightText = getWeightText(updating, displayUnit, dateData, formattedDate);
     return (
         <dialog id="my_modal" className={"modal modal-open"}>
             <div className="modal-box h-96">
@@ -74,30 +73,41 @@ const CreateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, defau
                     <form onSubmit={ onSubmit }>
                         <button onClick={ () => closeModalWindow() } className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"> ✕ </button>
 
-                        <RowAlignment className="mb-4">
-                            <div className="mr-2 font-bold"> {updating ? `Updating weight on` : `Add weight on`} </div>
-                            
-                            <DatePicker
+                        <div className="grid grid-cols-2 gap-2 mb-5">
+                            {/* Grid Row 1 - Column 1 */}
+                            <div className="flex items-center justify-end font-bold mr-2">
+                                {updating ? `Updating weight on` : `Add weight on`}
+                            </div>
+
+                            {/* Grid Row 1 - Column 2 */}
+                            <div className="flex items-center">
+                                <DatePicker
                                 className="w-32"
                                 showIcon
-                                selected={ date }
-                                onChange={ (v: Date) => setDate(v) }
-                                maxDate={ new Date() }
-                            />
-                        </RowAlignment>
-                        
-                        <div className="mb-4">
-                            <label className="mr-2 font-bold"> { weightText } </label>
+                                selected={date}
+                                onChange={(v: Date) => setDate(v)}
+                                maxDate={new Date()}
+                                />
+                            </div>
 
-                            <input 
-                                type="number" 
-                                name="weightInput" 
-                                step="0.10" 
-                                min="1" 
-                                max="1000" 
-                                defaultValue={ defaultValue }
-                                required
-                            />
+                            {/* Grid Row 2 - Column 1 */}
+                            <div className="flex items-center font-bold justify-end mr-2">
+                                {getWeightText(updating, displayUnit, dateData, formattedDate)}
+                            </div>
+
+                            {/* Grid Row 2 - Column 2 */}
+                            <div className="flex items-center">
+                                <input
+                                    className="w-32"
+                                    type="number"
+                                    name="weightInput"
+                                    step="0.10"
+                                    min="1"
+                                    max="1000"
+                                    defaultValue={defaultValue}
+                                    required
+                                />
+                            </div>
                         </div>
 
                         <div className="w-100 text-center font-bold mb-2">
