@@ -1,0 +1,22 @@
+/* prepare wrapper element for weight units */
+.weightUnitWrapper {
+  display: inline-block;
+  position: relative;
+}
+
+/* position the unit to the right of the wrapper */
+.weightUnitWrapper::after {
+  position: absolute;
+  top: 13px;
+  right: 2.2rem;
+  transition: all .05s ease-in-out;
+}
+
+/* set the unit abbreviation for each weight unit */
+.kg::after {
+  content: 'kg';
+}
+
+.lbs::after {
+  content: 'lbs';
+}

@@ -13,3 +13,6 @@ Notes TODO
 2. Destructing objects
 
 --
+
+https://stackoverflow.com/questions/44321326/property-value-does-not-exist-on-type-eventtarget-in-typescript
+https://felixgerschau.com/react-typescript-oninput-event-type/

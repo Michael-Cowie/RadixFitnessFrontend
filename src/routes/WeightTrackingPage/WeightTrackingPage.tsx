@@ -1,7 +1,7 @@
 import CenterContainer from 'atoms/CenterContainer';
 import SelectableButton from 'atoms/SelectableButton';
 import useProfileContext from 'context/ProfileContext';
-import CreateWeight from 'molecules/CreateWeight';
+import EditUpdateWeight from 'molecules/EditUpdateWeight/editUpdateWeight';
 import WeightTrackingLineGraph from 'organisms/WeightTracking/WeightTrackingLineGraph';
 import { useEffect, useState } from 'react';
 import { measurementSystemToUnit } from 'services/WeightTracking/utils';
@@ -12,10 +12,9 @@ import {
 import styled from 'styled-components';
 import PageTemplate from 'templates/PageTemplate';
 
-import { createDisplayText, getDefaultValue } from './WeightTrackingPageAlgorithms';
+import { createDisplayText } from './WeightTrackingPageAlgorithms';
 import { DateToUserData, DateToWeight } from './WeightTrackingPageInterfaces';
 
-const today: string = new Date().toISOString().slice(0, 10);
 const availableUnits: AvailableWeightUnits[] = ['kg', 'lbs'];
 const dataSelectionRange = [7, 14, 30, 90, Infinity];
 
@@ -28,6 +27,10 @@ const WeightTrackingPage = () => {
   const [displayUnit, setDisplayUnit] = useState<AvailableWeightUnits>(measurementSystemToUnit(measurementSystem));
   const [selectedDateRange, setSelectedDateRange] = useState<number>(7);
   const [trendLineEnabled, setTrendLineEnabled] = useState(true);
+
+  useEffect(() => {
+    setDisplayUnit(measurementSystemToUnit(measurementSystem));
+  }, [measurementSystemToUnit(measurementSystem)])
 
   useEffect(() => {
     getAllWeights()
@@ -51,10 +54,10 @@ const WeightTrackingPage = () => {
       })
   }, [])
 
-  function onSuccess(weight: string, notes:string) {
-    dateToWeight[today] = weight;
+  function onSuccess(date:string, weight: string, notes:string) {
+    dateToWeight[date] = weight;
 
-    dateToUserData[today] = {
+    dateToUserData[date] = {
       'weight_kg': weight,
       'notes': notes
     };
@@ -67,12 +70,11 @@ const WeightTrackingPage = () => {
       <PageTemplate>
           <CenterContainer>
               { createWeight && 
-                <CreateWeight 
+                <EditUpdateWeight 
                   displayUnit={ displayUnit } 
                   onSuccess={ onSuccess  }
                   closeModalWindow={ () => setCreateWeight(false) }
                   dateData={ dateToUserData }
-                  defaultValue={ getDefaultValue(dateToWeight) }
                 />
               }
               <WeightTrackingLineGraph 
