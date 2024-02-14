@@ -3,7 +3,6 @@ import {
 } from 'chart.js';
 import chartTrendline from 'chartjs-plugin-trendline';
 import { Line } from 'react-chartjs-2';
-import styled from 'styled-components';
 
 import { determine_tooltip, plottingData } from './WeightTrackingAlgorithms';
 import { Props } from './WeightTrackingInterfaces';
@@ -85,21 +84,11 @@ const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, date
   };
 
   return (
-    <LineContainer className="mb-10">
-        <Line
-          // @ts-ignore
-          options={options} 
-          data={data}
-        />
-    </LineContainer>
+    <Line
+      // @ts-ignore
+      options={options} 
+      data={data}
+    />
   )
 }
 export default WeightTrackingLineGraph;
-
-const LineContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 50%;
-`

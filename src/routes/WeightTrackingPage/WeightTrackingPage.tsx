@@ -9,11 +9,10 @@ import { getAllWeights } from 'services/WeightTracking/WeightTracking';
 import {
     AvailableWeightUnits, WeightEntry
 } from 'services/WeightTracking/WeightTrackingInterfaces';
-import styled from 'styled-components';
 import PageTemplate from 'templates/PageTemplate';
 
 import { createDisplayText } from './WeightTrackingPageAlgorithms';
-import { DateToUserData, DateToWeight } from './WeightTrackingPageInterfaces';
+import { DateToUserData } from './WeightTrackingPageInterfaces';
 
 const availableUnits: AvailableWeightUnits[] = ['kg', 'lbs'];
 const dataSelectionRange = [7, 14, 30, 90, Infinity];
@@ -59,74 +58,91 @@ const WeightTrackingPage = () => {
     setCreateWeight(false);
   }
 
+  
   return (
-      <PageTemplate>
-          <CenterContainer>
-              { createWeight && 
-                <EditUpdateWeight 
-                  displayUnit={ displayUnit } 
-                  onSuccess={ onSuccess  }
-                  closeModalWindow={ () => setCreateWeight(false) }
-                  dateData={ dateToUserData }
-                />
-              }
-              <WeightTrackingLineGraph
-                displayUnit={ displayUnit } 
-                dateRange={ selectedDateRange }
-                dateToUserData={ dateToUserData }
-                trendLineEnabled= { trendLineEnabled }
+    <PageTemplate>
+      {/* This is a modal popup and will appear when createWeight is true. */}
+      { createWeight && 
+        <EditUpdateWeight 
+          displayUnit={ displayUnit } 
+          onSuccess={ onSuccess  }
+          closeModalWindow={ () => setCreateWeight(false) }
+          dateData={ dateToUserData }
+        />
+      }
+      
+      <div className="h-screen flex flex-col justify-center items-center">
+        <div className="w-full p-3">
+          <WeightTrackingLineGraph
+            displayUnit={ displayUnit } 
+            dateRange={ selectedDateRange }
+            dateToUserData={ dateToUserData }
+            trendLineEnabled= { trendLineEnabled }
+          />
+        </div>
+
+        <div className="w-full flex justify-center">
+            <div className="h-7 w-7">
+              <img alt="Github" src="add_weight_icon.png" onClick={() => setCreateWeight(true)}/>
+            </div>
+        </div>
+
+        <div className="mt-3 w-full flex justify-center font-bold">
+          <h1> Select a range </h1>
+        </div>
+
+        <div className="flex flex-col">
+          <div className="mt-2 w-full flex flex-row justify-center items-center">
+            {dataSelectionRange.slice(0, 3).map((dateRange, i) => (
+              <SelectableButton 
+                selected={ dateRange === selectedDateRange } 
+                displayText={ createDisplayText(dateRange) }
+                onClick={ () => setSelectedDateRange(dateRange) }
+                key={ i }
               />
+            ))}
+          </div>
 
-              <ImageContainer>
-                <img alt="Github" src="add_weight_icon.png" onClick={() => setCreateWeight(true)}/>
-              </ImageContainer>
-
-              <div className="mt-2">
-                <span className="label-text mr-2 font-bold"> Enable trendline</span>
-                <input 
-                  className="focus:ring-0"
-                  type="checkbox"
-                  checked={ trendLineEnabled }
-                  onChange={ () => setTrendLineEnabled(!trendLineEnabled )}
+          <div className="mt-3 w-full flex flex-row justify-center items-center">
+            {dataSelectionRange.slice(3, 6).map((dateRange, i) => (
+                <SelectableButton 
+                  selected={ dateRange === selectedDateRange } 
+                  displayText={ createDisplayText(dateRange) }
+                  onClick={ () => setSelectedDateRange(dateRange) }
+                  key={ i }
                 />
-              </div>
+              ))}
+          </div>
+        </div>
 
-              <RowAlignmentContainer>
-                {dataSelectionRange.map((dateRange, i) => (
-                  <SelectableButton 
-                    selected={ dateRange === selectedDateRange } 
-                    displayText={ createDisplayText(dateRange) }
-                    onClick={ () => setSelectedDateRange(dateRange) }
-                    key={ i }
-                  />
-                ))}
-              </RowAlignmentContainer>
+        <div className="mt-3 w-full flex justify-center font-bold">
+          <h1> Select a display unit </h1>
+        </div>
 
-              <RowAlignmentContainer>
-                {availableUnits.map((unit, i) => (
-                  <SelectableButton 
-                    selected={ unit === displayUnit } 
-                    displayText={ unit }
-                    onClick={ () => setDisplayUnit(unit) }
-                    key={ i }
-                  />
-                ))}
-              </RowAlignmentContainer>
-          </CenterContainer>
-      </PageTemplate>
+        <div className="mt-3 w-full flex justify-center">
+          {availableUnits.map((unit, i) => (
+            <SelectableButton 
+              selected={ unit === displayUnit } 
+              displayText={ unit }
+              onClick={ () => setDisplayUnit(unit) }
+              key={ i }
+            />
+          ))}
+        </div>
+
+        <div className="mt-3 w-full flex justify-center">
+          <span className="label-text mr-2 font-bold"> Enable trendline</span>
+          <input 
+            className="focus:ring-0"
+            type="checkbox"
+            checked={ trendLineEnabled }
+            onChange={ () => setTrendLineEnabled(!trendLineEnabled )}
+          />
+        </div>
+      </div>
+    </PageTemplate>
   )
 }
 
-const RowAlignmentContainer = styled.div`
-  margin-top: 10px;
-  display: flex;
-  flex-direction: row;
-`
-
-const ImageContainer = styled.div`
-  height: 50px;
-  width: 50px;
-  cursor: pointer;
-`
 
 export default WeightTrackingPage;
