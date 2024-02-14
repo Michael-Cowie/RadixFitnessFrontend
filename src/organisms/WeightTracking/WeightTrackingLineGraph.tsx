@@ -22,6 +22,9 @@ ChartJS.register(
 const options = {
   type: 'line',
   responsive: true,
+  animation: {
+    duration: 0
+  },
   plugins: {
     title: {
       display: false,
@@ -37,15 +40,14 @@ const options = {
       },
       displayColors: false
     }
-
-  },
+  }
 };
 
 const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, dateToUserData, trendLineEnabled }) => {
-  const [labels, graphData, dateOrdering] = plottingData(dateToUserData, dateRange, displayUnit);
+  const [labels, graphData, formattedDates] = plottingData(dateToUserData, dateRange, displayUnit);
 
   // @ts-ignore
-  options.plugins.tooltip.callbacks.label = determine_tooltip(dateOrdering, dateToUserData, displayUnit);
+  options.plugins.tooltip.callbacks.label = determine_tooltip(formattedDates, dateToUserData, displayUnit);
 
   /**
    * We need to reset this to null to remove it, if it has been previously displayed. 
