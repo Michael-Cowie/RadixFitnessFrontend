@@ -1,4 +1,3 @@
-import CenterContainer from 'atoms/CenterContainer';
 import SelectableButton from 'atoms/SelectableButton';
 import useProfileContext from 'context/ProfileContext';
 import EditUpdateWeight from 'molecules/EditUpdateWeight/editUpdateWeight';
@@ -72,7 +71,7 @@ const WeightTrackingPage = () => {
       }
       
       <div className="h-screen flex flex-col justify-center items-center">
-        <div className="w-full p-3">
+        <div className="w-full md:w-4/6 p-3">
           <WeightTrackingLineGraph
             displayUnit={ displayUnit } 
             dateRange={ selectedDateRange }
@@ -82,7 +81,7 @@ const WeightTrackingPage = () => {
         </div>
 
         <div className="w-full flex justify-center">
-            <div className="h-7 w-7">
+            <div className="h-8 w-8 md:h-9 md:w-9">
               <img alt="Github" src="add_weight_icon.png" onClick={() => setCreateWeight(true)}/>
             </div>
         </div>
