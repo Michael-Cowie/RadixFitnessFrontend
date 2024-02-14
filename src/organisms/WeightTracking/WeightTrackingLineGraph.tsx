@@ -1,5 +1,5 @@
 import {
-    CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip
+    CategoryScale, Chart, Legend, LinearScale, LineElement, PointElement, Title, Tooltip
 } from 'chart.js';
 import chartTrendline from 'chartjs-plugin-trendline';
 import { Line } from 'react-chartjs-2';
@@ -7,7 +7,7 @@ import { Line } from 'react-chartjs-2';
 import { determine_tooltip, plottingData } from './WeightTrackingAlgorithms';
 import { Props } from './WeightTrackingInterfaces';
 
-ChartJS.register(
+Chart.register(
   chartTrendline,
   CategoryScale,
   LinearScale,
@@ -47,6 +47,12 @@ const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, date
 
   // @ts-ignore
   options.plugins.tooltip.callbacks.label = determine_tooltip(formattedDates, dateToUserData, displayUnit);
+
+  window.addEventListener('resize', function () {
+    for (let chart of Object.values(Chart.instances)) {
+      chart.resize();
+    }
+  })
 
   /**
    * We need to reset this to null to remove it, if it has been previously displayed. 
