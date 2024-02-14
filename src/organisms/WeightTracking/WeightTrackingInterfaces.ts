@@ -1,15 +1,10 @@
 
-import { DateToWeight } from 'routes/WeightTrackingPage/WeightTrackingPageInterfaces';
+import { DateToUserData } from 'routes/WeightTrackingPage/WeightTrackingPageInterfaces';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
 
 export interface Props {
     displayUnit: AvailableWeightUnits,
     dateRange: number,
-    dateToWeight: DateToWeight,
+    dateToUserData: DateToUserData,
     trendLineEnabled: boolean
-}
-
-export interface ToolTip {
-  label: string,
-  raw: string
 }

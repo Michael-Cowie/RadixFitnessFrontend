@@ -21,7 +21,6 @@ const dataSelectionRange = [7, 14, 30, 90, Infinity];
 const WeightTrackingPage = () => {
   const { measurementSystem } = useProfileContext();
 
-  const [dateToWeight, setDateToWeight] = useState<DateToWeight>({});
   const [dateToUserData, setDateToUserData] = useState<DateToUserData>({});
   const [createWeight, setCreateWeight] = useState<boolean>(false);
   const [displayUnit, setDisplayUnit] = useState<AvailableWeightUnits>(measurementSystemToUnit(measurementSystem));
@@ -35,18 +34,15 @@ const WeightTrackingPage = () => {
   useEffect(() => {
     getAllWeights()
       .then((responseData: WeightEntry[]) => {
-        let dateToWeight: DateToWeight = {};
         let dateToUserData: DateToUserData = {};
 
         for (let userWeightEntry of responseData) {
-          dateToWeight[userWeightEntry.date] = userWeightEntry.weight_kg;
           dateToUserData[userWeightEntry.date] = {
             'weight_kg': userWeightEntry.weight_kg,
             'notes': userWeightEntry.notes
           }
         }
 
-        setDateToWeight(dateToWeight);
         setDateToUserData(dateToUserData);
       })
       .catch(error => {
@@ -55,13 +51,10 @@ const WeightTrackingPage = () => {
   }, [])
 
   function onSuccess(date:string, weight: string, notes:string) {
-    dateToWeight[date] = weight;
-
     dateToUserData[date] = {
       'weight_kg': weight,
       'notes': notes
     };
-    setDateToWeight(dateToWeight);
     setDateToUserData(dateToUserData);
     setCreateWeight(false);
   }
@@ -80,7 +73,7 @@ const WeightTrackingPage = () => {
               <WeightTrackingLineGraph
                 displayUnit={ displayUnit } 
                 dateRange={ selectedDateRange }
-                dateToWeight={ dateToWeight }
+                dateToUserData={ dateToUserData }
                 trendLineEnabled= { trendLineEnabled }
               />
 
