@@ -1,0 +1,38 @@
+:root {
+    --blue: #35A2EB;
+    --darkBlue: #0074c9;
+    --green: #55b646;
+    --darkGreen: #32a91e;
+  }  
+
+.blue {
+    background-color: var(--blue);
+}
+
+.darkBlue {
+    background-color: var(--darkBlue);
+}
+
+.blueWithHover {
+    background-color: var(--blue);
+}
+
+.blueWithHover:hover {
+    background-color: var(--darkBlue);
+}
+
+.green {
+    background-color: var(--green);
+}
+
+.darkGreen {
+    background-color: var(--darkGreen);
+}
+
+.greenWithHover {
+    background-color: var(--green);
+}
+
+.greenWithHover:hover {
+    background-color: var(--darkGreen);
+}

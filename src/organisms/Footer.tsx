@@ -1,9 +1,10 @@
+import styles from 'lib/colours.module.css';
 import styled from 'styled-components';
 
 const Footer = () => {
     return (
         <FooterContainer>
-            <footer className="footer items-center p-4 text-neutral-content bg-slate-900">
+            <footer className={ `footer items-center p-4 text-neutral-content ${styles.darkBlue}` }>
                 <div className="flex flex-col items-center w-full md:flex-row">
 
                     <div className="flex justify-center items-center w-full md:justify-end">

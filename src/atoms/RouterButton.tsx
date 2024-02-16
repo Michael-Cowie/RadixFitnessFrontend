@@ -1,3 +1,4 @@
+import styles from 'lib/colours.module.css';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
@@ -13,7 +14,7 @@ const RouterButton: React.FC<Props> = ({ button_text, route }) => {
     }
 
     return (
-        <button className="btn btn-active btn-neutral mt-4 mb-4 w-full" onClick={ goToRoute }> { button_text } </button>
+        <button className={ `btn ${ styles.blueWithHover } mt-4 mb-4 w-full` } onClick={ goToRoute }> { button_text } </button>
     )
 }
 

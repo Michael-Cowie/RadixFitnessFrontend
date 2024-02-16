@@ -1,7 +1,8 @@
 import ErrorMessage from 'atoms/ErrorMessage';
-import { FlexingArmButton } from 'atoms/FlexingArmButton';
 import { ValidatedInputWithLabel } from 'atoms/inputs/ValidatedInputWithLabel';
+import LoadingButton from 'atoms/LoadingButton';
 import Title from 'atoms/Title';
+import styles from 'lib/colours.module.css';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { createNewUser } from 'services/FirebaseUtils';
@@ -23,13 +24,18 @@ const schema = z.object({
 
 const CreateAccountComponent = () => {
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const attemptCreateNewUser = async(data: any): Promise<void> => {
-      // @ts-ignore
-      const result = await createNewUser(data.email, data.password);
-      if (!result.success) {
-          setErrorMessage(result.message)
-      }
+        setIsLoading(true);
+
+        createNewUser(data.email, data.password).then((result) => {
+            if (!result.success) {
+                setErrorMessage(result.message)
+            }
+            setIsLoading(false);
+        })
+
     };
   
     const closeModalWindow = () => {
@@ -40,17 +46,16 @@ const CreateAccountComponent = () => {
     const methods = useForm({
         resolver: zodResolver(schema),
     });
-    
 
     return (
         <div>
             <button 
-                className="btn btn-success w-full font-sans font-black" 
+                className={ `${ styles.greenWithHover } btn w-full font-sans font-black` }
                 type="submit"
                 // @ts-ignore
                 onClick={()=>document.getElementById('create_account_modal').showModal()}
-            > 
-                Create an account
+            >
+               Create an account
             </button>
 
             <dialog id="create_account_modal" className="modal modal-bottom sm:modal-middle">
@@ -77,7 +82,12 @@ const CreateAccountComponent = () => {
                                     type="password"
                                 />
 
-                                <FlexingArmButton label="Sign up"/>
+
+                                <LoadingButton
+                                    buttonText="Create account"
+                                    displayLoadingAnimation={ isLoading }
+                                    displayIcon={ true }
+                                />
 
                                 <ErrorMessage errorMessage={errorMessage} />
                             </InputFieldContainer>

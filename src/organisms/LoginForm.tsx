@@ -1,6 +1,6 @@
 import ErrorMessage from 'atoms/ErrorMessage';
-import { FlexingArmButton } from 'atoms/FlexingArmButton';
 import { InputWithLabel } from 'atoms/inputs/InputWithLabel';
+import LoadingButton from 'atoms/LoadingButton';
 import useAuth from 'context/AuthContext';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,7 @@ export const LoginForm = () => {
   const { userIsLoggedIn, loginUser } = useAuth();
 
   const [loginError, setLoginError] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (userIsLoggedIn) { 
@@ -25,8 +26,12 @@ export const LoginForm = () => {
     const email = form.elements.namedItem('email') as HTMLInputElement;
     const password = form.elements.namedItem('password') as HTMLInputElement;
 
-    const successful = await loginUser(email.value, password.value);
-    setLoginError(successful === false);
+    setIsLoading(true);
+
+    loginUser(email.value, password.value).then((successful) => {
+      setLoginError(successful === false);
+      setIsLoading(false);
+    })
   };
 
   return (
@@ -35,6 +40,7 @@ export const LoginForm = () => {
             <InputWithLabel
               label="Email "
               name="email"
+              placeholder="Email is not verified"
             />
             <InputWithLabel
               label="Password "
@@ -44,7 +50,11 @@ export const LoginForm = () => {
 
             { loginError && <ErrorMessage errorMessage="Invalid Email or Password"/> }
 
-            <FlexingArmButton label="Log in"/>
+            <LoadingButton 
+              buttonText="Log in" 
+              displayLoadingAnimation={ isLoading }
+              displayIcon={ true }
+            />
         </form>
       </div>
   );

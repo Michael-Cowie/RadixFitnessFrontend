@@ -1,6 +1,7 @@
 import 'react-datepicker/dist/react-datepicker.css';
 
 import ErrorMessage from 'atoms/ErrorMessage';
+import LoadingButton from 'atoms/LoadingButton';
 import { dateObjectToFormattedDate } from 'lib/dateUtils';
 import { ChangeEvent, FormEvent, SyntheticEvent, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -17,6 +18,7 @@ import { Props } from './editUpdateInterfaces';
 const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, closeModalWindow}) => {
     const [date, setDate] = useState(new Date());
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const formattedDate = dateObjectToFormattedDate(date);
     const defaultValue = getDefaultValue(formattedDate, displayUnit, dateData);
@@ -27,17 +29,21 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
         
         const formattedDate = dateObjectToFormattedDate(date);
         const weight_kg = convertWeight(displayUnit, "kg", getResultsFromForm(event));
-        
         const notes = (document.getElementById('notesTextArea') as HTMLTextAreaElement).value;
 
-        const success = updating ? await updateWeight(formattedDate, weight_kg, notes) : await createNewWeight(formattedDate, weight_kg, notes);
+        setIsLoading(true);
 
-        // @ts-ignore
-        if (success) {
-            onSuccess(formattedDate, weight_kg, notes);
-        } else {
-            setErrorMessage(`Unable to ${updating ? 'update' : 'add'} weight`);
-        }
+        const apiCall = updating ? updateWeight : createNewWeight;
+        apiCall(formattedDate, weight_kg, notes).then((success) => {
+            // @ts-ignore
+            if (success) {
+                onSuccess(formattedDate, weight_kg, notes);
+            } else {
+                setErrorMessage(`Unable to ${updating ? 'update' : 'add'} weight`);
+            }
+
+            setIsLoading(false);
+        })
     };
 
     return (
@@ -103,8 +109,14 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                             defaultValue={ getNotesFromDate(dateData, formattedDate) }
                         />
 
-                        <div className="w-100 text-center mb-1">
-                            <button type="submit" className="btn w-32"> Submit </button>
+                        <div className="w-100 flex justify-center items-center">
+                            <div className="w-40">
+                                <LoadingButton
+                                    buttonText="Submit"
+                                    displayLoadingAnimation={ isLoading }
+                                />
+                            </div>
+                            
                         </div>
                     </form>
                     <ErrorMessage errorMessage={ errorMessage } />

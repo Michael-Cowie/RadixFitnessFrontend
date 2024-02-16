@@ -1,4 +1,5 @@
 import useAuthContext from 'context/AuthContext';
+import styles from 'lib/colours.module.css';
 import UpdateProfile from 'molecules/UserProfile/UpdateProfile';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +20,7 @@ const NavBar = () => {
         <NavbarContainer>
             { updatingProfile && <UpdateProfile onSuccess={ () => setUpdatingProfile(false) }/> }
 
-            <div className="navbar bg-slate-900">
+            <div className={ `navbar ${ styles.darkBlue }` }>
                 <div className="flex-1">
                     <a onClick={ goToHome } className="text-white font-bold text-2xl ml-4 cursor-pointer"> Home </a>
                 </div>
