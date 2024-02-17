@@ -4,6 +4,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {},
+    fontFamily: {
+      'default': ['inter', 'sans-serif']
+    }
   },
   plugins: [require("daisyui")],
   daisyui: {
@@ -18,7 +21,7 @@ export default {
 
           neutral: "#020515",
 
-          "base-100": "#fff6e1",
+          "base-100": "#FFFFFF",
 
           info: "#00e7ff",
 
@@ -27,6 +30,7 @@ export default {
           warning: "#e07300",
 
           error: "#ff6c8b",
+          
         },
       },
     ],

@@ -36,7 +36,7 @@ export function getDefaultValue(date: string, unit: AvailableWeightUnits, existi
 
 export function getWeightText(updating: boolean, displayUnit: AvailableWeightUnits, dateData: DateToUserData, formattedDate: string): string {
     if (!updating) {
-        return `Weight in ${ displayUnit }`;
+        return `Weight`;
     } 
     const weight = formatToTwoPrecision(getWeightFromDate(dateData, formattedDate, displayUnit));
     return `From ${ weight }${ displayUnit } to`

@@ -17,7 +17,7 @@ import {
 import { Props } from './editUpdateInterfaces';
 
 const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, closeModalWindow}) => {
-    const [date, setDate] = useState(dayjs(new Date()));
+    const [date, setDate] = useState<Dayjs>(dayjs(new Date()));
 
     const formattedDate = dateObjectToFormattedDate(date);
     const defaultValue = getDefaultValue(formattedDate, displayUnit, dateData);
@@ -55,37 +55,28 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                     <form onSubmit={ onSubmit }>
                         <button onClick={ () => closeModalWindow() } className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"> ✕ </button>
 
-                        <div className="grid grid-cols-2 grid-rows-2 gap-2 gap-y-6 mb-5">
-                            {/* Grid Row 1 - Column 1 */}
-                            <div className="flex items-center justify-end font-bold mr-2">
-                                { updating ? `Updating weight on` : `Add weight on` }
+                        <div className="flex flex-col w-80">
+                            <div className="flex w-full items-center justify-center">
+                                <div className="mb-5">
+                                    <DatePicker
+                                        className='w-48'
+                                        label={ updating ? `Updating weight on` : `Add weight on` }
+                                        defaultValue={ date }
+                                        maxDate={ dayjs(new Date()) }
+                                        // @ts-ignore - Remove the null type check as we will never receive it.
+                                        onChange={ (v: Dayjs) => setDate(v) }
+                                    />
+                                </div>
                             </div>
 
-                            {/* Grid Row 1 - Column 2 */}
-                            <div className="flex items-center">
-                                <DatePicker
-                                    className='w-40'
-                                    label="Choose a date"
-                                    defaultValue={ date }
-                                    maxDate={ dayjs(new Date()) }
-                                    onChange={ (v: Dayjs | null) => setDate(v) }
-                                />
-                            </div>
-
-                            {/* Grid Row 2 - Column 1 */}
-                            <div className="flex items-center font-bold justify-end mr-2">
-                                { getWeightText(updating, displayUnit, dateData, formattedDate) }
-                            </div>
-
-                            {/* Grid Row 2 - Column 2 */}
-                            <div className="flex items-center">
-                                <div className={`${ styles.weightUnitWrapper } ${ styles[displayUnit] }` }>
+                            <div className="flex w-full items-center justify-center">
+                                <div className={`w-48 mb-5 ${ styles.weightUnitWrapper } ${ styles[displayUnit] }` }>
                                     <TextField
                                         id="weightInput"
                                         name="weightInput"
-                                        label="Weight"
+                                        label={ getWeightText(updating, displayUnit, dateData, formattedDate) }
                                         type="number"
-                                        className="w-40"
+                                        className="w-full"
                                         InputLabelProps={{
                                             shrink: true,
                                         }}
@@ -102,8 +93,8 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                             </div>
                         </div>
 
-                        <div className="mb-5 flex justify-start w-full">
-                            <TextField 
+                        <div className="mb-5 w-full">
+                            <TextField
                                 id="notesTextArea"
                                 className="resize-none w-full" 
                                 defaultValue={ getNotesFromDate(dateData, formattedDate) }

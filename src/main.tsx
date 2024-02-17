@@ -9,7 +9,6 @@ import HomePage from 'routes/HomePage.tsx';
 import LoginPage from 'routes/LoginPage';
 import ProtectedRoute from 'routes/ProtectedRoute';
 import WeightTrackingPage from 'routes/WeightTrackingPage/WeightTrackingPage.tsx';
-import { Reset } from 'styled-reset';
 
 const router = createBrowserRouter([
   {
@@ -32,8 +31,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Reset/>
-
     <AppContextComponent>
       <RouterProvider router={ router } />
     </AppContextComponent>

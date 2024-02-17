@@ -22,7 +22,7 @@ const NavBar = () => {
 
             <div className={ `navbar ${ styles.darkBlue }` }>
                 <div className="flex-1">
-                    <a onClick={ goToHome } className="text-white font-bold text-2xl ml-4 cursor-pointer"> Home </a>
+                    <a onClick={ goToHome } className="text-white font-bold text-2xl ml-4 cursor-pointer"> Radix Fitness </a>
                 </div>
                 <div className="flex-none gap-2">
                     <div className="dropdown dropdown-end">

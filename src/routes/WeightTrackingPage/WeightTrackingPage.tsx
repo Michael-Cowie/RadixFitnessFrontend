@@ -1,8 +1,11 @@
 import SelectableButton from 'atoms/SelectableButton';
 import useProfileContext from 'context/ProfileContext';
+import { weightOnClosestDateTo } from 'lib/dateUtils';
 import EditUpdateWeight from 'molecules/EditUpdateWeight/editUpdateWeight';
 import WeightTrackingLineGraph from 'organisms/WeightTracking/WeightTrackingLineGraph';
 import { useEffect, useState } from 'react';
+import Confetti from 'react-confetti';
+import useWindowSize from 'react-use/lib/useWindowSize';
 import { measurementSystemToUnit } from 'services/WeightTracking/utils';
 import { getAllWeights } from 'services/WeightTracking/WeightTracking';
 import {
@@ -10,6 +13,7 @@ import {
 } from 'services/WeightTracking/WeightTrackingInterfaces';
 import PageTemplate from 'templates/PageTemplate';
 
+import styles from './WeightTracking.module.css';
 import { createDisplayText } from './WeightTrackingPageAlgorithms';
 import { DateToUserData } from './WeightTrackingPageInterfaces';
 
@@ -24,6 +28,7 @@ const WeightTrackingPage = () => {
   const [displayUnit, setDisplayUnit] = useState<AvailableWeightUnits>(measurementSystemToUnit(measurementSystem));
   const [selectedDateRange, setSelectedDateRange] = useState<number>(7);
   const [trendLineEnabled, setTrendLineEnabled] = useState(true);
+  const [useConfetti, setUseConfetti] = useState(false);
 
   useEffect(() => {
     setDisplayUnit(measurementSystemToUnit(measurementSystem));
@@ -55,9 +60,17 @@ const WeightTrackingPage = () => {
     };
     setDateToUserData(dateToUserData);
     setCreateWeight(false);
+
+    if ((weight_kg - weightOnClosestDateTo(dateToUserData, date)) <= 0) {
+      setUseConfetti(true);
+
+      setTimeout(() => {
+        setUseConfetti(false);
+      }, 4000);
+    }
   }
 
-  
+  const { width, height } = useWindowSize()
   return (
     <PageTemplate>
       {/* This is a modal popup and will appear when createWeight is true. */}
@@ -69,6 +82,8 @@ const WeightTrackingPage = () => {
           dateData={ dateToUserData }
         />
       }
+
+      { useConfetti && <Confetti className={ `${ styles.fadeOut }` } width={width} height={height}/> }
       
       <div className="h-screen flex flex-col justify-center items-center">
         <div className="w-full md:w-3/6 p-3">
@@ -130,7 +145,7 @@ const WeightTrackingPage = () => {
         </div>
 
         <div className="mt-3 w-full flex justify-center">
-          <span className="label-text mr-2 font-bold"> Enable trendline</span>
+          <span className="mr-2 font-bold"> Enable trendline</span>
           <input 
             className="focus:ring-0"
             type="checkbox"

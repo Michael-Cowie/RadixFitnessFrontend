@@ -1,4 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
+import { DateToUserData } from 'routes/WeightTrackingPage/WeightTrackingPageInterfaces';
 
 /**
  * Do not use `toISOString`. When using date.toISOString().split('T')[0] I ran into an issue 
@@ -44,7 +45,7 @@ export function dateObjectToFormattedDate(date: Dayjs): string {
  * @returns A "YYYY-MM-DD" formatted date string.
  */
 export function formattedDateWithOffsetFrom(dateString: string, offset: number = 0): string {
-  let date = dayjs(dateString).add(offset, 'days');  
+  let date = dayjs(dateString).add(offset, 'days');
   return formattedDate(date);
 }
 
@@ -78,6 +79,32 @@ export function findLatestDate(dateStrings: string[]): string {
   const latestDate = sortedDates[sortedDates.length - 1];
 
   return latestDate;
+}
+
+/**
+ * Returns the weight of the closest date to `date`. Only compares
+ * to previous dates. Primarily used to detect if the entries
+ * detect a weight loss or gain.
+ * 
+ * @param userData A collection of existing user weight entries
+ * @param date The current date we're comparing to.
+ */
+export function weightOnClosestDateTo(dateToUserData: DateToUserData, targetDate: string): number {
+  let datesWithWeight: string[] = Object.keys(dateToUserData);
+  if (datesWithWeight.length == 1) {
+    return dateToUserData[targetDate].weight_kg;
+  }
+
+  // Remove current date, or else it will always be the closest date.
+  datesWithWeight.splice(datesWithWeight.indexOf(targetDate), 1)
+
+  const target = dayjs(targetDate);
+
+  const dates = datesWithWeight.map(date => dayjs(date));
+  const differences = dates.map(date => Math.abs(target.diff(date, 'day')));
+  const minDifferenceIndex = differences.indexOf(Math.min(...differences));
+
+  return dateToUserData[datesWithWeight[minDifferenceIndex]].weight_kg;
 }
 
 /**
