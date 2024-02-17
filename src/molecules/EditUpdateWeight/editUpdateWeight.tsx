@@ -1,13 +1,14 @@
-import 'react-datepicker/dist/react-datepicker.css';
-
 import ErrorMessage from 'atoms/ErrorMessage';
 import LoadingButton from 'atoms/LoadingButton';
+import dayjs, { Dayjs } from 'dayjs';
 import { dateObjectToFormattedDate } from 'lib/dateUtils';
-import { SyntheticEvent, useState } from 'react';
-import DatePicker from 'react-datepicker';
+import { FormEvent, SyntheticEvent, useState } from 'react';
 import { convertWeight } from 'services/WeightTracking/utils';
 import { createNewWeight, updateWeight } from 'services/WeightTracking/WeightTracking';
 import styled from 'styled-components';
+
+import { TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import styles from './editUpdate.module.css';
 import {
@@ -16,13 +17,14 @@ import {
 import { Props } from './editUpdateInterfaces';
 
 const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, closeModalWindow}) => {
-    const [date, setDate] = useState(new Date());
-    const [errorMessage, setErrorMessage] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [date, setDate] = useState(dayjs(new Date()));
 
     const formattedDate = dateObjectToFormattedDate(date);
     const defaultValue = getDefaultValue(formattedDate, displayUnit, dateData);
     const updating = formattedDate in dateData;
+
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onSubmit = async(event: SyntheticEvent) => {
         event.preventDefault();
@@ -53,7 +55,7 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                     <form onSubmit={ onSubmit }>
                         <button onClick={ () => closeModalWindow() } className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"> ✕ </button>
 
-                        <div className="grid grid-cols-2 grid-rows-2 gap-2 mb-5">
+                        <div className="grid grid-cols-2 grid-rows-2 gap-2 gap-y-6 mb-5">
                             {/* Grid Row 1 - Column 1 */}
                             <div className="flex items-center justify-end font-bold mr-2">
                                 { updating ? `Updating weight on` : `Add weight on` }
@@ -62,11 +64,11 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                             {/* Grid Row 1 - Column 2 */}
                             <div className="flex items-center">
                                 <DatePicker
-                                    className="w-32"
-                                    showIcon
-                                    selected={ date }
-                                    onChange={ (v: Date) => setDate(v) }
-                                    maxDate={ new Date() }
+                                    className='w-40'
+                                    label="Choose a date"
+                                    defaultValue={ date }
+                                    maxDate={ dayjs(new Date()) }
+                                    onChange={ (v: Dayjs | null) => setDate(v) }
                                 />
                             </div>
 
@@ -78,36 +80,40 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                             {/* Grid Row 2 - Column 2 */}
                             <div className="flex items-center">
                                 <div className={`${ styles.weightUnitWrapper } ${ styles[displayUnit] }` }>
-                                    <input
+                                    <TextField
                                         id="weightInput"
-                                        className="w-32"
-                                        type="number"
                                         name="weightInput"
-                                        step="0.01"
-                                        min="1"
-                                        max="1000"
-                                        key={ defaultValue }
+                                        label="Weight"
+                                        type="number"
+                                        className="w-40"
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                        inputProps= {{
+                                            step: 0.01,
+                                            min: 1,
+                                            max: 1000
+                                        }}
                                         defaultValue={ defaultValue.toFixed(2) }
-                                        onInput={ (e) => validateInput(e) }
-                                        required
+                                        onInput={ (e: FormEvent<HTMLInputElement>) => validateInput(e) }
+                                        key={ defaultValue }
                                     />
                                 </div>
                             </div>
                         </div>
 
-                        <div className="w-100 text-center font-bold mb-2">
-                            Notes
+                        <div className="mb-5 flex justify-start w-full">
+                            <TextField 
+                                id="notesTextArea"
+                                className="resize-none w-full" 
+                                defaultValue={ getNotesFromDate(dateData, formattedDate) }
+                                placeholder="Optional notes"
+                                label="Notes"
+                                variant="outlined" 
+                                multiline
+                                rows={3}
+                            />
                         </div>
-
-                        <textarea 
-                            id="notesTextArea" 
-                            className="mb-4 resize-none w-80" 
-                            rows={ 3 } 
-                            cols={ 30 } 
-                            maxLength={ 255 }
-                            placeholder="Optional notes"
-                            defaultValue={ getNotesFromDate(dateData, formattedDate) }
-                        />
 
                         <div className="w-100 flex justify-center items-center">
                             <div className="w-40">

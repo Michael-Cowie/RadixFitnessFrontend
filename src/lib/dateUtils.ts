@@ -1,3 +1,5 @@
+import dayjs, { Dayjs } from 'dayjs';
+
 /**
  * Do not use `toISOString`. When using date.toISOString().split('T')[0] I ran into an issue 
  * due to the time zone offset in the original date string. When you use `toISOString()`, it 
@@ -8,20 +10,13 @@
  * @param includeYear Include the year in the formatted date.
  * @returns A string object that is either "YYYY-MM-DD" or "MM-DD" depending on includeYear.
  */
-function formattedDate(date: Date, includeYear=true): string { 
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  };
+function formattedDate(date: Dayjs, includeYear=true): string {
+  if (includeYear) {
+    return date.format('YYYY-MM-DD');
+  }
 
-  const YYYYMMDDFormat = "fr-CA";
-  const formattedDate = date.toLocaleDateString(YYYYMMDDFormat, options);
-  const [year, month, day] = formattedDate.split("-");
-
-  return `${ includeYear ? year + '-' : '' }${ month }-${ day }`
+  return date.format('MM-DD');
 }
-
 
 /**
  * 
@@ -29,9 +24,7 @@ function formattedDate(date: Date, includeYear=true): string {
  * @returns A "YYYY-MM-DD" formatted date.
  */
 export function formattedDateWithOffset(offset: number = 0): string {
-  let date = new Date();
-  date.setDate(date.getDate() + offset);
-  
+  let date = dayjs().add(offset, 'days');
   return formattedDate(date);
 }
 
@@ -40,7 +33,7 @@ export function formattedDateWithOffset(offset: number = 0): string {
  * @param date Any Date object.
  * @returns A "YYYY-MM-DD" formatted date string representation of the provided Date object.
  */
-export function dateObjectToFormattedDate(date: Date): string {
+export function dateObjectToFormattedDate(date: Dayjs): string {
   return formattedDate(date);
 }
 
@@ -51,9 +44,7 @@ export function dateObjectToFormattedDate(date: Date): string {
  * @returns A "YYYY-MM-DD" formatted date string.
  */
 export function formattedDateWithOffsetFrom(dateString: string, offset: number = 0): string {
-  let date = new Date(dateString);
-  date.setDate(date.getDate() + offset);
-  
+  let date = dayjs(dateString).add(offset, 'days');  
   return formattedDate(date);
 }
 
@@ -63,9 +54,7 @@ export function formattedDateWithOffsetFrom(dateString: string, offset: number =
  * @returns A "MM-DD" formatted date string.
  */
 export function formattedDateExcludingYear(offset: number = 0): string {
-  let date = new Date();
-  date.setDate(date.getDate() + offset);
-  
+  let date = dayjs().add(offset, 'days');  
   return formattedDate(date, false);
 }
 

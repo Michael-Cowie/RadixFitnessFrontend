@@ -1,10 +1,13 @@
 import styles from 'lib/colours.module.css';
 
+import LinearProgress from '@mui/material/LinearProgress';
+
 interface Props {
     buttonText: string,
     displayLoadingAnimation: boolean
     displayIcon?: boolean
 }
+
 
 const LoadingButton: React.FC<Props> = ({ buttonText, displayLoadingAnimation, displayIcon=false }) => {
   
@@ -14,7 +17,9 @@ const LoadingButton: React.FC<Props> = ({ buttonText, displayLoadingAnimation, d
             type='submit'
         >
             { displayLoadingAnimation ? (
-                <span className="loading loading-spinner loading-lg"/>
+                <LinearProgress 
+                    className="absolute w-full"
+                />
             ) : (
                 <>
                     { buttonText } { displayIcon && <img width="25px" src="public/flexing_arm.svg"/> }

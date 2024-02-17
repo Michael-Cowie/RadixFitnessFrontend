@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Label } from './shared';
+import { TextField } from '@mui/material';
 
 export interface Props {
   label: string,
@@ -12,13 +12,12 @@ export interface Props {
 export const InputWithLabel: React.FC<Props> = ({ label, name, type="text", placeholder="Type here" }) => {
   return (
     <Container>
-      <Label> { label } </Label>
-
-      <input
-        className="border-2 input input-bordered"
-        name={ name } 
-        type={ type }
+      <TextField 
+        name={ name} 
+        variant="standard" 
+        label={ label }
         placeholder={ placeholder }
+        type={ type }
       />
     </Container>
   );

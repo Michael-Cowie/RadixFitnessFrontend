@@ -71,7 +71,7 @@ const WeightTrackingPage = () => {
       }
       
       <div className="h-screen flex flex-col justify-center items-center">
-        <div className="w-full md:w-4/6 p-3">
+        <div className="w-full md:w-3/6 p-3">
           <WeightTrackingLineGraph
             displayUnit={ displayUnit } 
             dateRange={ selectedDateRange }

@@ -1,6 +1,9 @@
 import useAuthContext, { AuthContextComponent } from 'context/AuthContext';
 import React, { ReactNode, useEffect, useState } from 'react';
 
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 import useProfileContext, { ProfileContextComponent } from './ProfileContext';
 
 interface Props {
@@ -65,9 +68,11 @@ export const AppContextComponent: React.FC<Props> = ({ children }) => {
     return (
         <AuthContextComponent>
             <ProfileContextComponent>
-                <App>
-                    { children }
-                </App>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <App>
+                        { children }
+                    </App>
+                </LocalizationProvider>
             </ProfileContextComponent>
         </AuthContextComponent>
     )

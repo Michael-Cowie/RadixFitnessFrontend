@@ -40,7 +40,7 @@ export const ValidatedInputWithLabel: React.FC<Props> = ({ label, name, type="te
             value: /^[a-zA-Z]+$/,
             message: "Only alphabetical characters are supported"
           }
-        })}
+        }) }
 
         className="border-2 input input-bordered w-full"
         name={ name } 

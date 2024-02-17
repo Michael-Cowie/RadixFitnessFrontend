@@ -39,7 +39,7 @@ export function getWeightText(updating: boolean, displayUnit: AvailableWeightUni
         return `Weight in ${ displayUnit }`;
     } 
     const weight = formatToTwoPrecision(getWeightFromDate(dateData, formattedDate, displayUnit));
-    return `From ${weight}${displayUnit} to`
+    return `From ${ weight }${ displayUnit } to`
 }
 
 export function getResultsFromForm(event: SyntheticEvent): number {
