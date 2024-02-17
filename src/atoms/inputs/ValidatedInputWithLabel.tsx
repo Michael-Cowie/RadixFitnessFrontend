@@ -2,7 +2,7 @@ import ErrorMessage from 'atoms/ErrorMessage';
 import { useFormContext } from 'react-hook-form';
 import styled from 'styled-components';
 
-import { Label } from './shared';
+import { TextField } from '@mui/material';
 
 interface Props {
   label: string,
@@ -31,9 +31,7 @@ export const ValidatedInputWithLabel: React.FC<Props> = ({ label, name, type="te
   const error_message = error_for?.message?.toString();
   return (
     <Container>
-      <Label> { label } </Label>
-
-      <input
+      <TextField
         { ...register(name, {
           required: true,
           pattern: {
@@ -42,7 +40,9 @@ export const ValidatedInputWithLabel: React.FC<Props> = ({ label, name, type="te
           }
         }) }
 
-        className="border-2 input input-bordered w-full"
+        variant="standard"
+        className="border-2 w-full"
+        label={ label }
         name={ name } 
         type={ type }
         placeholder={ placeholder }

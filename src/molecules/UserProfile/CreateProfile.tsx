@@ -32,7 +32,7 @@ const CreateProfile = () => {
                 <div className="modal-box">
                     <FormProvider { ...methods }>
                         <FormContainer>
-                            <Title> It's time to create your profile! </Title>
+                            <Title> Time to create your profile! </Title>
                             <form className="w-80" onSubmit={ methods.handleSubmit(attemptCreateNewProfile) }>
                                 <ValidatedInputWithLabel 
                                     label="Name" 
@@ -41,7 +41,7 @@ const CreateProfile = () => {
 
                                 <SelectionInput 
                                     name={ selectionOptionsName } 
-                                    label='Default unit' 
+                                    label='Default measurement system' 
                                     options={ selectionOptions }
                                 />
 

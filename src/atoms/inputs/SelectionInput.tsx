@@ -1,6 +1,9 @@
 import { useFormContext } from 'react-hook-form';
 
-import { Label } from './shared';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 interface Props {
     name: string, 
@@ -25,22 +28,23 @@ export const SelectionInput: React.FC<Props> = ({ name, label, options, defaultI
   const { register } = useFormContext();
 
   return (
-      <div>
-          <Label> { label } </Label>
-
-          <select 
-              { ...register(name, {
-                required: true
-              })}
-              className="select select-bordered w-full mb-5"
-              name={ name }
-              defaultValue={ options[defaultIndex] }
-          >
-              { options.map((option, i) => (
-                  <option value={ option } key={ i }> { option } </option>
-              )) }
-          </select>
-      </div>
+        <div className="mt-7 mb-7">
+            <FormControl className="w-full">
+                <InputLabel id="demo-simple-select-label"> { label } </InputLabel>
+                <Select 
+                    { ...register(name, {
+                        required: true
+                    })}
+                    label={ label }
+                    name={ name }
+                    defaultValue={ options[defaultIndex] }
+                >
+                    { options.map((option, i) => (
+                        <MenuItem value={ option } key={ i }> { option } </MenuItem>
+                    )) }
+                </Select>
+            </FormControl>
+        </div>
   )
 }
 

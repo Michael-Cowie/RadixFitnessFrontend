@@ -3,6 +3,7 @@
 2. Add Bearer to JWT token
 3. Bug -> Login with internet connection but server not turned on, will cause you to be stuck on profile creation screen.
 
+material ui vs material-tailwind vs tailwindcss/forms, ...
 
 
 Notes TODO
