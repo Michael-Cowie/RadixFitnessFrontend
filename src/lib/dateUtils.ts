@@ -19,7 +19,7 @@ function formattedDate(date: Date, includeYear=true): string {
   const formattedDate = date.toLocaleDateString(YYYYMMDDFormat, options);
   const [year, month, day] = formattedDate.split("-");
 
-  return `${includeYear ? year + '-' : ''}${month}-${day}`
+  return `${ includeYear ? year + '-' : '' }${ month }-${ day }`
 }
 
 
@@ -76,7 +76,7 @@ export function formattedDateExcludingYear(offset: number = 0): string {
  */
 export function removeYearFromDate(dateString: string) : string {
   let [_, month, day] = dateString.split("-");
-  return `${month} - ${day}`;
+  return `${ month } - ${ day }`;
 }
 
 /**

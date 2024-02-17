@@ -17,9 +17,9 @@ interface Props {
  * want any requests being made to the server without a user being logged in.
  */
 const App: React.FC<Props> = ({ children }) => {
-    let [loadingApplication, setLoadingApplication] = useState(true);
+    const [loadingApplication, setLoadingApplication] = useState(true);
 
-    const {loading: authLoading, userIsLoggedIn, user } = useAuthContext();
+    const { loading: authLoading, userIsLoggedIn, user } = useAuthContext();
     const { loading: profileContextLoading } = useProfileContext();
 
     useEffect(() => {

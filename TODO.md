@@ -1,7 +1,5 @@
 # TODO - but later, not now.
 
-1. Mobile responsiveness login
-1. Add a spinning icon or some sort of interaction when waiting on a network request (e.g. when creating a profile)
 2. Add Bearer to JWT token
 3. Bug -> Login with internet connection but server not turned on, will cause you to be stuck on profile creation screen.
 4. Bug -> add 160lbs and its 159.99 (floating point issues?, but it's an integer?)

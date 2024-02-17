@@ -36,7 +36,7 @@ const WeightTrackingPage = () => {
 
         for (let userWeightEntry of responseData) {
           dateToUserData[userWeightEntry.date] = {
-            'weight_kg': userWeightEntry.weight_kg,
+            'weight_kg': parseFloat(userWeightEntry.weight_kg),
             'notes': userWeightEntry.notes
           }
         }
@@ -48,9 +48,9 @@ const WeightTrackingPage = () => {
       })
   }, [])
 
-  function onSuccess(date:string, weight: string, notes:string) {
+  function onSuccess(date:string, weight_kg: number, notes:string) {
     dateToUserData[date] = {
-      'weight_kg': weight,
+      'weight_kg': weight_kg,
       'notes': notes
     };
     setDateToUserData(dateToUserData);
@@ -82,7 +82,7 @@ const WeightTrackingPage = () => {
 
         <div className="w-full flex justify-center">
             <div className="h-8 w-8 md:h-9 md:w-9">
-              <img alt="Github" src="add_weight_icon.png" onClick={() => setCreateWeight(true)}/>
+              <img alt="Github" src="add_weight_icon.png" onClick={ () => setCreateWeight(true) }/>
             </div>
         </div>
 
@@ -92,25 +92,25 @@ const WeightTrackingPage = () => {
 
         <div className="flex flex-col">
           <div className="mt-2 w-full flex flex-row justify-center items-center">
-            {dataSelectionRange.slice(0, 3).map((dateRange, i) => (
+            { dataSelectionRange.slice(0, 3).map((dateRange, i) => (
               <SelectableButton 
                 selected={ dateRange === selectedDateRange } 
                 displayText={ createDisplayText(dateRange) }
                 onClick={ () => setSelectedDateRange(dateRange) }
                 key={ i }
               />
-            ))}
+            )) }
           </div>
 
           <div className="mt-3 w-full flex flex-row justify-center items-center">
-            {dataSelectionRange.slice(3, 6).map((dateRange, i) => (
+            { dataSelectionRange.slice(3, 6).map((dateRange, i) => (
                 <SelectableButton 
                   selected={ dateRange === selectedDateRange } 
                   displayText={ createDisplayText(dateRange) }
                   onClick={ () => setSelectedDateRange(dateRange) }
                   key={ i }
                 />
-              ))}
+              )) }
           </div>
         </div>
 
@@ -119,14 +119,14 @@ const WeightTrackingPage = () => {
         </div>
 
         <div className="mt-3 w-full flex justify-center">
-          {availableUnits.map((unit, i) => (
+          { availableUnits.map((unit, i) => (
             <SelectableButton 
               selected={ unit === displayUnit } 
               displayText={ unit }
               onClick={ () => setDisplayUnit(unit) }
               key={ i }
             />
-          ))}
+          )) }
         </div>
 
         <div className="mt-3 w-full flex justify-center">

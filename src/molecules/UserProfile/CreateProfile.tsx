@@ -28,7 +28,7 @@ const CreateProfile = () => {
 
     return (
         <div>
-            <dialog id="my_modal" className={`modal ${showModal ? 'modal-open' : 'modal-close'}`}>
+            <dialog id="my_modal" className={ `modal ${ showModal ? 'modal-open' : 'modal-close' }` }>
                 <div className="modal-box">
                     <FormProvider { ...methods }>
                         <FormContainer>
@@ -49,7 +49,7 @@ const CreateProfile = () => {
                                     <button type="submit" className="btn w-32"> Continue </button>
                                 </div>
                             
-                                <ErrorMessage errorMessage={errorMessage} />
+                                <ErrorMessage errorMessage={ errorMessage } />
                             </form>
                         </FormContainer>
                     </FormProvider>

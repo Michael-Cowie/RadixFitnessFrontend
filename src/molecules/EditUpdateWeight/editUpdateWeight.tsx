@@ -3,7 +3,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ErrorMessage from 'atoms/ErrorMessage';
 import LoadingButton from 'atoms/LoadingButton';
 import { dateObjectToFormattedDate } from 'lib/dateUtils';
-import { ChangeEvent, FormEvent, SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { convertWeight } from 'services/WeightTracking/utils';
 import { createNewWeight, updateWeight } from 'services/WeightTracking/WeightTracking';
@@ -24,7 +24,7 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
     const defaultValue = getDefaultValue(formattedDate, displayUnit, dateData);
     const updating = formattedDate in dateData;
 
-    const onSubmit = async(event: SyntheticEvent)=> {
+    const onSubmit = async(event: SyntheticEvent) => {
         event.preventDefault();
         
         const formattedDate = dateObjectToFormattedDate(date);
@@ -39,7 +39,7 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
             if (success) {
                 onSuccess(formattedDate, weight_kg, notes);
             } else {
-                setErrorMessage(`Unable to ${updating ? 'update' : 'add'} weight`);
+                setErrorMessage(`Unable to ${ updating ? 'update' : 'add' } weight`);
             }
 
             setIsLoading(false);
@@ -56,7 +56,7 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                         <div className="grid grid-cols-2 grid-rows-2 gap-2 mb-5">
                             {/* Grid Row 1 - Column 1 */}
                             <div className="flex items-center justify-end font-bold mr-2">
-                                {updating ? `Updating weight on` : `Add weight on`}
+                                { updating ? `Updating weight on` : `Add weight on` }
                             </div>
 
                             {/* Grid Row 1 - Column 2 */}
@@ -64,9 +64,9 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                                 <DatePicker
                                     className="w-32"
                                     showIcon
-                                    selected={date}
-                                    onChange={(v: Date) => setDate(v)}
-                                    maxDate={new Date()}
+                                    selected={ date }
+                                    onChange={ (v: Date) => setDate(v) }
+                                    maxDate={ new Date() }
                                 />
                             </div>
 
@@ -77,7 +77,7 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
 
                             {/* Grid Row 2 - Column 2 */}
                             <div className="flex items-center">
-                                <div className={`${styles.weightUnitWrapper} ${styles[displayUnit]}`}>
+                                <div className={`${ styles.weightUnitWrapper } ${ styles[displayUnit] }` }>
                                     <input
                                         id="weightInput"
                                         className="w-32"
@@ -87,8 +87,8 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                                         min="1"
                                         max="1000"
                                         key={ defaultValue }
-                                        defaultValue={ defaultValue }
-                                        onInput={(e) => validateInput(e)}
+                                        defaultValue={ defaultValue.toFixed(2) }
+                                        onInput={ (e) => validateInput(e) }
                                         required
                                     />
                                 </div>

@@ -23,14 +23,14 @@ function splitStringIntoArray(inputString: string, maxLength: number): string[] 
 
 export function determine_tooltip(formattedDates: string[], dateToUserData: DateToUserData, displayUnit: AvailableWeightUnits){
     function inner(tooltipItem: TooltipItem<'line'>) {
-        const label = tooltipItem.label;
-        const weight_kg = tooltipItem.raw;
-        const notes = dateToUserData[formattedDates[tooltipItem.dataIndex]].notes
+        const label: string = tooltipItem.label;
+        const weight_kg: string = tooltipItem.parsed['y'].toFixed(2);
+        const notes: string = dateToUserData[formattedDates[tooltipItem.dataIndex]].notes
         /**
          * react-chartjs2 accepts an array of strings where each index creates a new line between
          * each other. It does not accept new line characters in a single string.
          */
-        let tooltip: string[] = [`On ${label}, you weighed ${weight_kg}${displayUnit}`];
+        let tooltip: string[] = [`On ${ label }, you weighed ${ weight_kg }${ displayUnit }`];
         if (notes.length) {
             tooltip.push('');
             tooltip = tooltip.concat(splitStringIntoArray(notes, tooltip[0].length))
@@ -41,11 +41,11 @@ export function determine_tooltip(formattedDates: string[], dateToUserData: Date
     return inner;
 }
 
-export function plottingData(dateToUserData: DateToUserData, dateRange: number, unit: AvailableWeightUnits): [string[], (string | null)[], string[]] {
+export function plottingData(dateToUserData: DateToUserData, dateRange: number, unit: AvailableWeightUnits): [string[], (number | null)[], string[]] {
     const minimumFutureDays = 1;
     const minimumNumberDays = 7;
 
-    const data: (string | null)[] = [];
+    const data: (number | null)[] = [];
     const labels: string[] = [];
     const formattedDates: string[] = [];
 

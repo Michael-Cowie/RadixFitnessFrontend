@@ -53,7 +53,7 @@ const CreateAccountComponent = () => {
                 className={ `${ styles.greenWithHover } btn w-full font-sans font-black` }
                 type="submit"
                 // @ts-ignore
-                onClick={()=>document.getElementById('create_account_modal').showModal()}
+                onClick={ ()=>document.getElementById('create_account_modal').showModal() }
             >
                Create an account
             </button>
@@ -89,7 +89,7 @@ const CreateAccountComponent = () => {
                                     displayIcon={ true }
                                 />
 
-                                <ErrorMessage errorMessage={errorMessage} />
+                                <ErrorMessage errorMessage={ errorMessage } />
                             </InputFieldContainer>
                         </form>
                     </FormProvider>

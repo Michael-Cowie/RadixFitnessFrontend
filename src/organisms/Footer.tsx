@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const Footer = () => {
     return (
         <FooterContainer>
-            <footer className={ `footer items-center p-4 text-neutral-content ${styles.darkBlue}` }>
+            <footer className={ `footer items-center p-4 text-neutral-content ${ styles.darkBlue }` }>
                 <div className="flex flex-col items-center w-full md:flex-row">
 
                     <div className="flex justify-center items-center w-full md:justify-end">

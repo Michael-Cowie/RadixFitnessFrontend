@@ -34,11 +34,11 @@ export const SelectionInput: React.FC<Props> = ({ name, label, options, defaultI
               })}
               className="select select-bordered w-full mb-5"
               name={ name }
-              defaultValue={options[defaultIndex]}
+              defaultValue={ options[defaultIndex] }
           >
-              {options.map((option, i) => (
+              { options.map((option, i) => (
                   <option value={ option } key={ i }> { option } </option>
-              ))}
+              )) }
           </select>
       </div>
   )

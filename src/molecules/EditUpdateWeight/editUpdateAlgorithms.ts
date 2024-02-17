@@ -1,10 +1,10 @@
 import { findLatestDate } from 'lib/dateUtils';
 import { FormEvent, SyntheticEvent } from 'react';
 import { DateToUserData } from 'routes/WeightTrackingPage/WeightTrackingPageInterfaces';
-import { convertKgTo } from 'services/WeightTracking/utils';
+import { convertKgTo, formatToTwoPrecision } from 'services/WeightTracking/utils';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
 
-export function getWeightFromDate(dateData: DateToUserData, date:string, toUnit: AvailableWeightUnits): string {
+export function getWeightFromDate(dateData: DateToUserData, date:string, toUnit: AvailableWeightUnits): number {
     return convertKgTo(toUnit, dateData[date].weight_kg)
 }
 
@@ -15,8 +15,8 @@ export function getNotesFromDate(dateData: DateToUserData, date:string): string 
     return '';
 }
 
-export function getDefaultValue(date: string, unit: AvailableWeightUnits, existingWeight: DateToUserData): string {
-    const averagePersonWeightKg = '65';
+export function getDefaultValue(date: string, unit: AvailableWeightUnits, existingWeight: DateToUserData): number {
+    const averagePersonWeightKg = 65;
     if (Object.keys(existingWeight).length == 0){
         switch (unit) {
             case "kg":
@@ -38,14 +38,14 @@ export function getWeightText(updating: boolean, displayUnit: AvailableWeightUni
     if (!updating) {
         return `Weight in ${ displayUnit }`;
     } 
-    const weight = getWeightFromDate(dateData, formattedDate, displayUnit);
+    const weight = formatToTwoPrecision(getWeightFromDate(dateData, formattedDate, displayUnit));
     return `From ${weight}${displayUnit} to`
 }
 
-export function getResultsFromForm(event: SyntheticEvent): string {
+export function getResultsFromForm(event: SyntheticEvent): number {
     const form = event.target as HTMLFormElement
     const weightInput = form.elements.namedItem('weightInput') as HTMLInputElement;
-    return weightInput.value;
+    return parseFloat(weightInput.value);
 }
 
 export function validateInput(event: FormEvent<HTMLInputElement>) {

@@ -1,24 +1,26 @@
 import { AvailableWeightUnits, MeasurementSystem } from './WeightTrackingInterfaces';
 
-function formatToTwoPrecision(weight: number): string {
+const kg_to_lbs = 2.2046226218488;
+
+export function formatToTwoPrecision(weight: number): string {
   return String(weight.toFixed(2));
 }
 
-function kgToLbs(kg: string): string {
-  return formatToTwoPrecision(Number(kg) * 2.20462);
+function kgToLbs(kg: number): number {
+  return kg * 2.2046226218488;
 }
 
-function lbsToKg(lbs: string): string {
-  return formatToTwoPrecision(Number(lbs) * 0.453592);
+function lbsToKg(lbs: number): number {
+  return lbs / kg_to_lbs;
 }
 
 /**
  * 
  * @param unit The default weight returned from the server is in kg, create a standard function for that primary use case.
  * @param weight Weight on a particular date.
- * @returns A string representation of the converted unit, rounded to 2 decimal points of precision.
+ * @returns Converted unit
  */
-export function convertKgTo(unit: AvailableWeightUnits, weight: string): string {
+export function convertKgTo(unit: AvailableWeightUnits, weight: number): number {
   switch (unit) {
     case "kg":
       return weight;
@@ -36,7 +38,7 @@ export function convertKgTo(unit: AvailableWeightUnits, weight: string): string 
  * @param weight The provided weight that we want to convert.
  * @returns A string representation of the converted unit, rounded to 2 decimal points of precision.
  */
-export function convertWeight(fromUnit: AvailableWeightUnits, toUnit: AvailableWeightUnits, weight: string): string {
+export function convertWeight(fromUnit: AvailableWeightUnits, toUnit: AvailableWeightUnits, weight: number): number {
   if (fromUnit == toUnit) {
     return weight;
   }

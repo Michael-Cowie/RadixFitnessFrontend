@@ -92,8 +92,8 @@ const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, date
   return (
     <Line
       // @ts-ignore
-      options={options} 
-      data={data}
+      options={ options } 
+      data={ data }
     />
   )
 }

@@ -13,13 +13,13 @@ const LoadingButton: React.FC<Props> = ({ buttonText, displayLoadingAnimation, d
             className={ `btn ${ styles.blueWithHover } w-full font-sans font-black` } 
             type='submit'
         >
-            {displayLoadingAnimation ? (
+            { displayLoadingAnimation ? (
                 <span className="loading loading-spinner loading-lg"/>
             ) : (
                 <>
                     { buttonText } { displayIcon && <img width="25px" src="public/flexing_arm.svg"/> }
                 </>
-            )}
+            ) }
         </button>
     );
   };

@@ -19,7 +19,7 @@ const selectionOptions = ['Metric', 'Imperial'];
 const UpdateProfile: React.FC<Props> = ({ onSuccess }) => {
     const [errorMessage, setErrorMessage] = useState<string>('');
 
-    const {updateProfileContext, name, measurementSystem } = useProfileContext();
+    const { updateProfileContext, name, measurementSystem } = useProfileContext();
 
     const methods = useForm();
 
@@ -65,7 +65,7 @@ const UpdateProfile: React.FC<Props> = ({ onSuccess }) => {
                                     <button type="submit" className="btn w-32"> Submit </button>
                                 </div>
                             
-                                <ErrorMessage errorMessage={errorMessage} />
+                                <ErrorMessage errorMessage={ errorMessage } />
                             </form>
                         </FormContainer>
                     </FormProvider>
