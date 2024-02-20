@@ -1,4 +1,5 @@
 import ErrorMessage from 'atoms/ErrorMessage';
+import WeightTrackingSpinbutton from 'atoms/inputs/weights/WeightTrackingSpinbutton';
 import LoadingButton from 'atoms/LoadingButton';
 import dayjs, { Dayjs } from 'dayjs';
 import { dateObjectToFormattedDate } from 'lib/dateUtils';
@@ -10,9 +11,8 @@ import styled from 'styled-components';
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import styles from './editUpdate.module.css';
 import {
-    getDefaultValue, getNotesFromDate, getResultsFromForm, getWeightText, validateInput
+    getDefaultValue, getNotesFromDate, getResultsFromForm, getWeightText
 } from './editUpdateAlgorithms';
 import { Props } from './editUpdateInterfaces';
 
@@ -70,26 +70,12 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                             </div>
 
                             <div className="flex w-full items-center justify-center">
-                                <div className={`w-48 mb-5 ${ styles.weightUnitWrapper } ${ styles[displayUnit] }` }>
-                                    <TextField
-                                        id="weightInput"
-                                        name="weightInput"
-                                        label={ getWeightText(updating, displayUnit, dateData, formattedDate) }
-                                        type="number"
-                                        className="w-full"
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
-                                        inputProps= {{
-                                            step: 0.01,
-                                            min: 1,
-                                            max: 1000
-                                        }}
-                                        defaultValue={ defaultValue.toFixed(2) }
-                                        onInput={ (e: FormEvent<HTMLInputElement>) => validateInput(e) }
-                                        key={ defaultValue }
-                                    />
-                                </div>
+                                <WeightTrackingSpinbutton 
+                                    defaultValue={ defaultValue }
+                                    displayUnit={ displayUnit }
+                                    name={ "weightInput" }
+                                    label={ getWeightText(updating, displayUnit, dateData, formattedDate) }
+                                />
                             </div>
                         </div>
 

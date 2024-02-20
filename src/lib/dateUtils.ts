@@ -60,28 +60,6 @@ export function formattedDateExcludingYear(offset: number = 0): string {
 }
 
 /**
- * 
- * @param dateString A single "YYYY-MM-DD" formatted date string.
- * @returns The provided parameter string reformatted to "MM - DD".
- */
-export function removeYearFromDate(dateString: string) : string {
-  let [_, month, day] = dateString.split("-");
-  return `${ month } - ${ day }`;
-}
-
-/**
- * 
- * @param dateStrings An array of "YYYY-MM-DD" formatted dates.
- * @returns A single date which is closest to today.
- */
-export function findLatestDate(dateStrings: string[]): string {
-  const sortedDates = dateStrings.sort();
-  const latestDate = sortedDates[sortedDates.length - 1];
-
-  return latestDate;
-}
-
-/**
  * Returns the weight of the closest date to `date`. Only compares
  * to previous dates. Primarily used to detect if the entries
  * detect a weight loss or gain.
@@ -110,11 +88,37 @@ export function weightOnClosestDateTo(dateToUserData: DateToUserData, targetDate
 /**
  * 
  * @param dateStrings An array of "YYYY-MM-DD" formatted dates.
+ * @returns A single date, which is closet to today in "YYYY-MM-DD" format.
+ */
+export function findClosestDate(dateStrings: string[]) {
+  const dateObjects = dateStrings.map(dateString => dayjs(dateString));
+
+  // Find the closest date to today
+  const closestDate = dateObjects.reduce((closest, current) => {
+    const closestDiff = Math.abs(closest.diff(dayjs(), 'days'));
+    const currentDiff = Math.abs(current.diff(dayjs(), 'days'));
+
+    return currentDiff < closestDiff ? current : closest;
+  });
+
+  return closestDate.format('YYYY-MM-DD');
+}
+
+/**
+ * 
+ * @param dateStrings An array of "YYYY-MM-DD" formatted dates.
  * @returns A single date which is furtherest from today.
  */
 export function findFurtherestDate(dateStrings: string[]): string {
-  const sortedDates = dateStrings.sort();
-  const latestDate = sortedDates[0];
+  const dateObjects = dateStrings.map(dateString => dayjs(dateString));
 
-  return latestDate;
+  // Find the furtherest date to today
+  const furtherestDate = dateObjects.reduce((furtherest, current) => {
+    const furtherestDiff = Math.abs(furtherest.diff(dayjs(), 'days'));
+    const currentDiff = Math.abs(current.diff(dayjs(), 'days'));
+
+    return currentDiff > furtherestDiff ? current : furtherest;
+  });
+
+  return furtherestDate.format('YYYY-MM-DD');
 }

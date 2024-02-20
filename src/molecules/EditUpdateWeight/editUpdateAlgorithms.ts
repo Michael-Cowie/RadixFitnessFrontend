@@ -1,5 +1,5 @@
-import { findLatestDate } from 'lib/dateUtils';
-import { FormEvent, SyntheticEvent } from 'react';
+import { findClosestDate } from 'lib/dateUtils';
+import { SyntheticEvent } from 'react';
 import { DateToUserData } from 'routes/WeightTrackingPage/WeightTrackingPageInterfaces';
 import { convertKgTo, formatToTwoPrecision } from 'services/WeightTracking/utils';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
@@ -29,7 +29,7 @@ export function getDefaultValue(date: string, unit: AvailableWeightUnits, existi
     } else if (date in existingWeight) {
         return convertKgTo(unit, existingWeight[date].weight_kg);
     } else {
-        const latestEntry = findLatestDate(Object.keys(existingWeight));
+        const latestEntry = findClosestDate(Object.keys(existingWeight));
         return convertKgTo(unit, existingWeight[latestEntry].weight_kg);
     }
 }
@@ -46,17 +46,4 @@ export function getResultsFromForm(event: SyntheticEvent): number {
     const form = event.target as HTMLFormElement
     const weightInput = form.elements.namedItem('weightInput') as HTMLInputElement;
     return parseFloat(weightInput.value);
-}
-
-export function validateInput(event: FormEvent<HTMLInputElement>) {
-    const input = event.target as HTMLInputElement;
-    const value = input.value.toString();
-    
-    const isValid = /^\d+(\.\d{1,2})?$/.test(value);
-    
-    if (!isValid) {
-        input.setCustomValidity("Please enter a number with no more than 2 decimal places.");
-    } else {
-        input.setCustomValidity("");
-    }
 }
