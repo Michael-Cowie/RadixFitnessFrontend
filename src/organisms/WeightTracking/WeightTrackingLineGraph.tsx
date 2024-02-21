@@ -5,8 +5,8 @@ import chartTrendline from 'chartjs-plugin-trendline';
 import { Line } from 'react-chartjs-2';
 
 import {
-    calculateGoalWeightData, calculatePredictedData, calculateUserData, determine_tooltip,
-    formatLabels, generateLabelRange
+    calculateGoalWeightData, calculatePredictedData, calculateUserData, convertDataToDisplayUnit,
+    determine_tooltip, formatLabels, generateLabelRange
 } from './WeightTrackingAlgorithms';
 import { Props } from './WeightTrackingInterfaces';
 
@@ -47,9 +47,15 @@ const options = {
 
 const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, dateToUserData, trendLineEnabled, goalInformation }) => {
   const labels = generateLabelRange(dateToUserData, dateRange, goalInformation);
+
   const userData = calculateUserData(labels, dateToUserData);
   const predictedData = calculatePredictedData(labels, userData, dateToUserData, goalInformation);
   const goalWeightData = calculateGoalWeightData(labels, goalInformation);
+
+  const convertedUserData = convertDataToDisplayUnit(userData, displayUnit);
+  const convertedPredictedData = convertDataToDisplayUnit(predictedData, displayUnit);
+  const convertedGoalWeightData = convertDataToDisplayUnit(goalWeightData, displayUnit);
+
 
   // @ts-ignore
   options.plugins.tooltip.callbacks.label = determine_tooltip(labels, dateToUserData, displayUnit);
@@ -84,7 +90,7 @@ const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, date
   let datasets = [
     {
       label: `Weight in ${ displayUnit }`,
-      data: userData,
+      data: convertedUserData,
       borderColor: 'rgb(53, 162, 235)',
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
       spanGaps: true, // Connect the line for null points
@@ -92,13 +98,13 @@ const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, date
     },
     predictedData.length > 0 && {
       label: "Goal Prediction",
-      data: predictedData,
+      data: convertedPredictedData,
       borderColor: '#55b646',
       backgroundColor: '#3f9532',
     },
     goalInformation.enablePrediction && {
         label: "Goal Weight",
-        data: goalWeightData,
+        data: convertedGoalWeightData,
         borderColor: '#55b646',
         backgroundColor: '#3f9532',
       }

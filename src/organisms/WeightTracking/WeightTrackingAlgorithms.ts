@@ -4,6 +4,7 @@ import { findClosestDate, findFurtherestDate } from 'lib/dateUtils';
 import {
     DateToUserData, GoalInformation
 } from 'routes/WeightTrackingPage/WeightTrackingPageInterfaces';
+import { convertKgTo } from 'services/WeightTracking/utils';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
 
 function splitStringIntoArray(inputString: string, maxLength: number): string[] {
@@ -98,6 +99,17 @@ export function generateLabelRange(dateToUserData: DateToUserData, dateRange: nu
         labels.push(minimumDate.add(offSet, 'days').format("YYYY-MM-DD"));
     }
     return labels;
+}
+
+
+export function convertDataToDisplayUnit(dataList: (number | null)[], convertToUnit: AvailableWeightUnits): (number | null)[] {
+    return dataList.map((point => {
+        if (point === null) {
+            return point;
+        } else {
+            return convertKgTo(convertToUnit, point);
+        }
+    }))
 }
 
 /**
