@@ -11,6 +11,7 @@ import useWindowSize from 'react-use/lib/useWindowSize';
 import PageTemplate from 'templates/PageTemplate';
 
 import styles from './WeightTracking.module.css';
+import WeightTrackingPageLoadingHandler from './WeightTrackingPageLoadingHandler';
 
 const WeightTrackingPage = () => {
   const [useConfetti, setUseConfetti] = useState(false);
@@ -43,22 +44,25 @@ const WeightTrackingPage = () => {
         { /* This component will make confetti appear and then slowly fade. */}
         { useConfetti && <Confetti className={ `${ styles.fadeOut }` } width={width} height={height}/> }
         
-        <div className="h-screen flex flex-col justify-center items-center">
-            <div className="w-full h-3/6 md:w-3/6 p-3">
-              <WeightTrackingLineGraph/>
-            </div>
+          <div className="h-screen flex flex-col justify-center items-center">
+              <div className="w-full h-3/6 md:w-3/6 p-3">
+                <WeightTrackingLineGraph/>
+              </div>
 
-            <div className="w-full flex justify-center flex-row">
-                <div className="h-8 w-8 md:h-9 md:w-9 mr-5">
-                  <img title="Add an entry" src="add_weight_icon.png" onClick={ () => setCreateWeight(true) }/>
+              <WeightTrackingPageLoadingHandler>
+                <div className="w-full flex justify-center flex-row">
+                    <div className="h-8 w-8 md:h-9 md:w-9 mr-5">
+                      <img title="Add an entry" src="add_weight_icon.png" onClick={ () => setCreateWeight(true) }/>
+                    </div>
+
+                    <div className="h-8 w-8 md:h-9 md:w-9">
+                      <img title="Settings" src="settings_cogwheel.svg" onClick={ () => setCreateGoalWeight(true) }/>
+                    </div>
                 </div>
 
-                <div className="h-8 w-8 md:h-9 md:w-9">
-                  <img title="Settings" src="settings_cogwheel.svg" onClick={ () => setCreateGoalWeight(true) }/>
-                </div>
-            </div>
-          <WeightTrackingDateRangeSelection/>
-        </div>
+                <WeightTrackingDateRangeSelection/>
+              </WeightTrackingPageLoadingHandler>
+          </div>
       </WeightTrackingGraphContextComponent>
     </PageTemplate>
   )

@@ -10,7 +10,7 @@ export function createDisplayText(range: number): string {
 const dataSelectionRange = [7, 14, 30, 90, Infinity];
 
 const WeightTrackingDateRangeSelection = () => {
-    const { setPartialState, dateRange: selectedDateRange} = useWeightTrackingGraphContext();
+    const { setPartialState, dateRange: selectedDateRange } = useWeightTrackingGraphContext();
 
     return (
         <>

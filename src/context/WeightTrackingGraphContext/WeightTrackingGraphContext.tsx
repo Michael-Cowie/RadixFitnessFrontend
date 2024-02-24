@@ -54,6 +54,10 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children}
           }, {} as Partial<WeightTrackingGraphContext>);
 
           setPartialState(restoredLocalStorage);
+      
+          setPartialState({
+            isLoading: false
+          })
         });
       }, []);
 
