@@ -17,6 +17,7 @@ const WeightTrackingDateRangeSelection = () => {
         <div className="mt-3 w-full flex justify-center font-bold">
             <h1> Select a range </h1>
         </div>
+
         <div className="flex flex-col md:flex-row">
             <div className="mt-2 w-full flex flex-row justify-center items-center">
                 { dataSelectionRange.slice(0, 3).map((dateRange, i) => (

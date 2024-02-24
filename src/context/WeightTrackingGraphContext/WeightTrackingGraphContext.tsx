@@ -5,9 +5,7 @@ import { getAllWeights } from 'services/WeightTracking/WeightTracking';
 
 import useProfileContext from '../ProfileContext';
 import {
-    createDefaultState, gatherDateInformation, getLocalStorage, goalWeightEnabledLocalStorageKey,
-    localStorageKeys, setLocalStorage, trendlineEnabledLocalStorageKey,
-    weightPredictionEnabledLocalStorageKey
+    createDefaultState, gatherDateInformation, getLocalStorage, localStorageKeys, setLocalStorage
 } from './WeightTrackingGraphContextAlgorithms';
 import { Props, WeightTrackingGraphContext } from './WeightTrackingGraphContextInterfaces';
 
@@ -15,8 +13,6 @@ const WeightTrackingGraphContextProvider = createContext<WeightTrackingGraphCont
 
 export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children}) => {
     const { measurementSystem } = useProfileContext();
-
-    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const [state, setState] = useState<WeightTrackingGraphContext>(createDefaultState(measurementSystem));
 
@@ -31,8 +27,6 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children}
     };
 
     useEffect(() => {
-        setIsLoading(true);
-      
         Promise.all([getAllWeights(), getGoalWeightOnDate()]).then((result) => {
           const [dateToWeightKg, dateToNotes, datesWithWeight] = gatherDateInformation(result[0]);
       
@@ -50,14 +44,16 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children}
               updatingGoalWeight: true,
             });
           }
-      
-          setPartialState({
-            trendlineEnabled: getLocalStorage(trendlineEnabledLocalStorageKey),
-            goalWeightEnabled: getLocalStorage(goalWeightEnabledLocalStorageKey),
-            enableWeightPrediction: getLocalStorage(weightPredictionEnabledLocalStorageKey),
-          });
-      
-          setIsLoading(false);
+          
+          const restoredLocalStorage = localStorageKeys.reduce((acc, key) => {
+            const value = getLocalStorage(key);
+            if (value !== null) {
+              acc[key] = value;
+            }
+            return acc;
+          }, {} as Partial<WeightTrackingGraphContext>);
+
+          setPartialState(restoredLocalStorage);
         });
       }, []);
 

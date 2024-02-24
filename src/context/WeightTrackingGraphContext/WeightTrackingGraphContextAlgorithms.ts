@@ -8,12 +8,14 @@ import {
 
 export const trendlineEnabledLocalStorageKey = 'trendlineEnabled';
 export const goalWeightEnabledLocalStorageKey ='goalWeightEnabled';
-export const weightPredictionEnabledLocalStorageKey = 'enableWeightPrediction'
+export const weightPredictionEnabledLocalStorageKey = 'enableWeightPrediction';
+export const selectedDateRangeLocalStorageKey = 'dateRange';
 
 export const localStorageKeys: (keyof WeightTrackingGraphContext)[] = [
     trendlineEnabledLocalStorageKey,
     goalWeightEnabledLocalStorageKey,
-    weightPredictionEnabledLocalStorageKey
+    weightPredictionEnabledLocalStorageKey,
+    selectedDateRangeLocalStorageKey,
 ]
 
 export const createDefaultState = (measurementSystem: MeasurementSystem): WeightTrackingGraphContext => ({
@@ -49,9 +51,14 @@ export function gatherDateInformation(userEntries: WeightEntry[]): [DateToWeight
     return [dateToWeightKg, dateToNotes, datesWithWeight];
 }
 
-export function getLocalStorage(key: string): boolean {
+export function getLocalStorage(key: string): any {
     let storage = localStorage.getItem(key);
-    return storage === null ? false : JSON.parse(storage); 
+
+    if ( storage === null) {
+        return null;
+    }
+
+    return JSON.parse(storage);
 }
 
 export function setLocalStorage(key: string, value: boolean) {

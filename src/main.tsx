@@ -2,6 +2,9 @@ import './firebase.ts'; // Initializes Firebase
 import './index.css'; // Initializes Tailwind CSS
 
 import AppContextComponent from 'context/AppContext.tsx';
+import dayjs from 'dayjs';
+import dayjsPluginUTC from 'dayjs-plugin-utc';
+import timezone from 'dayjs/plugin/timezone';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -10,6 +13,8 @@ import LoginPage from 'routes/LoginPage';
 import ProtectedRoute from 'routes/ProtectedRoute';
 import WeightTrackingPage from 'routes/WeightTrackingPage/WeightTrackingPage.tsx';
 
+dayjs.extend(dayjsPluginUTC, { parseToLocal: true })
+dayjs.extend(timezone)
 const router = createBrowserRouter([
   {
     path: "/login",
