@@ -1,10 +1,10 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import WeightTrackingSpinbutton from 'atoms/inputs/weights/WeightTrackingSpinbutton';
 import LoadingButton from 'atoms/LoadingButton';
+import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import dayjs, { Dayjs } from 'dayjs';
 import { dateObjectToFormattedDate } from 'lib/dateUtils';
-import { FormEvent, SyntheticEvent, useState } from 'react';
-import { convertWeight } from 'services/WeightTracking/utils';
+import { SyntheticEvent, useState } from 'react';
 import { createNewWeight, updateWeight } from 'services/WeightTracking/WeightTracking';
 import styled from 'styled-components';
 
@@ -16,30 +16,40 @@ import {
 } from './editUpdateAlgorithms';
 import { Props } from './editUpdateInterfaces';
 
-const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, closeModalWindow}) => {
+const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
+    const { displayUnit, datesWithWeight, dateToNotes, dateToWeightKg,setPartialState} = useWeightTrackingGraphContext();
+
     const [date, setDate] = useState<Dayjs>(dayjs(new Date()));
 
     const formattedDate = dateObjectToFormattedDate(date);
-    const defaultValue = getDefaultValue(formattedDate, displayUnit, dateData);
-    const updating = formattedDate in dateData;
+    const updating = datesWithWeight.includes(formattedDate);;
 
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onSubmit = async(event: SyntheticEvent) => {
         event.preventDefault();
-        
-        const formattedDate = dateObjectToFormattedDate(date);
-        const weight_kg = convertWeight(displayUnit, "kg", getResultsFromForm(event));
-        const notes = (document.getElementById('notesTextArea') as HTMLTextAreaElement).value;
+
+        const [date, weight_kg, notes] = getResultsFromForm(event, displayUnit);
 
         setIsLoading(true);
 
         const apiCall = updating ? updateWeight : createNewWeight;
-        apiCall(formattedDate, weight_kg, notes).then((success) => {
+        apiCall(date, weight_kg, notes).then((success) => {
             // @ts-ignore
             if (success) {
-                onSuccess(formattedDate, weight_kg, notes);
+                dateToWeightKg[formattedDate] = weight_kg;
+                dateToNotes[formattedDate] = notes;
+
+                if (!datesWithWeight.includes(formattedDate)) {
+                    datesWithWeight.push(formattedDate);
+                }
+                setPartialState({
+                    dateToWeightKg,
+                    dateToNotes,
+                    datesWithWeight
+                })
+                closeModalWindow();
             } else {
                 setErrorMessage(`Unable to ${ updating ? 'update' : 'add' } weight`);
             }
@@ -48,6 +58,7 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
         })
     };
 
+    const today = new Date();
     return (
         <dialog id="my_modal" className={"modal modal-open"}>
             <div className="modal-box h-96">
@@ -59,10 +70,11 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                             <div className="flex w-full items-center justify-center">
                                 <div className="mb-5">
                                     <DatePicker
+                                        name='datePicker'
                                         className='w-48'
                                         label={ updating ? `Updating weight on` : `Add weight on` }
                                         defaultValue={ date }
-                                        maxDate={ dayjs(new Date()) }
+                                        maxDate={ dayjs(today) }
                                         // @ts-ignore - Remove the null type check as we will never receive it.
                                         onChange={ (v: Dayjs) => setDate(v) }
                                     />
@@ -71,10 +83,10 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
 
                             <div className="flex w-full items-center justify-center">
                                 <WeightTrackingSpinbutton 
-                                    defaultValue={ defaultValue }
+                                    defaultValue={ getDefaultValue() }
                                     displayUnit={ displayUnit }
                                     name={ "weightInput" }
-                                    label={ getWeightText(updating, displayUnit, dateData, formattedDate) }
+                                    label={ getWeightText(updating, formattedDate) }
                                 />
                             </div>
                         </div>
@@ -83,7 +95,7 @@ const EditUpdateWeight: React.FC<Props> = ({ displayUnit, onSuccess, dateData, c
                             <TextField
                                 id="notesTextArea"
                                 className="resize-none w-full" 
-                                defaultValue={ getNotesFromDate(dateData, formattedDate) }
+                                defaultValue={ getNotesFromDate(formattedDate) }
                                 placeholder="Optional notes"
                                 label="Notes"
                                 variant="outlined" 

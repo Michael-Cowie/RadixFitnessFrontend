@@ -6,4 +6,4 @@ const Title = styled.h3`
     font-weight: bold;
     text-align: center;
 `
-export default Title
+export default Title;

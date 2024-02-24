@@ -14,7 +14,7 @@ const LoadingButton: React.FC<Props> = ({ buttonText, displayLoadingAnimation, d
     return (
         <button 
             className={ `btn ${ styles.blueWithHover } w-full font-sans font-black` } 
-            type='submit'
+            type="submit"
         >
             { displayLoadingAnimation ? (
                 <LinearProgress 
@@ -27,5 +27,5 @@ const LoadingButton: React.FC<Props> = ({ buttonText, displayLoadingAnimation, d
             ) }
         </button>
     );
-  };
+};
 export default LoadingButton;

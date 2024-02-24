@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { get, patch, post } from 'services/DataService';
 
 import { WeightGoal } from './goalWeightOnDateInterface';
@@ -22,13 +22,13 @@ export const getGoalWeightOnDate = async (): Promise<WeightGoal | null> => {
     }
 }
 
-export const createGoalWeightOnDate = async (goalDate: string, goalWeight: number) => {
+export const createGoalWeightOnDate = async (goalDate: Dayjs, goalWeightKg: number) => {
   /**
    * Create a users goal weight on date entry.
    */
   const body = {
-    'goal_date_key': goalDate,
-    'goal_weight_kg_key': goalWeight
+    'goal_date': goalDate.format("YYYY-MM-DD"),
+    'goal_weight_kg': goalWeightKg
   }
   try {
       const response = await post("http://localhost:8000/api/v1/measurements/weights/", body);
@@ -39,13 +39,17 @@ export const createGoalWeightOnDate = async (goalDate: string, goalWeight: numbe
   }
 };
 
-export const updateGoalWeightOnDate = async (goalDate: string, goalWeight: number) => {
-  /**
-   * Update the users goal date or goal weight.
-   */
+/**
+ * 
+ * @param goalDate Dayjs object representing the users new goal date.
+ * @param goalWeight Currently chosen goal weight.
+ * @param displayUnit Current unit that the goalWeight is in.
+ * @returns 200 success or null.
+ */
+export const updateGoalWeightOnDate = async (goalDate: Dayjs, goalWeightKg: number) => {
   const body = {
-    'goal_date_key': goalDate,
-    'goal_weight_kg_key': goalWeight
+    'goal_date': goalDate.format("YYYY-MM-DD"),
+    'goal_weight_kg': goalWeightKg
   }
 
   try {

@@ -2,32 +2,86 @@ import ErrorMessage from 'atoms/ErrorMessage';
 import WeightTrackingSpinbutton from 'atoms/inputs/weights/WeightTrackingSpinbutton';
 import LoadingButton from 'atoms/LoadingButton';
 import SelectableButton from 'atoms/SelectableButton';
+import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import dayjs, { Dayjs } from 'dayjs';
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
+import {
+    createGoalWeightOnDate, updateGoalWeightOnDate
+} from 'services/WeightGoal/goalWeightOnDateService';
+import { convertWeight } from 'services/WeightTracking/utils';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
 import styled from 'styled-components';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+import styles from './styles.module.css';
 import { Props } from './WeightGraphSettingsInterfaces';
 
 const availableUnits: AvailableWeightUnits[] = ['kg', 'lbs'];
 
-const WeightGraphSettings: React.FC<Props> = ({ displayUnit, onSuccess, closeModalWindow}) => {
-    const [trendLineEnabled, setTrendLineEnabled] = useState<boolean>(false); // TODO
+const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
+    const { updatingGoalWeight, isLoading: contextLoaded, setPartialState } = useWeightTrackingGraphContext();
+    const weightTrackingGraphContext = useWeightTrackingGraphContext();
 
-    const [settingsDisplayUnit, setSettingsDisplayUnit] = useState<AvailableWeightUnits>(displayUnit); // Keep default to settings
-
-    const [enableGoalSettings, setEnableGoalSettings] = useState<boolean>();     // TODO
-    const [goalDate, setGoalDate] = useState<Dayjs>(dayjs(new Date()).add(7));   // TODO
-    const [goalWeight, setGoalWeight] = useState<number>(100);                   // TODO
-    const [enableWeightPrediction, setEnableWeightPrediction] = useState(false); // TODO
+    const [displayUnit, setDisplayUnit] = useState<AvailableWeightUnits>("kg");
+    const [trendlineEnabled, setTrendlineEnabled] = useState<boolean>(false);
+    const [goalWeightEnabled, setGoalWeightEnabled] = useState<boolean>(false);
+    const [goalDate, setGoalDate] = useState<Dayjs>(dayjs());
+    const [goalWeight, setGoalWeight] = useState<number>(70);
+    const [enableWeightPrediction, setEnableWeightPrediction] = useState<boolean>(false);
 
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    useEffect(() => {
+        const { 
+            displayUnit: defaultDisplayUnit, 
+            trendlineEnabled: defaultTrendlineEnabled, 
+            goalDate: defaultGoalDate, 
+            goalWeightKg: defaultGoalWeight, 
+            goalWeightEnabled: defaultGoalWeightEnabled,
+            enableWeightPrediction: defaultEnableWeightPrediction, 
+        } = weightTrackingGraphContext;
+
+        setDisplayUnit(defaultDisplayUnit);
+        setTrendlineEnabled(defaultTrendlineEnabled);
+        setGoalDate(defaultGoalDate);
+        setGoalWeight(convertWeight(displayUnit, "kg", defaultGoalWeight));
+        setGoalWeightEnabled(defaultGoalWeightEnabled);
+        setEnableWeightPrediction(defaultEnableWeightPrediction);
+    }, [contextLoaded]);
+
     const onSubmit = async(event: SyntheticEvent) => {
         event.preventDefault();
+
+        setIsLoading(true);
+
+        const form = event.target as HTMLFormElement;
+        const weightInput = parseFloat((form.elements.namedItem('goalWeightSpinButton') as HTMLInputElement).value);
+        const goalWeightKg = convertWeight(displayUnit, "kg", weightInput);
+
+        const apiCall = updatingGoalWeight ? updateGoalWeightOnDate : createGoalWeightOnDate
+        apiCall(goalDate, goalWeightKg)
+            .then((success) => {
+                /**
+                 * Once the API call has been successful, keep track of the user UI setup.
+                 */
+                if (success) {                    
+                    setPartialState({
+                        displayUnit,
+                        trendlineEnabled,
+                        goalWeightEnabled,
+                        goalDate,
+                        goalWeightKg,
+                        enableWeightPrediction
+                    })
+                    closeModalWindow();
+                } else {
+                    setErrorMessage(`Unable to ${ updatingGoalWeight ? 'update' : 'add' } goal information`);
+                }
+
+                setIsLoading(false);
+            })
     };
 
     return (
@@ -44,68 +98,67 @@ const WeightGraphSettings: React.FC<Props> = ({ displayUnit, onSuccess, closeMod
                         <div className="mt-3 w-full flex justify-center">
                             { availableUnits.map((unit, i) => (
                                 <SelectableButton 
-                                    selected={ unit === settingsDisplayUnit } 
+                                    selected={ unit === displayUnit } 
                                     displayText={ unit }
-                                    onClick={ () => setSettingsDisplayUnit(unit) }
+                                    onClick={ () => setDisplayUnit(unit) }
                                     key={ i }
                                 />
                             )) }
                         </div>
 
                         <div className="mt-3 w-full flex justify-center">
-                            <span className="mr-2 font-bold"> Enable trendline </span>
+                            <span className="mr-2 font-bold"> Trendline </span>
                             <input 
                                 className="focus:ring-0"
                                 type="checkbox"
-                                checked={ trendLineEnabled }
-                                onChange={ () => setTrendLineEnabled(!trendLineEnabled) }
+                                checked={ trendlineEnabled }
+                                onClick={ _ => setTrendlineEnabled(!trendlineEnabled)}
                             />
                         </div>
 
                         <div className="mt-3 w-full flex justify-center">
-                            <span className="mr-2 font-bold"> Enable goal settings </span>
+                            <span className="mr-2 font-bold"> Goal weight  </span>
                             <input 
                                 className="focus:ring-0"
                                 type="checkbox"
-                                checked={ enableGoalSettings }
-                                onChange={ () => setEnableGoalSettings(!enableGoalSettings) }
+                                checked={ goalWeightEnabled }
+                                onClick={ _ => setGoalWeightEnabled(!goalWeightEnabled) }
                             />
                         </div>
 
-                        <div className="flex w-full mt-5 items-center justify-center">
+                        <div className= { `flex w-full mt-5 items-center justify-center ${ !goalWeightEnabled ? styles.fadeImage : '' }` }>
                             <div className="mb-5">
                                 <DatePicker
-                                    disabled={ !enableGoalSettings }
+                                    name="goalDateDatePicker"
+                                    disabled={ !goalWeightEnabled }
                                     className='w-48'
                                     label={ "Goal Date"}
-                                    defaultValue={ goalDate }
+                                    value={ goalDate }
                                     // @ts-ignore - Remove the null type check as we will never receive it.
-                                    onChange={ (v: Dayjs) => setDate(v) }
+                                    onChange={ (v: Dayjs) => setGoalDate(v) }
                                 />
                             </div>
                         </div>
 
-                        <div className="flex w-full items-center justify-center">
+                        <div className= { `flex w-full items-center justify-center ${ !goalWeightEnabled ? styles.fadeImage : '' }` }>
                             <WeightTrackingSpinbutton
                                 defaultValue={ goalWeight }
                                 displayUnit={ displayUnit }
-                                name={"goalWeight" }
+                                name="goalWeightSpinButton"
                                 label="Goal Weight"
-                                disabled= { !enableGoalSettings }
+                                disabled= { !goalWeightEnabled }
                             />
                         </div>
 
-
                         <div className="w-full flex justify-center items-center">
-                            <span className={ `mr-1 font-bold ${ !enableGoalSettings ? 'text-gray-500' : ''}` }> Enable weight prediction </span>
-                            <img className="mr-2 h-3 w-3" src="information-icon.svg" title="Predictions are calculated from the selected date range." />
+                            <span className={ `mr-1 font-bold ${ !goalWeightEnabled ? styles.fadeImage : ''}` }> Weight prediction </span>
+                            <img className={ `mr-2 h-2.5 w-2.5 ${ !goalWeightEnabled ? styles.fadeImage : '' }` } src="information-icon.svg" title="Predictions are calculated from the visible weights on the graph." />
                             <input
-                                disabled= { !enableGoalSettings }
+                                disabled= { !goalWeightEnabled }
                                 className="focus:ring-0"
                                 type="checkbox"
-                                defaultChecked={ enableWeightPrediction }
-                                // checked={ enableWeightPrediction }
-                                // onChange={ () => setEnableWeightPrediction(!enableWeightPrediction) }
+                                checked={ enableWeightPrediction }
+                                onChange={ () => setEnableWeightPrediction(!enableWeightPrediction) }
                             />
                         </div>
 

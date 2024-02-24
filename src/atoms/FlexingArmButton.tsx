@@ -11,4 +11,4 @@ export const FlexingArmButton: React.FC<Props> = ({ label }) => {
             <img width="25px" src="public/flexing_arm.svg"/>
         </button>
     );
-  };
+};

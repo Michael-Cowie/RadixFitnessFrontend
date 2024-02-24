@@ -2,6 +2,7 @@ import {
     CategoryScale, Chart, Legend, LinearScale, LineElement, PointElement, Title, Tooltip
 } from 'chart.js';
 import chartTrendline from 'chartjs-plugin-trendline';
+import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import { Line } from 'react-chartjs-2';
 
 import {
@@ -45,20 +46,22 @@ const options = {
   }
 };
 
-const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, dateToUserData, trendLineEnabled, goalInformation }) => {
-  const labels = generateLabelRange(dateToUserData, dateRange, goalInformation);
+const WeightTrackingLineGraph: React.FC<Props> = () => {
+  const { trendlineEnabled, displayUnit, goalWeightEnabled, enableWeightPrediction, dateToNotes } = useWeightTrackingGraphContext();
 
-  const userData = calculateUserData(labels, dateToUserData);
-  const predictedData = calculatePredictedData(labels, userData, dateToUserData, goalInformation);
-  const goalWeightData = calculateGoalWeightData(labels, goalInformation);
+  const labels = generateLabelRange();
 
-  const convertedUserData = convertDataToDisplayUnit(userData, displayUnit);
-  const convertedPredictedData = convertDataToDisplayUnit(predictedData, displayUnit);
-  const convertedGoalWeightData = convertDataToDisplayUnit(goalWeightData, displayUnit);
+  const userData = calculateUserData(labels);
+  const predictedData = calculatePredictedData(labels, userData);
+  const goalWeightData = calculateGoalWeightData(labels);
+
+  const convertedUserData = convertDataToDisplayUnit(userData);
+  const convertedPredictedData = convertDataToDisplayUnit(predictedData);
+  const convertedGoalWeightData = convertDataToDisplayUnit(goalWeightData);
 
 
   // @ts-ignore
-  options.plugins.tooltip.callbacks.label = determine_tooltip(labels, dateToUserData, displayUnit);
+  options.plugins.tooltip.callbacks.label = determine_tooltip(labels, dateToNotes, displayUnit);
 
   window.addEventListener('resize', function () {
     for (let chart of Object.values(Chart.instances)) {
@@ -78,7 +81,7 @@ const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, date
    * will not remove it from the canvas after it had been rendered.
    */
   let trendLineData = null;
-  if (trendLineEnabled && userData.some((v) => v !== null)) {
+  if (trendlineEnabled && userData.some((v) => v !== null)) {
     trendLineData = {
         colorMin: "green",
         colorMax: "green",
@@ -95,20 +98,30 @@ const WeightTrackingLineGraph: React.FC<Props> = ({ displayUnit, dateRange, date
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
       spanGaps: true, // Connect the line for null points
       trendlineLinear: trendLineData
-    },
-    predictedData.length > 0 && {
+    }
+  ]
+
+  const displayPredictedDataset = predictedData.length > 1 && goalWeightEnabled && enableWeightPrediction;
+  if (displayPredictedDataset) {
+    //@ts-ignore
+    datasets.push({
       label: "Goal Prediction",
       data: convertedPredictedData,
       borderColor: '#55b646',
       backgroundColor: '#3f9532',
-    },
-    goalInformation.enablePrediction && {
-        label: "Goal Weight",
-        data: convertedGoalWeightData,
-        borderColor: '#55b646',
-        backgroundColor: '#3f9532',
-      }
-  ]
+    });
+  }
+  
+  if (goalWeightEnabled) {
+    //@ts-ignore
+    datasets.push({
+      label: "Goal Weight",
+      data: convertedGoalWeightData,
+      borderColor: '#6dc162',
+      backgroundColor: '#6dc162',
+    });
+  }
+
 
   const data = {
       labels: formatLabels(labels),

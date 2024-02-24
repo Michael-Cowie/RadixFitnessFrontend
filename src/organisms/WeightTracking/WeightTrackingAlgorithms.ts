@@ -1,9 +1,10 @@
 import { TooltipItem } from 'chart.js';
+import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
+import {
+    DateToNotes
+} from 'context/WeightTrackingGraphContext/WeightTrackingGraphContextInterfaces';
 import dayjs, { Dayjs } from 'dayjs';
 import { findClosestDate, findFurtherestDate } from 'lib/dateUtils';
-import {
-    DateToUserData, GoalInformation
-} from 'routes/WeightTrackingPage/WeightTrackingPageInterfaces';
 import { convertKgTo } from 'services/WeightTracking/utils';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
 
@@ -21,10 +22,10 @@ function splitStringIntoArray(inputString: string, maxLength: number): string[] 
     return resultArray;
 }
 
-export function determine_tooltip(labels: string[], dateToUserData: DateToUserData, displayUnit: AvailableWeightUnits){
+export function determine_tooltip(labels: string[], dateToNotes: DateToNotes, displayUnit: AvailableWeightUnits){
     function inner(tooltipItem: TooltipItem<'line'>) {
         const label: string = tooltipItem.label;
-        const weight_kg: string = tooltipItem.parsed['y'].toFixed(2);
+        const weight: string = tooltipItem.parsed['y'].toFixed(2);
 
 
         if (tooltipItem.dataset.label === 'Goal Prediction') {
@@ -32,21 +33,23 @@ export function determine_tooltip(labels: string[], dateToUserData: DateToUserDa
             if (firstNonNullIndex == tooltipItem.dataIndex) {
                 return '' // The first data point overlaps, do not display a tooltip.
             } else {
-                return `On ${ label }, you are predicted to weigh ${ weight_kg }${ displayUnit }`
+                return `On ${ label }, you are predicted to weigh ${ weight }${ displayUnit }`
             }
-        } else if (tooltipItem.dataset.label === 'Weight in kg') {
-            const notes: string = dateToUserData[labels[tooltipItem.dataIndex]].notes
+        } else if (tooltipItem.dataset.label === `Weight in ${ displayUnit }`) {
+            const notes: string = dateToNotes[labels[tooltipItem.dataIndex]]
             /**
              * react-chartjs2 accepts an array of strings where each index creates a new line between
              * each other. It does not accept new line characters in a single string.
              */
-            let tooltip: string[] = [`On ${ label }, you weighed ${ weight_kg }${ displayUnit }`];
+            let tooltip: string[] = [`On ${ label }, you weighed ${ weight }${ displayUnit }`];
             if (notes.length) {
                 tooltip.push('');
                 tooltip = tooltip.concat(splitStringIntoArray(notes, tooltip[0].length))
             }
 
             return tooltip;
+        } else if (tooltipItem.dataset.label === 'Goal Weight') {
+            return `You have a goal to weigh ${ weight }${ displayUnit } on ${label}, keep it up!`;
         }
     }
     return inner;
@@ -65,9 +68,10 @@ export function calculateLossOrGain(weightList: number[]) {
  * @param dateRange Selected date range
  * @returns The minimum label that is to be used in the X axis, a date in YYYY-MM-DD format.
  */
-function getMinimumDate(dateToUserData: DateToUserData, dateRange: number): Dayjs {
+function getMinimumDate(): Dayjs {
+    const { datesWithWeight, dateRange } = useWeightTrackingGraphContext();
+
     if (dateRange === Infinity) {
-        const datesWithWeight = Object.keys(dateToUserData);
         return dayjs(findFurtherestDate(datesWithWeight));
     } else {
         return dayjs().subtract(dateRange, 'days');
@@ -79,20 +83,22 @@ function getMinimumDate(dateToUserData: DateToUserData, dateRange: number): Dayj
  * @param goalInformation Information on the user settings for the goal date and weight.
  * @returns The maximum label that is to be used in the X axis, a date in YYYY-MM-DD format.
  */
-function getMaximumDateFromGoalInformation(goalInformation: GoalInformation): Dayjs {
-    if (!goalInformation.enablePrediction) return dayjs();
+function getMaximumDateFromGoalInformation(): Dayjs {
+    const { goalWeightEnabled, goalDate } = useWeightTrackingGraphContext();
 
-    return goalInformation.goalDate;
+    if (!goalWeightEnabled) return dayjs();
+
+    return goalDate;
 }
 
 /**
  * Generates the labels that are displayed on the X axis on the line graph.
  */
-export function generateLabelRange(dateToUserData: DateToUserData, dateRange: number, goalInformation: GoalInformation): string[] {
-    const minimumDate = getMinimumDate(dateToUserData, dateRange);
-    const maximumDate = getMaximumDateFromGoalInformation(goalInformation);
+export function generateLabelRange(): string[] {
+    const minimumDate = getMinimumDate();
+    const maximumDate = getMaximumDateFromGoalInformation();
 
-    const labelRange = maximumDate.diff(minimumDate, 'days') + 1; // Include the maximum date.
+    const labelRange = maximumDate.diff(minimumDate, 'days');
 
     let labels = []
     for (let offSet = 0; offSet <= labelRange; offSet++) {
@@ -102,12 +108,14 @@ export function generateLabelRange(dateToUserData: DateToUserData, dateRange: nu
 }
 
 
-export function convertDataToDisplayUnit(dataList: (number | null)[], convertToUnit: AvailableWeightUnits): (number | null)[] {
+export function convertDataToDisplayUnit(dataList: (number | null)[]): (number | null)[] {
+    const { displayUnit } = useWeightTrackingGraphContext();
+
     return dataList.map((point => {
         if (point === null) {
             return point;
         } else {
-            return convertKgTo(convertToUnit, point);
+            return convertKgTo(displayUnit, point);
         }
     }))
 }
@@ -115,11 +123,13 @@ export function convertDataToDisplayUnit(dataList: (number | null)[], convertToU
 /**
  * Returns the Y axis plotted data for the user dataset.
  */
-export function calculateUserData(labels: string[], dateToUserData: DateToUserData): (number | null)[] {
+export function calculateUserData(labels: string[]): (number | null)[] {
+    const { dateToWeightKg } = useWeightTrackingGraphContext();
+
     let userData = [];
     for (let label of labels) {
-        if (label in dateToUserData) {
-            userData.push(dateToUserData[label].weight_kg);
+        if (label in dateToWeightKg) {
+            userData.push(dateToWeightKg[label]);
         } else {
             userData.push(null);
         }
@@ -130,30 +140,31 @@ export function calculateUserData(labels: string[], dateToUserData: DateToUserDa
 /**
  * Returns the Y axis plotted data for the predicted dataset.
  */
-export function calculatePredictedData(labels: string[], userData: (number | null)[], dateToUserData: DateToUserData, goalinformation: GoalInformation) {
-    const datesWithWeight = Object.keys(dateToUserData);
-    const pastPredictedDate = goalinformation.goalDate.diff(dayjs(), 'days') <= 0;
+export function calculatePredictedData(labels: string[], userData: (number | null)[]) {
+    const { datesWithWeight, goalDate, enableWeightPrediction, dateToWeightKg } = useWeightTrackingGraphContext();
+
+    const pastPredictedDate = goalDate.diff(dayjs(), 'days') <= 0;
     /**
      * Do not allow prediction if we either,
      *  1. Contain no data entries
      *  2. Have it disabled
      *  3. Have gone beyond the goal date.
      */
-    if (datesWithWeight.length < 1 || !goalinformation.enablePrediction || pastPredictedDate) return [];
+    if (datesWithWeight.length < 1 || !enableWeightPrediction || pastPredictedDate) return [];
 
     const closestDate = findClosestDate(datesWithWeight);
     const closestDateIndex = labels.indexOf(closestDate); 
 
     let predictedData = new Array(closestDateIndex).fill(null);
-    predictedData.push(dateToUserData[closestDate].weight_kg);
+    predictedData.push(dateToWeightKg[closestDate]);
 
     // @ts-ignore
     const sortedDataWithoutNull: number[] = userData.filter(v => v !== null);
     const weightDeviation = calculateLossOrGain(sortedDataWithoutNull);
 
-    const predictionRange = goalinformation.goalDate.diff(closestDate, 'days') + 1;
+    const predictionRange = goalDate.diff(closestDate, 'days') + 1;
 
-    const closestDateWeight = dateToUserData[closestDate].weight_kg;
+    const closestDateWeight = dateToWeightKg[closestDate];
     for (let offset = 1; offset < predictionRange; offset++) {
         predictedData.push(closestDateWeight + (weightDeviation * offset));
     }
@@ -163,11 +174,13 @@ export function calculatePredictedData(labels: string[], userData: (number | nul
 /**
  * Returns the Y axis dataset for the goal weight.
  */
-export function calculateGoalWeightData(labels: string[], goalInformation: GoalInformation) {
-    if (!goalInformation.enablePrediction) return [];
+export function calculateGoalWeightData(labels: string[]) {
+    const { goalWeightEnabled, goalWeightKg } = useWeightTrackingGraphContext();
+    
+    if (!goalWeightEnabled) return [];
 
     let goalWeightData = new Array(labels.length - 1).fill(null);
-    goalWeightData.push(goalInformation.goalWeight);
+    goalWeightData.push(goalWeightKg);
     return goalWeightData;
 }
 

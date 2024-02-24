@@ -28,3 +28,4 @@ BUGS
 ----
 
 GOal Weight for < TOday
+goalWeightSettings, type=submit submits form but window not closing?

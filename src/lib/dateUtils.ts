@@ -1,5 +1,7 @@
+import {
+    DateToWeight
+} from 'context/WeightTrackingGraphContext/WeightTrackingGraphContextInterfaces';
 import dayjs, { Dayjs } from 'dayjs';
-import { DateToUserData } from 'routes/WeightTrackingPage/WeightTrackingPageInterfaces';
 
 /**
  * Do not use `toISOString`. When using date.toISOString().split('T')[0] I ran into an issue 
@@ -67,10 +69,10 @@ export function formattedDateExcludingYear(offset: number = 0): string {
  * @param userData A collection of existing user weight entries
  * @param date The current date we're comparing to.
  */
-export function weightOnClosestDateTo(dateToUserData: DateToUserData, targetDate: string): number {
-  let datesWithWeight: string[] = Object.keys(dateToUserData);
+export function weightOnClosestDateTo(dateToWeight: DateToWeight, targetDate: string): number {
+  let datesWithWeight: string[] = Object.keys(dateToWeight);
   if (datesWithWeight.length == 1) {
-    return dateToUserData[targetDate].weight_kg;
+    return dateToWeight[targetDate];
   }
 
   // Remove current date, or else it will always be the closest date.
@@ -82,7 +84,7 @@ export function weightOnClosestDateTo(dateToUserData: DateToUserData, targetDate
   const differences = dates.map(date => Math.abs(target.diff(date, 'day')));
   const minDifferenceIndex = differences.indexOf(Math.min(...differences));
 
-  return dateToUserData[datesWithWeight[minDifferenceIndex]].weight_kg;
+  return dateToWeight[datesWithWeight[minDifferenceIndex]];
 }
 
 /**

@@ -1,5 +1,5 @@
-import { getAuth, onAuthStateChanged, Unsubscribe, User } from 'firebase/auth';
-import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { loginUser, signOutUser } from 'services/FirebaseUtils';
 
 export interface AuthProviderContextData {

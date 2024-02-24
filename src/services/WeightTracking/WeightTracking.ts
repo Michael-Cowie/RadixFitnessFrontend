@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import { get, patch, post } from 'services/DataService';
 
 export const getAllWeights = async () => {
@@ -13,12 +14,12 @@ export const getAllWeights = async () => {
     }
 }
 
-export const createNewWeight = async (date: string, weight_kg: number, notes: string) => {
+export const createNewWeight = async (date: Dayjs, weight_kg: number, notes: string) => {
     /**
      * Create a weight entry for the current user on the specified date with the provided weight in kilograms.
      */
     const body = {
-        'date': date,
+        'date': date.format("YYYY-MM-DD"),
         'weight_kg': weight_kg,
         'notes': notes
     }
@@ -31,12 +32,12 @@ export const createNewWeight = async (date: string, weight_kg: number, notes: st
     }
 };
 
-export const updateWeight = async(date: string, weight_kg: number, notes: string): Promise<boolean> => {
+export const updateWeight = async(date: Dayjs, weight_kg: number, notes: string): Promise<boolean> => {
     /**
      * Retrieve all of the existing weight entries for the current user.
      */
     const body = {
-        'date': date,
+        'date': date.format("YYYY-MM-DD"),
         'weight_kg': weight_kg,
         'notes': notes
     }
