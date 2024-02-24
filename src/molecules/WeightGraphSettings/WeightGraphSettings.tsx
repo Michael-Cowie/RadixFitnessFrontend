@@ -8,7 +8,7 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import {
     createGoalWeightOnDate, updateGoalWeightOnDate
 } from 'services/WeightGoal/goalWeightOnDateService';
-import { convertWeight } from 'services/WeightTracking/utils';
+import { convertKgTo, convertWeight } from 'services/WeightTracking/utils';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
 import styled from 'styled-components';
 
@@ -46,7 +46,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
         setDisplayUnit(defaultDisplayUnit);
         setTrendlineEnabled(defaultTrendlineEnabled);
         setGoalDate(defaultGoalDate);
-        setGoalWeight(convertWeight(displayUnit, "kg", defaultGoalWeight));
+        setGoalWeight(convertKgTo(defaultDisplayUnit, defaultGoalWeight));
         setGoalWeightEnabled(defaultGoalWeightEnabled);
         setEnableWeightPrediction(defaultEnableWeightPrediction);
     }, [contextLoaded]);
@@ -86,16 +86,16 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
 
     return (
         <dialog id="my_modal" className={"modal modal-open"}>
-            <div className="modal-box h-full">
+            <div className="modal-box">
                 <FormContainer>
-                    <form onSubmit={ onSubmit }>
+                    <form onSubmit={ onSubmit } className="w-80">
                         <button onClick={ () => closeModalWindow() } className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"> ✕ </button>
 
                         <div className="mt-3 w-full flex justify-center font-bold">
                             <h1> Select a display unit </h1>
                         </div>
 
-                        <div className="mt-3 w-full flex justify-center">
+                        <div className="mt-3 w-full flex flex-row justify-center">
                             { availableUnits.map((unit, i) => (
                                 <SelectableButton 
                                     selected={ unit === displayUnit } 
@@ -112,7 +112,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
                                 className="focus:ring-0"
                                 type="checkbox"
                                 checked={ trendlineEnabled }
-                                onClick={ _ => setTrendlineEnabled(!trendlineEnabled)}
+                                onChange={ _ => setTrendlineEnabled(!trendlineEnabled)}
                             />
                         </div>
 
@@ -122,11 +122,11 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
                                 className="focus:ring-0"
                                 type="checkbox"
                                 checked={ goalWeightEnabled }
-                                onClick={ _ => setGoalWeightEnabled(!goalWeightEnabled) }
+                                onChange={ _ => setGoalWeightEnabled(!goalWeightEnabled) }
                             />
                         </div>
 
-                        <div className= { `flex w-full mt-5 items-center justify-center ${ !goalWeightEnabled ? styles.fadeImage : '' }` }>
+                        <div className= { `flex w-full mt-3 items-center justify-center ${ !goalWeightEnabled ? styles.fadeImage : '' }` }>
                             <div className="mb-5">
                                 <DatePicker
                                     name="goalDateDatePicker"
@@ -134,13 +134,14 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
                                     className='w-48'
                                     label={ "Goal Date"}
                                     value={ goalDate }
+                                    minDate={ dayjs(new Date()).add(1, 'days') }
                                     // @ts-ignore - Remove the null type check as we will never receive it.
                                     onChange={ (v: Dayjs) => setGoalDate(v) }
                                 />
                             </div>
                         </div>
 
-                        <div className= { `flex w-full items-center justify-center ${ !goalWeightEnabled ? styles.fadeImage : '' }` }>
+                        <div className= { `flex items-center justify-center ${ !goalWeightEnabled ? styles.fadeImage : '' }` }>
                             <WeightTrackingSpinbutton
                                 defaultValue={ goalWeight }
                                 displayUnit={ displayUnit }
@@ -162,7 +163,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
                             />
                         </div>
 
-                        <div className="w-100 mt-5 flex justify-center items-center">
+                        <div className="w-100 mt-3 flex justify-center items-center">
                             <div className="w-40">
                                 <LoadingButton
                                     buttonText="Submit"

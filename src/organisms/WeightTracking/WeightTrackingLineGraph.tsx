@@ -9,7 +9,6 @@ import {
     calculateGoalWeightData, calculatePredictedData, calculateUserData, convertDataToDisplayUnit,
     determine_tooltip, formatLabels, generateLabelRange
 } from './WeightTrackingAlgorithms';
-import { Props } from './WeightTrackingInterfaces';
 
 Chart.register(
   chartTrendline,
@@ -25,6 +24,7 @@ Chart.register(
 const options = {
   type: 'line',
   responsive: true,
+  maintainAspectRatio: false,
   animation: {
     duration: 0
   },
@@ -46,7 +46,7 @@ const options = {
   }
 };
 
-const WeightTrackingLineGraph: React.FC<Props> = () => {
+const WeightTrackingLineGraph = () => {
   const { trendlineEnabled, displayUnit, goalWeightEnabled, enableWeightPrediction, dateToNotes } = useWeightTrackingGraphContext();
 
   const labels = generateLabelRange();

@@ -17,9 +17,11 @@ import {
 import { Props } from './editUpdateInterfaces';
 
 const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
+    const today = dayjs(new Date());
+
     const { displayUnit, datesWithWeight, dateToNotes, dateToWeightKg,setPartialState} = useWeightTrackingGraphContext();
 
-    const [date, setDate] = useState<Dayjs>(dayjs(new Date()));
+    const [date, setDate] = useState<Dayjs>(today);
 
     const formattedDate = dateObjectToFormattedDate(date);
     const updating = datesWithWeight.includes(formattedDate);;
@@ -49,7 +51,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
                     dateToNotes,
                     datesWithWeight
                 })
-                closeModalWindow();
+                closeModalWindow(true);
             } else {
                 setErrorMessage(`Unable to ${ updating ? 'update' : 'add' } weight`);
             }
@@ -58,23 +60,22 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
         })
     };
 
-    const today = new Date();
     return (
         <dialog id="my_modal" className={"modal modal-open"}>
             <div className="modal-box h-96">
                 <FormContainer>
-                    <form onSubmit={ onSubmit }>
-                        <button onClick={ () => closeModalWindow() } className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"> ✕ </button>
+                    <form onSubmit={ onSubmit } className="w-80">
+                        <button onClick={ () => closeModalWindow(false) } className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"> ✕ </button>
 
-                        <div className="flex flex-col w-80">
+                        <div className="flex flex-col">
                             <div className="flex w-full items-center justify-center">
                                 <div className="mb-5">
                                     <DatePicker
                                         name='datePicker'
                                         className='w-48'
                                         label={ updating ? `Updating weight on` : `Add weight on` }
-                                        defaultValue={ date }
-                                        maxDate={ dayjs(today) }
+                                        defaultValue={ today }
+                                        maxDate={ today }
                                         // @ts-ignore - Remove the null type check as we will never receive it.
                                         onChange={ (v: Dayjs) => setDate(v) }
                                     />

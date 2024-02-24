@@ -21,23 +21,23 @@ const WeightTrackingDateRangeSelection = () => {
             <div className="mt-2 w-full flex flex-row justify-center items-center">
                 { dataSelectionRange.slice(0, 3).map((dateRange, i) => (
                     <SelectableButton 
-                    selected={ dateRange === selectedDateRange } 
-                    displayText={ createDisplayText(dateRange) }
-                    onClick={ () => setPartialState({dateRange}) }
-                    key={ i }
-                    />
-                )) }
-            </div>
-
-            <div className="mt-3 w-full flex flex-row justify-center items-center">
-                { dataSelectionRange.slice(3, 6).map((dateRange, i) => (
-                    <SelectableButton 
                         selected={ dateRange === selectedDateRange } 
                         displayText={ createDisplayText(dateRange) }
                         onClick={ () => setPartialState({dateRange}) }
                         key={ i }
                     />
-                    )) }
+                )) }
+            </div>
+
+            <div className="mt-2 w-full flex flex-row justify-center items-center">
+                { dataSelectionRange.slice(3, 6).map((dateRange, i) => (
+                        <SelectableButton 
+                            selected={ dateRange === selectedDateRange } 
+                            displayText={ createDisplayText(dateRange) }
+                            onClick={ () => setPartialState({dateRange}) }
+                            key={ i }
+                        />
+                )) }
             </div>
         </div>
       </>

@@ -26,9 +26,13 @@ const WeightTrackingPage = () => {
         {/* This is a modal popup and will appear when createWeight is true. */}
         { createWeight && 
           <EditUpdateWeight 
-            closeModalWindow={ () => {
+            closeModalWindow={ (showConfetti) => {
               setCreateWeight(false);
-              setUseConfetti(true);
+              setUseConfetti(showConfetti); // After opacity is zero, reset is to false.
+
+              setTimeout(() => {
+                setUseConfetti(false); // Reset it, after opacity fades it to zero.
+              }, 4000);
             }}
           />
         }
@@ -40,7 +44,7 @@ const WeightTrackingPage = () => {
         { useConfetti && <Confetti className={ `${ styles.fadeOut }` } width={width} height={height}/> }
         
         <div className="h-screen flex flex-col justify-center items-center">
-            <div className="w-full md:w-3/6 p-3">
+            <div className="w-full h-3/6 md:w-3/6 p-3">
               <WeightTrackingLineGraph/>
             </div>
 

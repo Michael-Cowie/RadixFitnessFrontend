@@ -20,7 +20,7 @@ const WeightTrackingSpinbutton: React.FC<Props> = ({ defaultValue, displayUnit, 
                 }}
                 inputProps= {{
                     step: 0.01,
-                    min: 1,
+                    min: 10,
                     max: 1000
                 }}
                 defaultValue={ defaultValue.toFixed(2) }
