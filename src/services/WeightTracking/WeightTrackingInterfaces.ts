@@ -1,5 +1,6 @@
-export type MeasurementSystem = "Metric" | "Imperial";
 export type AvailableWeightUnits = "kg" | "lbs";
+
+export const availableWeightUnits: AvailableWeightUnits[] = ["kg", "lbs"];
 
 export interface WeightEntry {
     id: number,

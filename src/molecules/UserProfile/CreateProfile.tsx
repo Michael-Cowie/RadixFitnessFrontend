@@ -4,11 +4,10 @@ import { ValidatedInputWithLabel } from 'atoms/inputs/ValidatedInputWithLabel';
 import Title from 'atoms/Title';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { createProfile } from 'services/Profile';
+import { createProfile } from 'services/Profile/Profile';
+import { measurementSystems } from 'services/Profile/ProfileInterfaces';
 
 import { FormContainer } from './shared';
-
-const selectionOptions = ['Metric', 'Imperial'];
 
 const CreateProfile = () => {
     const [showModal, setShowModal] = useState(true);
@@ -42,7 +41,7 @@ const CreateProfile = () => {
                                 <SelectionInput 
                                     name={ selectionOptionsName } 
                                     label='Default measurement system' 
-                                    options={ selectionOptions }
+                                    options={ measurementSystems }
                                 />
 
                                 <div className="w-100 text-center">

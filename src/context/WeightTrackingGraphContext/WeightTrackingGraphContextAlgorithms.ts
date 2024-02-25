@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
+import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
 import { measurementSystemToUnit } from 'services/WeightTracking/utils';
-import { MeasurementSystem, WeightEntry } from 'services/WeightTracking/WeightTrackingInterfaces';
 
 import {
     DateToNotes, DateToWeight, WeightTrackingGraphContext
@@ -31,7 +31,7 @@ export const createDefaultState = (measurementSystem: MeasurementSystem): Weight
     datesWithWeight: [],
     isLoading: true,
     dateRange: 7,
-    setPartialState: () => {}, // Dummy function, will be replaced with the actual logic
+    setPartialState: () => {}
 });
 
 export function gatherDateInformation(userEntries: WeightEntry[]): [DateToWeight, DateToNotes, string[]] {

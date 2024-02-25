@@ -22,12 +22,11 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
     const { displayUnit, datesWithWeight, dateToNotes, dateToWeightKg,setPartialState} = useWeightTrackingGraphContext();
 
     const [date, setDate] = useState<Dayjs>(today);
+    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const formattedDate = dateObjectToFormattedDate(date);
     const updating = datesWithWeight.includes(formattedDate);;
-
-    const [errorMessage, setErrorMessage] = useState<string>('');
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const onSubmit = async(event: SyntheticEvent) => {
         event.preventDefault();

@@ -1,20 +1,9 @@
-import useAuthContext from 'context/AuthContext';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { getProfile } from 'services/Profile';
-import { MeasurementSystem } from 'services/WeightTracking/WeightTrackingInterfaces';
+import useAuthContext from 'context/AuthContext/AuthContext';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { getProfile } from 'services/Profile/Profile';
+import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
 
-interface Profile {
-    loading: boolean,
-    updateProfileContext: (name: string, measurementSystem: MeasurementSystem) => void;
-    name: string,
-    measurementSystem: MeasurementSystem
-}
-
-export interface Props {
-    children: ReactNode;
-}
-
-const defaultMeasurementSystem = "Metric";
+import { defaultMeasurementSystem, Profile, Props } from './ProfileContextInterfaces';
 
 const ProfileContext = createContext<Profile>({
     loading: true,

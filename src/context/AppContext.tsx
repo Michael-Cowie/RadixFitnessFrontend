@@ -1,10 +1,10 @@
-import useAuthContext, { AuthContextComponent } from 'context/AuthContext';
+import useAuthContext, { AuthContextComponent } from 'context/AuthContext/AuthContext';
 import React, { ReactNode, useEffect, useState } from 'react';
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-import useProfileContext, { ProfileContextComponent } from './ProfileContext';
+import useProfileContext, { ProfileContextComponent } from './ProfileContext/ProfileContext';
 
 interface Props {
     children: ReactNode;

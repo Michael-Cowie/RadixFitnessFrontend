@@ -2,10 +2,10 @@ import ErrorMessage from 'atoms/ErrorMessage';
 import SelectionInput from 'atoms/inputs/SelectionInput';
 import { ValidatedInputWithLabel } from 'atoms/inputs/ValidatedInputWithLabel';
 import Title from 'atoms/Title';
-import useProfileContext from 'context/ProfileContext';
+import useProfileContext from 'context/ProfileContext/ProfileContext';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { updateProfile } from 'services/Profile';
+import { updateProfile } from 'services/Profile/Profile';
 
 import { FormContainer } from './shared';
 

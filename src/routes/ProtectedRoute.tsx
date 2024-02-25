@@ -1,4 +1,4 @@
-import useAuthContext from 'context/AuthContext';
+import useAuthContext from 'context/AuthContext/AuthContext';
 import { Navigate, Outlet } from 'react-router-dom';
 
 /**

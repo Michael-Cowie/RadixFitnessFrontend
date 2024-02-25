@@ -3,7 +3,7 @@ import EqualWidthContainer from 'atoms/EqualWidthContainer';
 import RouterButton from 'atoms/RouterButton';
 import CreateProfile from 'molecules/UserProfile/CreateProfile';
 import { useEffect, useState } from 'react';
-import { getProfile } from 'services/Profile';
+import { getProfile } from 'services/Profile/Profile';
 import PageTemplate from 'templates/PageTemplate';
 
 const HomePage = () => {

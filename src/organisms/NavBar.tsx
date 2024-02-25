@@ -1,4 +1,4 @@
-import useAuthContext from 'context/AuthContext';
+import useAuthContext from 'context/AuthContext/AuthContext';
 import styles from 'lib/colours.module.css';
 import UpdateProfile from 'molecules/UserProfile/UpdateProfile';
 import { useState } from 'react';

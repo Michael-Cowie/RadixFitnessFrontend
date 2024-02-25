@@ -9,15 +9,15 @@ import {
     createGoalWeightOnDate, updateGoalWeightOnDate
 } from 'services/WeightGoal/goalWeightOnDateService';
 import { convertKgTo, convertWeight } from 'services/WeightTracking/utils';
-import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
+import {
+    AvailableWeightUnits, availableWeightUnits
+} from 'services/WeightTracking/WeightTrackingInterfaces';
 import styled from 'styled-components';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import styles from './styles.module.css';
 import { Props } from './WeightGraphSettingsInterfaces';
-
-const availableUnits: AvailableWeightUnits[] = ['kg', 'lbs'];
 
 const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
     const { updatingGoalWeight, isLoading: contextLoaded, setPartialState } = useWeightTrackingGraphContext();
@@ -96,7 +96,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
                         </div>
 
                         <div className="mt-3 w-full flex flex-row justify-center">
-                            { availableUnits.map((unit, i) => (
+                            { availableWeightUnits.map((unit, i) => (
                                 <SelectableButton 
                                     selected={ unit === displayUnit } 
                                     displayText={ unit }

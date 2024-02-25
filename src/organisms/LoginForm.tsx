@@ -1,7 +1,7 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import { InputWithLabel } from 'atoms/inputs/InputWithLabel';
 import LoadingButton from 'atoms/LoadingButton';
-import useAuth from 'context/AuthContext';
+import useAuth from 'context/AuthContext/AuthContext';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

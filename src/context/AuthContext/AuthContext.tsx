@@ -1,18 +1,8 @@
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { loginUser, signOutUser } from 'services/FirebaseUtils';
 
-export interface AuthProviderContextData {
-    loading: boolean,
-    user: User | null,
-    userIsLoggedIn: boolean,
-    loginUser: (email: string, password: string) => Promise<boolean>,
-    signOutUser: () => Promise<void>
-}
-
-export interface Props {
-    children: ReactNode;
-}
+import { AuthProviderContextData, Props } from './AuthContextInterfaces';
 
 const auth = getAuth(); // getAuth() returns the same object each time, hence, only call it once.
 
@@ -25,7 +15,7 @@ const AuthContext = createContext<AuthProviderContextData>({
 });
 
 
-export const AuthContextComponent: React.FC<Props> = ({ children}) => {
+export const AuthContextComponent: React.FC<Props> = ({ children }) => {
     /**
      * The authentication loading state could potentially be renamed to initializing,
      * as it will be initialized to True and will be set to False when the Firebase
@@ -35,7 +25,6 @@ export const AuthContextComponent: React.FC<Props> = ({ children}) => {
      * will be done using the user and userIsLoggedIn states.
      */
     const [loading, setLoading] = useState<boolean>(true);
-
 
     const [user, setUser] = useState<User | null>(null);
     const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);

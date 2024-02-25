@@ -1,4 +1,6 @@
-import { AvailableWeightUnits, MeasurementSystem } from './WeightTrackingInterfaces';
+import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
+
+import { AvailableWeightUnits } from './WeightTrackingInterfaces';
 
 const kg_to_lbs = 2.2046226218488;
 

@@ -3,7 +3,7 @@ import { WeightGoal } from 'services/WeightGoal/goalWeightOnDateInterface';
 import { getGoalWeightOnDate } from 'services/WeightGoal/goalWeightOnDateService';
 import { getAllWeights } from 'services/WeightTracking/WeightTracking';
 
-import useProfileContext from '../ProfileContext';
+import useProfileContext from '../ProfileContext/ProfileContext';
 import {
     createDefaultState, gatherDateInformation, getLocalStorage, localStorageKeys, setLocalStorage
 } from './WeightTrackingGraphContextAlgorithms';
