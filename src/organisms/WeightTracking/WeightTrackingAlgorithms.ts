@@ -93,20 +93,57 @@ function getMaximumDateFromGoalInformation(): Dayjs {
 
 /**
  * Generates the labels that are displayed on the X axis on the line graph.
- */
+ * 
+ * ---------- Notes ----------
+ * 
+ * Writing this function, my original implementation used the diff method to compute the range and did not work.
+ * 
+ * The appeared as such,
+ *  
+ *  const labelRange = maximumDate.diff(minimumDate, 'days');
+ *
+ *  let labels = []
+ *  for (let offSet = 0; offSet <= labelRange; offSet++) {
+ *      labels.push(minimumDate.add(offSet, 'days').format("YYYY-MM-DD"));
+ *  }
+ * 
+ * The problem is that the diff method will compute the difference in days in milliseconds
+ * and when converting this to 'days', it will always round down. Hence, the difference
+ * between,
+ * 
+ * let today = dayjs("2024-02-26");
+ * let minimumDate = dayjs().subtract(3, 'days');
+ * today.diff(minimumDate, 'days');                  // 2
+ * today.diff(minimumDate, 'days', true)             // 2.159. This will always round down, i.e. 2.7 -> 2.
+ * 
+ * Therefore, to utilize diff and subtraction, we need to turn the start of the minimum date to 
+ * midnight via startOf('days') to properly get 3. However, instead of using diff and iterating
+ * over a range we can use isAfter and a while loop.
+ * 
+ * ---------- Caveat ----------
+ * 
+ * Using dayjs(), objects will do arithmatic in local time but will be displayed in UTC + 0. For example,
+ * creating an object as `dayjs("2024-02-26")`, which is the 26th February. This will be displayed to the
+ * console as `25th Feb 2024, 11:00:00 GMT`. This is because in New Zealand during daylight savings
+ * we are currently at GMT + 13, meaning the console will display it 13 hours prior in GMT + 0, which
+ * will be at 11am on the 25th of February.
+ * 
+*/
 export function generateLabelRange(): string[] {
     const minimumDate = getMinimumDate();
     const maximumDate = getMaximumDateFromGoalInformation();
 
-    const labelRange = maximumDate.diff(minimumDate, 'days');
+    let date = minimumDate.startOf('day'); // Adjust to the start of the day, maximum date is always beginning of day.
 
-    let labels = []
-    for (let offSet = 0; offSet <= labelRange; offSet++) {
-        labels.push(minimumDate.add(offSet, 'days').format("YYYY-MM-DD"));
+    let labels: string[] = [];
+
+    while (!date.isAfter(maximumDate)) {
+        labels.push(date.format('YYYY-MM-DD'));
+        date = date.add(1, 'days');
     }
+
     return labels;
 }
-
 
 export function convertDataToDisplayUnit(dataList: (number | null)[]): (number | null)[] {
     const { displayUnit } = useWeightTrackingGraphContext();
