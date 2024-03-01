@@ -98,7 +98,7 @@ function getMaximumDateFromGoalInformation(): Dayjs {
  * 
  * Writing this function, my original implementation used the diff method to compute the range and did not work.
  * 
- * The appeared as such,
+ * This appeared as such,
  *  
  *  const labelRange = maximumDate.diff(minimumDate, 'days');
  *
@@ -116,9 +116,9 @@ function getMaximumDateFromGoalInformation(): Dayjs {
  * today.diff(minimumDate, 'days');                  // 2
  * today.diff(minimumDate, 'days', true)             // 2.159. This will always round down, i.e. 2.7 -> 2.
  * 
- * Therefore, to utilize diff and subtraction, we need to turn the start of the minimum date to 
+ * Therefore, to utilize diff and subtraction, we need to adjust the start of the minimum date to 
  * midnight via startOf('days') to properly get 3. However, instead of using diff and iterating
- * over a range we can use isAfter and a while loop.
+ * over a range we can use isAfter and a while loop is nicer.
  * 
  * ---------- Caveat ----------
  * 

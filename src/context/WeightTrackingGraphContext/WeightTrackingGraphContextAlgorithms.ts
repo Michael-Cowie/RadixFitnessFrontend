@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
 import { measurementSystemToUnit } from 'services/WeightTracking/utils';
+import { WeightEntry } from 'services/WeightTracking/WeightTrackingInterfaces';
 
 import {
     DateToNotes, DateToWeight, WeightTrackingGraphContext
