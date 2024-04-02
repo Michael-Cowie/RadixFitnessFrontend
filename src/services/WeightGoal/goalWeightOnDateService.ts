@@ -3,12 +3,14 @@ import { get, patch, post } from 'services/DataService';
 
 import { WeightGoal } from './goalWeightOnDateInterface';
 
+const END_POINT_PATH = "/api/v1/measurements/weights/goal_weight/";
+
 export const getGoalWeightOnDate = async (): Promise<WeightGoal | null> => {
     /**
      * Retrieve the current users goal weight on date, else null.
      */
     try {
-        const response = await get("/api/v1/measurements/weights/goal_weight/");
+        const response = await get(END_POINT_PATH);
 
         if (response.status === 200) {
           return {
@@ -31,7 +33,7 @@ export const createGoalWeightOnDate = async (goalDate: Dayjs, goalWeightKg: numb
     'goal_weight_kg': goalWeightKg
   }
   try {
-      const response = await post("/api/v1/measurements/weights/", body);
+      const response = await post(END_POINT_PATH, body);
   
       return response.status === 201 ? response.data : null
     } catch (error) {
@@ -53,7 +55,7 @@ export const updateGoalWeightOnDate = async (goalDate: Dayjs, goalWeightKg: numb
   }
 
   try {
-      const response = await patch("/api/v1/measurements/weights/goal_weight/", body);
+      const response = await patch(END_POINT_PATH, body);
   
       return response.status === 200 ? true : null
     } catch (error) {
