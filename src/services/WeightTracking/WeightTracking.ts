@@ -6,7 +6,7 @@ export const getAllWeights = async () => {
      * Retrieve all of the existing weight entries for the current user.
      */
     try {
-        const response = await get("http://localhost:8000/api/v1/measurements/weights/all/");
+        const response = await get("/api/v1/measurements/weights/all/");
     
         return response.status === 200 ? response.data : null
       } catch (error) {
@@ -24,7 +24,7 @@ export const createNewWeight = async (date: Dayjs, weight_kg: number, notes: str
         'notes': notes
     }
     try {
-        const response = await post("http://localhost:8000/api/v1/measurements/weights/", body);
+        const response = await post("/api/v1/measurements/weights/", body);
     
         return response.status === 201 ? response.data : null
       } catch (error) {
@@ -43,7 +43,7 @@ export const updateWeight = async(date: Dayjs, weight_kg: number, notes: string)
     }
 
     try {
-        const response = await patch("http://localhost:8000/api/v1/measurements/weights/", body);
+        const response = await patch("/api/v1/measurements/weights/", body);
     
         return response.status === 200 ? true : false
       } catch (error) {

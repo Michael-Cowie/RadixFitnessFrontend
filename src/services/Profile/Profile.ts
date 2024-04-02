@@ -9,7 +9,7 @@ export const getProfile = async () => {
      * the UID from the JWT and correctly passing back the user profile.
      */
     try {
-        const response = await get("http://localhost:8000/api/v1/profile/");
+        const response = await get("/api/v1/profile/");
     
         return response.status === 200 ? response.data : null
       } catch (error) {
@@ -26,7 +26,7 @@ export const createProfile = async (name: string, measurement_system: string): P
    */
   try {
       const response = await post(
-          "http://localhost:8000/api/v1/profile/", 
+          "/api/v1/profile/", 
           {
             "name": name, 
             "measurement_system": measurement_system
@@ -48,7 +48,7 @@ export const updateProfile = async (name: string, measurement_system: string) =>
    */
     try {
       const response = await patch(
-          "http://localhost:8000/api/v1/profile/", 
+          "/api/v1/profile/", 
           {
             "name": name, 
             "measurement_system": measurement_system

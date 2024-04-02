@@ -81,7 +81,7 @@ const WeightTrackingLineGraph = () => {
    * will not remove it from the canvas after it had been rendered.
    */
   let trendLineData = null;
-  if (trendlineEnabled && userData.some((v) => v !== null)) {
+  if (trendlineEnabled && userData.filter(v => v != null).length > 1) {
     trendLineData = {
         colorMin: "green",
         colorMax: "green",

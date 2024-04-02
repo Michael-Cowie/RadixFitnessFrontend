@@ -10,17 +10,25 @@
 import axios from 'axios';
 import { getAuth } from 'firebase/auth';
 
+const API_END_POINT = import.meta.env.VITE_API_END_POINT;
 const auth = getAuth();
 
 const getIdTokenFromCurrentUser = async (): Promise<string | undefined> => {
     return await auth.currentUser?.getIdToken();
 }
 
-export const get = async (url: string) => {
+const addDomain = (path: string) => {
     /**
-     * @param {string} url - The URL to which the HTTP request will be.
+     * @param { string } path - The path that will be appended to the domain to create the full URL.
+     */
+    return API_END_POINT + path;
+}
+
+export const get = async (path: string) => {
+    /**
+     * @param {string} path - The URL path.
      * 
-     * Utilizes axios.get(url, header) but also passes the logged in user ID token
+     * Utilizes axios.get(path, header) but also passes the logged in user ID token
      * in the Autorization field in the header.
      * 
      * ---------- NOTE ----------
@@ -37,15 +45,15 @@ export const get = async (url: string) => {
             "Authorization": await getIdTokenFromCurrentUser()
         }
     }
-    return await axios.get(url, header);
+    return await axios.get(addDomain(path), header);
 }
 
-export const put = async (url: string, body: any) => {
+export const put = async (path: string, body: any) => {
     /**
      * Utilizes axios.put(url, body, header) but also passes the logged in user ID token
      * in the Autorization field in the header.
      * 
-     * @param { string } url - The URL to which the HTTP request will be.
+     * @param { string } path - The URL path. 
      * @param { any } body - The body of the HTTP request
     */
     const header = {
@@ -53,15 +61,15 @@ export const put = async (url: string, body: any) => {
             "Authorization": await getIdTokenFromCurrentUser()
         }
     }
-    return await axios.put(url, body, header);
+    return await axios.put(addDomain(path), body, header);
 }
 
-export const post = async (url: string, body: any) => {
+export const post = async (path: string, body: any) => {
     /**
-     * Utilizes axios.put(url, body, header) but also passes the logged in user ID token
+     * Utilizes axios.put(path, body, header) but also passes the logged in user ID token
      * in the Autorization field in the header.
      * 
-     * @param { string } url - The URL to which the HTTP request will be.
+     * @param { string } path - The URL path.
      * @param { any } body - The body of the HTTP request
     */
     const header = {
@@ -69,15 +77,15 @@ export const post = async (url: string, body: any) => {
             "Authorization": await getIdTokenFromCurrentUser()
         }
     }
-    return await axios.post(url, body, header);
+    return await axios.post(addDomain(path), body, header);
 }
 
-export const patch = async (url: string, body: any) => {
+export const patch = async (path: string, body: any) => {
     /**
-     * Utilizes axios.patch(url, body, header) but also passes the logged in user ID token
+     * Utilizes axios.patch(path, body, header) but also passes the logged in user ID token
      * in the Autorization field in the header.
      * 
-     * @param { string } url - The URL to which the HTTP request will be.
+     * @param { string } path - The URL path.
      * @param { any } body - The body of the HTTP request
     */
     const header = {
@@ -85,5 +93,5 @@ export const patch = async (url: string, body: any) => {
             "Authorization": await getIdTokenFromCurrentUser()
         }
     }
-    return await axios.patch(url, body, header);
+    return await axios.patch(addDomain(path), body, header);
 }

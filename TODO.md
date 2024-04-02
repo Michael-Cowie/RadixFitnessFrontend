@@ -14,6 +14,8 @@ for ... of vs Object.values() not equivalent iterators?
 Notes TODO
 1. [[prototype]]
 2. Destructing objects
+3. https://vitejs.dev/guide/why.html
+
 
 --
 

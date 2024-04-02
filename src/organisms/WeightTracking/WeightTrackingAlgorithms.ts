@@ -56,6 +56,8 @@ export function determine_tooltip(labels: string[], dateToNotes: DateToNotes, di
 }
 
 export function calculateLossOrGain(weightList: number[]) {
+    if (weightList.length == 1) return 0;
+    
     const differences = weightList.map((weight, index) => index > 0 ? weight - weightList[index - 1] : 0);
     const sumOfDifferences = differences.reduce((sum, difference) => sum + difference, 0);
     const averageLossOrGain = sumOfDifferences / (weightList.length - 1);
@@ -183,7 +185,7 @@ export function calculatePredictedData(labels: string[], userData: (number | nul
     const pastPredictedDate = goalDate.diff(dayjs(), 'days') <= 0;
     /**
      * Do not allow prediction if we either,
-     *  1. Contain no data entries
+     *  1. Contain no dates with a weight entry
      *  2. Have it disabled
      *  3. Have gone beyond the goal date.
      */
