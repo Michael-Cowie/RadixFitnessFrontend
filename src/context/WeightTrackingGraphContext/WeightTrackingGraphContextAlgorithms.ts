@@ -52,8 +52,13 @@ export function gatherDateInformation(userEntries: WeightEntry[]): [DateToWeight
     return [dateToWeightKg, dateToNotes, datesWithWeight];
 }
 
-export function getLocalStorage(key: string): any {
-    let storage = localStorage.getItem(key);
+
+const getFullLocalStorageKey = (key: string, user_id: string): string => {
+    return 'user_' + user_id + '_' + key;
+}
+
+export function getLocalStorage(key: string, user_id: string): any {
+    let storage = localStorage.getItem(getFullLocalStorageKey(key, user_id));
 
     if ( storage === null) {
         return null;
@@ -62,6 +67,6 @@ export function getLocalStorage(key: string): any {
     return JSON.parse(storage);
 }
 
-export function setLocalStorage(key: string, value: boolean) {
-    localStorage.setItem(key, JSON.stringify(value));
+export function setLocalStorage(key: string, user_id: string, value: boolean) {
+    localStorage.setItem(getFullLocalStorageKey(key, user_id), JSON.stringify(value));
 }

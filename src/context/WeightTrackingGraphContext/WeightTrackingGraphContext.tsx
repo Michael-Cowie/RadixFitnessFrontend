@@ -1,3 +1,4 @@
+import useAuthContext from 'context/AuthContext/AuthContext';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { WeightGoal } from 'services/WeightGoal/goalWeightOnDateInterface';
 import { getGoalWeightOnDate } from 'services/WeightGoal/goalWeightOnDateService';
@@ -12,6 +13,12 @@ import { Props, WeightTrackingGraphContext } from './WeightTrackingGraphContextI
 const WeightTrackingGraphContextProvider = createContext<WeightTrackingGraphContext>(createDefaultState("Metric"));
 
 export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children}) => {
+    const { user } = useAuthContext();
+
+    // @ts-ignore
+    // By getting here, a user must be set by the auth context.
+    const user_uid = user.uid;
+
     const { measurementSystem } = useProfileContext();
 
     const [state, setState] = useState<WeightTrackingGraphContext>(createDefaultState(measurementSystem));
@@ -19,10 +26,10 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children}
     const setPartialState = (partialState: Partial<WeightTrackingGraphContext>) => {
         localStorageKeys.forEach((localStorageKey) => {
             if (localStorageKey in partialState) {
-              setLocalStorage(localStorageKey, partialState[localStorageKey] as boolean);
+              setLocalStorage(localStorageKey, user_uid, partialState[localStorageKey] as boolean);
             }
         });
-        
+
         setState((prevState) => ({ ...prevState, ...partialState }));
     };
 
@@ -46,7 +53,7 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children}
           }
           
           const restoredLocalStorage = localStorageKeys.reduce((acc, key) => {
-            const value = getLocalStorage(key);
+            const value = getLocalStorage(key, user_uid);
             if (value !== null) {
               acc[key] = value;
             }
