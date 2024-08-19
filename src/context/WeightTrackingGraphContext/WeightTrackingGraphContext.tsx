@@ -12,7 +12,7 @@ import { Props, WeightTrackingGraphContext } from './WeightTrackingGraphContextI
 
 const WeightTrackingGraphContextProvider = createContext<WeightTrackingGraphContext>(createDefaultState("Metric"));
 
-export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children}) => {
+export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children }) => {
     const { user } = useAuthContext();
 
     // @ts-ignore

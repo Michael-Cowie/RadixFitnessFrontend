@@ -10,7 +10,7 @@ export function createDisplayText(range: number): string {
 const dataSelectionRange = [7, 14, 30, 90, Infinity];
 
 const WeightTrackingDateRangeSelection = () => {
-    const { setPartialState, dateRange: selectedDateRange } = useWeightTrackingGraphContext();
+    const { setPartialState, dateRange: selectedDateRange, datesWithWeight } = useWeightTrackingGraphContext();
 
     return (
         <>
@@ -31,13 +31,14 @@ const WeightTrackingDateRangeSelection = () => {
             </div>
 
             <div className="mt-2 w-full flex flex-row justify-center items-center">
-                { dataSelectionRange.slice(3, 6).map((dateRange, i) => (
-                        <SelectableButton 
-                            selected={ dateRange === selectedDateRange } 
-                            displayText={ createDisplayText(dateRange) }
-                            onClick={ () => setPartialState({dateRange}) }
-                            key={ i }
-                        />
+                { dataSelectionRange.slice(3, 5).map((dateRange, i) => (
+                    <SelectableButton 
+                        selected={ dateRange === selectedDateRange } 
+                        displayText={ createDisplayText(dateRange) }
+                        onClick={ () => setPartialState({dateRange}) }
+                        key={ i }
+                        isDisabled= { dateRange === Infinity && datesWithWeight.length == 0}
+                    />
                 )) }
             </div>
         </div>

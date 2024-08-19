@@ -38,7 +38,7 @@ export const AuthContextComponent: React.FC<Props> = ({ children }) => {
               Retrieve the idToken from Firebase and then finish loading.
 
               The user is unitialized and null when first loading the webpage. Hence, we set the loading
-              state to true. Here, loading the webpage refers to us waiting for Firebase to initialized
+              state to true. Here, loading the webpage refers to us waiting for Firebase to initialize
               and check the user. The user can stay null or be initialized (logged in), therefore no matter 
               the response we set the loading state to false once Firebase has responded.
 

@@ -31,7 +31,7 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
             setMeasurementSystem(defaultMeasurementSystem);
         }
 
-        if (!userIsLoggedIn || authLoading) return;
+        if (authLoading || !userIsLoggedIn) return;
 
         setLoading(true);
 
