@@ -2,7 +2,7 @@ import SelectableButton from 'atoms/SelectableButton';
 import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 
 export function createDisplayText(range: number): string {
-    if (range === Infinity) return "All";
+    if (range === Infinity) return "All Entries";
 
     return `${range} days`;
 }
