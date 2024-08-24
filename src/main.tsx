@@ -5,6 +5,7 @@ import AppContextComponent from 'context/AppContext.tsx';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import FoodIntakeTrackingPage from 'routes/FoodIntakeTrackingPage/FoodIntakeTrackingPage.tsx';
 import HomePage from 'routes/HomePage.tsx';
 import LoginPage from 'routes/LoginPage';
 import ProtectedRoute from 'routes/ProtectedRoute';
@@ -25,7 +26,12 @@ const router = createBrowserRouter([
     {
       path: "weight_tracking",
       element: <WeightTrackingPage/>
-    }]
+    },
+    {
+      path: "food_intake_tracking",
+      element: <FoodIntakeTrackingPage/>
+    }  
+    ]
   }
 ]);
 

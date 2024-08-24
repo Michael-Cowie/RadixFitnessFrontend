@@ -2,9 +2,13 @@
 
 A quick note on the folder structure is as follows,
 
+### UI Components
+
+Many UI components use MUI. The MUI library is a React component library that implements Google’s Material Design, frequently used components are buttons and inputs.
+
 ### Atoms
 
-Components inside the `src/atoms` location are very specific components that are *tiny* are are generally used *within a molecule*. It contains the smallest and most basic building blocks of the application, such as buttons, inputs. Atoms should be highly reusable and not contain any business logic.
+Components inside the `src/atoms` location are very specific components that are *tiny* and are generally used *within a molecule*. It contains the smallest and most basic building blocks of the application, such as buttons, inputs. Atoms should be highly reusable and not contain any business logic.
 
 ### Molecule
 

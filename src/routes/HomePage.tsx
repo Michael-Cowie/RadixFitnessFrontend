@@ -25,9 +25,8 @@ const HomePage = () => {
             <CenterContainer>
                 <EqualWidthContainer>
                     <RouterButton button_text="Track my weight" route="/weight_tracking"/>
+                    <RouterButton button_text="Food intake tracking" route="/food_intake_tracking"/>
                     <button className="btn mt-4 mb-4 w-full" disabled> Exercise Finder </button>
-                    <button className="btn mt-4 mb-4 w-full" disabled> Workout </button>
-                    <button className="btn mt-4 mb-4 w-full" disabled> Food Analysis </button>
                     <button className="btn mt-4 mb-4 w-full" disabled> Education </button>
                 </EqualWidthContainer>
             </CenterContainer>

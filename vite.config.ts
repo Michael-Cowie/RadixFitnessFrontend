@@ -1,6 +1,5 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
+import path from 'path';
+import { defineConfig } from 'vite';
 /**
  * The TypeScript compiler itself doesn't handle runtime module resolution; it's mainly a compile-time feature. 
  * This means that when you run your code, the runtime environment needs to know how to resolve these mapped paths.
@@ -12,9 +11,16 @@ import react from '@vitejs/plugin-react'
  * This additional step is required because the TypeScript compiler's paths resolution is not automatically 
  * translated into runtime resolution in every development environment or build tool
  */
-import tsconfigPaths from 'vite-tsconfig-paths'
+import tsconfigPaths from 'vite-tsconfig-paths';
+
+import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
-})
+  resolve: {
+    alias: {
+      'lib': path.resolve(__dirname, 'src/lib')
+    }
+  }
+});
