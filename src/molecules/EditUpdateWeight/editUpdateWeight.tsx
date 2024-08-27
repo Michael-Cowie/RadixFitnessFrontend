@@ -5,7 +5,7 @@ import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/We
 import dayjs, { Dayjs } from 'dayjs';
 import { dateObjectToFormattedDate } from 'lib/dateUtils';
 import { SyntheticEvent, useState } from 'react';
-import { createNewWeight, updateWeight } from 'services/WeightTracking/WeightTracking';
+import { createNewWeight, updateWeight } from 'services/WeightTracking/WeightTrackingService';
 import styled from 'styled-components';
 
 import { TextField } from '@mui/material';

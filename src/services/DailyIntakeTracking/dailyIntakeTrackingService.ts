@@ -1,7 +1,8 @@
 import { Dayjs } from 'dayjs';
 import { get, put } from 'services/DataService';
 
-const END_POINT_PATH = '/api/v1/food_intake_on_date/';
+const FOOD_INTAKE_END_POINT = '/api/v1/food_intake/';
+const MACRONUTRIENT_PROGRESS_END_POINT = FOOD_INTAKE_END_POINT + "macronutrient-progress/";
 
 interface MacroNutrientProgress {
   current_calories: number;
@@ -31,7 +32,7 @@ export const getMacroNutrientProgressOnDate: GetMacroNutrientProgressOnDateProps
      * @param { Dayjs } date -  Dayjs object for the desired date.
      */
     try {
-        const response = await get(END_POINT_PATH + "macronutrient_progress/", { date: date.format("YYYY-MM-DD")});
+        const response = await get(MACRONUTRIENT_PROGRESS_END_POINT, { date: date.format("YYYY-MM-DD")});
 
         const successful = response.status === 200;
         if (successful) {
@@ -62,7 +63,7 @@ export const createUpdateMacroNutrientProgressOnDate: createMacroNutrientProgres
    */
   try {
       const response = await put(
-        END_POINT_PATH + "macronutrient_progress/", 
+        MACRONUTRIENT_PROGRESS_END_POINT, 
           {
             date: date.format("YYYY-MM-DD"), 
             current_calories: currentCalories,

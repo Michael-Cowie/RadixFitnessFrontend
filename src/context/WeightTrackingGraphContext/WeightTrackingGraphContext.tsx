@@ -2,7 +2,7 @@ import useAuthContext from 'context/AuthContext/AuthContext';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { WeightGoal } from 'services/WeightGoal/goalWeightOnDateInterface';
 import { getGoalWeightOnDate } from 'services/WeightGoal/goalWeightOnDateService';
-import { getAllWeights } from 'services/WeightTracking/WeightTracking';
+import { getAllWeights } from 'services/WeightTracking/WeightTrackingService';
 
 import useProfileContext from '../ProfileContext/ProfileContext';
 import {

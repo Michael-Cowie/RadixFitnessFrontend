@@ -65,12 +65,12 @@ export const put = async (path: string, body: any) => {
      * @param { string } path - The URL path. 
      * @param { any } body - The body of the HTTP request
     */
-    const header = {
+    const headers = {
         headers: {
             "Authorization": await getIdTokenFromCurrentUser()
         }
     }
-    return await axios.put(addDomain(path), body, header);
+    return await axios.put(addDomain(path), body, headers);
 }
 
 export const post = async (path: string, body: any) => {
