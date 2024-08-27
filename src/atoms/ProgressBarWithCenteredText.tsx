@@ -8,11 +8,12 @@ import TextField from '@mui/material/TextField';
 interface CustomLinearProgressProps {
   value: number;
   initialGoalValue: number;
+  onChange: (value: number) => void
 }
 
 const FONT_FAMILY = '"Roboto", "Helvetica", "Arial", sans-serif';
 
-const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({ value, initialGoalValue }) => {
+const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({ value, initialGoalValue, onChange }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [goalValue, setGoalValue] = useState(initialGoalValue);
 
@@ -23,19 +24,23 @@ const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({ valu
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    setIsEditing(false);
-
     const newValue: number = Number(e.target.value)
+
     if (newValue >= 0 && newValue <= 5000) {
       setGoalValue(newValue);
+      onChange(newValue)
     }  else if (newValue < 0) {
       setGoalValue(0);
+      onChange(0);
     } else {
       setGoalValue(5000);
+      onChange(5000);
     }
+
+    setIsEditing(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleBlur(e as unknown as React.FocusEvent<HTMLInputElement>);
     }
@@ -46,7 +51,7 @@ const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({ valu
       autoFocus
       defaultValue={ goalValue }
       onBlur={ handleBlur }
-      onKeyDown={ handleKeyDown }
+      onKeyDown={ handleKeyPress }
       type="number"
       size="small"
       sx={{

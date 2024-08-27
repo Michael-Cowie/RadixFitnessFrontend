@@ -24,28 +24,37 @@ const addDomain = (path: string) => {
     return API_END_POINT + path;
 }
 
-export const get = async (path: string) => {
+export const get = async (path: string, params?: Record<string, any>) => {
     /**
      * @param {string} path - The URL path.
+     * @param {Record<string, any>} params - The query parameters.
      * 
-     * Utilizes axios.get(path, header) but also passes the logged in user ID token
+     * Utilizes axios.get(...) but also passes the logged in user ID token
      * in the Autorization field in the header.
      * 
      * ---------- NOTE ----------
      * 
-     * It's expected that GET requests are idempotent: Requesting the same URL 
-     * multiple times always gets you an equivalent result. This e.g. allows 
-     * for caching (which some browsers and proxies do very aggressively). If 
-     * you move query parameters into the request body, you are violating this 
-     * expectation so please avoid this. You're setting yourself up for hard to 
-     * debug problems.
+     * A REST API can have arguments in several places,
+     * 
+     *  1. In the request body, as part of a JSON body or other MIME type.
+     *  2. In the query string - e.g. /api/resource?p1=v1&p2=v2
+     *  3. As part of the URL path - e.g. /api/resource/v1/v2
+     * 
+     * Usually the content body is used for the data that is to be uploaded
+     * or downloaded from the server and the query parameters are used to 
+     * specify the name, MIME type, etc. 
+     * 
+     * In general, the query parameters are property of the query and not
+     * the data. It's expected that GET requests are idempotent. If you
+     * move query parameters into the request bdoy, you're violating this 
+     * expectation so please avoid it.
     */
     const header = {
         headers: {
             "Authorization": await getIdTokenFromCurrentUser()
         }
     }
-    return await axios.get(addDomain(path), header);
+    return await axios.get(addDomain(path), { ...header, params });
 }
 
 export const put = async (path: string, body: any) => {
