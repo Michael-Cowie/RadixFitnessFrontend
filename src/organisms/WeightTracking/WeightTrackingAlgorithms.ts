@@ -4,7 +4,10 @@ import {
     DateToNotes
 } from 'context/WeightTrackingGraphContext/WeightTrackingGraphContextInterfaces';
 import dayjs, { Dayjs } from 'dayjs';
-import { findClosestDate, findFurtherestDate } from 'lib/dateUtils';
+import {
+    findClosestDateFromToday, findFurtherestDateFromToday, getFurthestFutureDate,
+    getFurthestPastDate
+} from 'lib/dateUtils';
 import { convertKgTo } from 'services/WeightTracking/utils';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
 
@@ -74,7 +77,7 @@ function getMinimumDate(): Dayjs {
     const { datesWithWeight, dateRange } = useWeightTrackingGraphContext();
 
     if (dateRange === Infinity) {
-        return dayjs(findFurtherestDate(datesWithWeight));
+        return dayjs(findFurtherestDateFromToday(datesWithWeight));
     } else {
         return dayjs().subtract(dateRange, 'days');
     }
@@ -87,8 +90,10 @@ function getMinimumDate(): Dayjs {
  */
 function getMaximumDateFromGoalInformation(): Dayjs {
     const { goalWeightEnabled, goalDate } = useWeightTrackingGraphContext();
+    let today = dayjs()
 
-    if (!goalWeightEnabled) return dayjs();
+    if (!goalWeightEnabled) return today;
+    if (goalDate.isBefore(today)) return today;
 
     return goalDate;
 }
@@ -131,20 +136,23 @@ function getMaximumDateFromGoalInformation(): Dayjs {
  * will be at 11am on the 25th of February.
  * 
 */
-export function generateLabelRange(): string[] {
+export function generateDateRange(): Dayjs[] {
     const minimumDate = getMinimumDate();
     const maximumDate = getMaximumDateFromGoalInformation();
 
     let date = minimumDate.startOf('day'); // Adjust to the start of the day, maximum date is always beginning of day.
-
-    let labels: string[] = [];
+    let dates: Dayjs[] = [];
 
     while (!date.isAfter(maximumDate)) {
-        labels.push(date.format('YYYY-MM-DD'));
+        dates.push(date);
         date = date.add(1, 'days');
     }
 
-    return labels;
+    return dates;
+}
+
+export function generateLabelsFromDates(dates: Dayjs[]): string[] {
+    return dates.map(date => date.format('YYYY-MM-DD'));
 }
 
 export function convertDataToDisplayUnit(dataList: (number | null)[]): (number | null)[] {
@@ -191,7 +199,7 @@ export function calculatePredictedData(labels: string[], userData: (number | nul
      */
     if (datesWithWeight.length < 1 || !enableWeightPrediction || pastPredictedDate) return [];
 
-    const closestDate = findClosestDate(datesWithWeight);
+    const closestDate = findClosestDateFromToday(datesWithWeight);
     const closestDateIndex = labels.indexOf(closestDate); 
 
     let predictedData = new Array(closestDateIndex).fill(null);
@@ -213,13 +221,20 @@ export function calculatePredictedData(labels: string[], userData: (number | nul
 /**
  * Returns the Y axis dataset for the goal weight.
  */
-export function calculateGoalWeightData(labels: string[]) {
-    const { goalWeightEnabled, goalWeightKg } = useWeightTrackingGraphContext();
+export function calculateGoalWeightData(dates: Dayjs[]): (number | null)[] {
+    const { goalWeightEnabled, goalWeightKg, goalDate } = useWeightTrackingGraphContext();
     
     if (!goalWeightEnabled) return [];
 
-    let goalWeightData = new Array(labels.length - 1).fill(null);
-    goalWeightData.push(goalWeightKg);
+    let goalWeightData: (number | null)[] = [];
+    for (let date of dates) {
+        if (date.diff(goalDate) == 0){
+            goalWeightData.push(goalWeightKg)
+        } else {
+            goalWeightData.push(null)
+        }
+    }
+
     return goalWeightData;
 }
 

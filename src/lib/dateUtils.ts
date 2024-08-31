@@ -92,7 +92,7 @@ export function weightOnClosestDateTo(dateToWeight: DateToWeight, targetDate: st
  * @param dateStrings An array of "YYYY-MM-DD" formatted dates.
  * @returns A single date, which is closet to today in "YYYY-MM-DD" format.
  */
-export function findClosestDate(dateStrings: string[]) {
+export function findClosestDateFromToday(dateStrings: string[]) {
   const dateObjects = dateStrings.map(dateString => dayjs(dateString));
 
   // Find the closest date to today
@@ -111,7 +111,7 @@ export function findClosestDate(dateStrings: string[]) {
  * @param dateStrings An array of "YYYY-MM-DD" formatted dates.
  * @returns A single date which is furtherest from today.
  */
-export function findFurtherestDate(dateStrings: string[]): string {
+export function findFurtherestDateFromToday(dateStrings: string[]): string {
   const dateObjects = dateStrings.map(dateString => dayjs(dateString));
 
   // Find the furtherest date to today
@@ -123,4 +123,20 @@ export function findFurtherestDate(dateStrings: string[]): string {
   });
 
   return furtherestDate.format('YYYY-MM-DD');
+}
+
+/**
+ * @param dates An array of Dayjs objects
+ * @returns A single Dayjs object which represents the furtherest date into the past
+ */
+export function getFurthestPastDate(dates: Dayjs[]) {
+  return dates.reduce((min, current) => (current.isBefore(min) ? current : min), dates[0]);
+}
+
+/**
+ * @param dates An array of Dayjs objects
+ * @returns A single Dayjs object which represents the furtherest date into the future
+ */
+export function getFurthestFutureDate(dates: Dayjs[]) {
+  return dates.reduce((max, current) => (current.isAfter(max) ? current : max), dates[0]);
 }

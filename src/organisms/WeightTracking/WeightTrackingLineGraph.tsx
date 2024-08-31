@@ -7,7 +7,7 @@ import { Line } from 'react-chartjs-2';
 
 import {
     calculateGoalWeightData, calculatePredictedData, calculateUserData, convertDataToDisplayUnit,
-    determine_tooltip, formatLabels, generateLabelRange
+    determine_tooltip, formatLabels, generateDateRange, generateLabelsFromDates
 } from './WeightTrackingAlgorithms';
 
 Chart.register(
@@ -49,11 +49,12 @@ const options = {
 const WeightTrackingLineGraph = () => {
   const { trendlineEnabled, displayUnit, goalWeightEnabled, enableWeightPrediction, dateToNotes } = useWeightTrackingGraphContext();
 
-  const labels = generateLabelRange();
+  const dateRange = generateDateRange();
+  const labels = generateLabelsFromDates(dateRange);
 
   const userData = calculateUserData(labels);
   const predictedData = calculatePredictedData(labels, userData);
-  const goalWeightData = calculateGoalWeightData(labels);
+  const goalWeightData = calculateGoalWeightData(dateRange);
 
   const convertedUserData = convertDataToDisplayUnit(userData);
   const convertedPredictedData = convertDataToDisplayUnit(predictedData);

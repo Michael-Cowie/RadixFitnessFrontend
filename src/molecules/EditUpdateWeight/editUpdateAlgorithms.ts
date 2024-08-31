@@ -1,6 +1,6 @@
 import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import dayjs, { Dayjs } from 'dayjs';
-import { findClosestDate } from 'lib/dateUtils';
+import { findClosestDateFromToday } from 'lib/dateUtils';
 import { SyntheticEvent } from 'react';
 import { convertKgTo, convertWeight, formatToTwoPrecision } from 'services/WeightTracking/utils';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
@@ -37,7 +37,7 @@ export function getDefaultValue(): number {
     } else if (today in dateToWeightKg) {
         return convertKgTo(displayUnit, dateToWeightKg[today]);
     } else {
-        const latestEntry = findClosestDate(datesWithWeight);
+        const latestEntry = findClosestDateFromToday(datesWithWeight);
         return convertKgTo(displayUnit, dateToWeightKg[latestEntry]);
     }
 }
