@@ -51,9 +51,9 @@ const App: React.FC<Props> = ({ children }) => {
     }
 
     return (
-        <div>
+        <>
             { children }
-        </div>
+        </>
     )
 }
 

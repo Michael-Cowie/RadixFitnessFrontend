@@ -1,5 +1,10 @@
 import './firebase.ts'; // Initializes Firebase
 import './index.css'; // Initializes Tailwind CSS
+import 'lib/colours.module.css'; // Access application colours
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
 import AppContextComponent from 'context/AppContext.tsx';
 import React from 'react';

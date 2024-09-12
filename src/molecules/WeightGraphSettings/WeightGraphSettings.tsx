@@ -1,4 +1,5 @@
 import ErrorMessage from 'atoms/ErrorMessage';
+import InformationHover from 'atoms/InformationHover';
 import WeightTrackingSpinbutton from 'atoms/inputs/weights/WeightTrackingSpinbutton';
 import LoadingButton from 'atoms/LoadingButton';
 import SelectableButton from 'atoms/SelectableButton';
@@ -153,7 +154,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
 
                         <div className="w-full flex justify-center items-center">
                             <span className={ `mr-1 font-bold ${ !goalWeightEnabled ? styles.fadeImage : ''}` }> Weight prediction </span>
-                            <img className={ `mr-2 h-2.5 w-2.5 ${ !goalWeightEnabled ? styles.fadeImage : '' }` } src="information-icon.svg" title="Predictions are calculated from the visible weights on the graph." />
+                            <InformationHover information="Predictions are calculated from the visible weights on the graph." faded={ !goalWeightEnabled }/>
                             <input
                                 disabled= { !goalWeightEnabled }
                                 className="focus:ring-0"

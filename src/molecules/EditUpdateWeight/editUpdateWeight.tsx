@@ -104,7 +104,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
                             />
                         </div>
 
-                        <div className="w-100 flex justify-center items-center">
+                        <div className="w-full flex justify-center items-center">
                             <div className="w-40">
                                 <LoadingButton
                                     buttonText="Submit"

@@ -1,3 +1,4 @@
+import CompleteCenteringContainer from 'atoms/CenterContainer';
 import Footer from 'organisms/Footer';
 import NavBar from 'organisms/NavBar';
 import { ReactNode } from 'react';
@@ -8,10 +9,12 @@ interface Props {
 
 const PageTemplate: React.FC<Props> = ({ children }) => {
     return (
-        <div>
+        <div className="flex flex-col h-full w-full">
             <NavBar/>
 
-            { children }
+            <CompleteCenteringContainer>
+                { children }
+            </CompleteCenteringContainer>
 
             <Footer/>
         </div>

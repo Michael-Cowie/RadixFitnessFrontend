@@ -10,7 +10,7 @@ const WeightTrackingSpinbutton: React.FC<Props> = ({ defaultValue, displayUnit, 
     return (
         <div className={`w-48 mb-5 ${ styles.weightUnitWrapper } ${ styles[displayUnit] }` }>
             <TextField
-                disabled= { disabled}
+                disabled= { disabled }
                 name={ name }
                 label={ label }
                 type="number"

@@ -1,3 +1,4 @@
+import AddEntry from 'atoms/addEntry';
 import {
     WeightTrackingGraphContextComponent
 } from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
@@ -51,8 +52,8 @@ const WeightTrackingPage = () => {
 
             <WeightTrackingPageLoadingHandler>
               <div className="w-full flex justify-center flex-row">
-                  <div className="h-8 w-8 md:h-9 md:w-9 mr-5">
-                    <img title="Add an entry" src="add_weight_icon.png" onClick={ () => setCreateWeight(true) }/>
+                  <div className="mr-5 h-9 w-9">
+                    <AddEntry onClick={ () => setCreateWeight(true) }/>
                   </div>
 
                   <div className="h-8 w-8 md:h-9 md:w-9">

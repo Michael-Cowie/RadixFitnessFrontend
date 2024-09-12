@@ -28,9 +28,10 @@ const Footer = () => {
 export default Footer;
 
 const FooterContainer = styled.div`
-  position: fixed;
+  position: sticky;
   padding: 0;
   margin: 0;
+  margin-top: 25x;
   bottom: 0px;
   width: 100%;
 `

@@ -1,26 +1,26 @@
 /* prepare wrapper element for weight units */
 .weightUnitWrapper {
-  display: inline-block;
-  position: relative;
-}
-
+    display: inline-block;
+    position: relative;
+  }
+  
 /* position the unit to the right of the wrapper */
 .weightUnitWrapper::after {
-  position: absolute;
-  top: 15.5px;
-  right: 2.5rem;
-  transition: all .05s ease-in-out;
+    position: absolute;
+    top: 15.5px;
+    right: 2.5rem;
+    transition: all .05s ease-in-out;
 }
 
 /* set the unit abbreviation for each weight unit */
 .kg::after {
-  content: 'kg';
+    content: 'kg';
 }
 
 .lbs::after {
-  content: 'lbs';
+    content: 'lbs';
 }
 
 .g::after {
-  content: 'g'
+    content: 'g'
 }

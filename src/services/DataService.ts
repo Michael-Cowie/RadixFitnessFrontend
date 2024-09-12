@@ -1,10 +1,10 @@
 /**
  * @fileoverview 
  * 
- *  DataService.ts is a utility file that prevents any callers continuously
- *  retrieving the required information each time. For example, any requests for a logged in
- *  user will ALWAYS needs to pass The Firebase ID token, by using these functions it
- *  prevents each calling code to pass the ID token. 
+ * DataService.ts is a utility file that prevents any callers from continuously
+ * retrieving the required information each time. For example, any requests for a logged-in
+ * user will ALWAYS need to pass the Firebase ID token. By using these functions, it
+ * prevents each calling code from needing to pass the ID token.
  */
 
 import axios from 'axios';
@@ -24,83 +24,68 @@ const addDomain = (path: string) => {
     return API_END_POINT + path;
 }
 
-export const get = async (path: string, params?: Record<string, any>) => {
-    /**
-     * @param {string} path - The URL path.
-     * @param {Record<string, any>} params - The query parameters.
-     * 
-     * Utilizes axios.get(...) but also passes the logged in user ID token
-     * in the Autorization field in the header.
-     * 
-     * ---------- NOTE ----------
-     * 
-     * A REST API can have arguments in several places,
-     * 
-     *  1. In the request body, as part of a JSON body or other MIME type.
-     *  2. In the query string - e.g. /api/resource?p1=v1&p2=v2
-     *  3. As part of the URL path - e.g. /api/resource/v1/v2
-     * 
-     * Usually the content body is used for the data that is to be uploaded
-     * or downloaded from the server and the query parameters are used to 
-     * specify the name, MIME type, etc. 
-     * 
-     * In general, the query parameters are property of the query and not
-     * the data. It's expected that GET requests are idempotent. If you
-     * move query parameters into the request bdoy, you're violating this 
-     * expectation so please avoid it.
-    */
-    const header = {
+/**
+ * Makes an HTTP request using the specified method.
+ * Utilizes axios for making HTTP requests and includes the Authorization header with the logged-in user ID token.
+ * 
+ * @param { 'get' | 'put' | 'post' | 'patch' | 'delete' } method - The HTTP method.
+ * @param { string } path - The URL path.
+ * @param { any } [body=null] - The body of the HTTP request (optional for non-GET and non-DELETE requests).
+ * @param { any } [queryParams={}] - The query parameters to be included in the request (optional).
+ * @returns { Promise<any> } The response from the HTTP request.
+ */
+const request = async (
+    method: 'get' | 'put' | 'post' | 'patch' | 'delete', 
+    path: string, 
+    body: any = null, 
+    queryParams: any = {}
+  ): Promise<any> => {
+    const config = {
         headers: {
             "Authorization": await getIdTokenFromCurrentUser()
-        }
+        },
+        params: queryParams
+    };
+    if (method === 'get' || method === 'delete') {
+        /** 
+         * ---------- NOTE ----------
+         * For GET and DELETE requests, exclude the body parameter.
+         * 
+         * A REST API can have arguments in several places:
+         * 
+         *  1. In the request body, as part of a JSON body or other MIME type.
+         *  2. In the query string - e.g. /api/resource?p1=v1&p2=v2
+         *  3. As part of the URL path - e.g. /api/resource/v1/v2
+         * 
+         * Usually, the content body is used for the data that is to be uploaded
+         * or downloaded from the server, and the query parameters are used to 
+         * specify the name, MIME type, etc.
+         * 
+         * In general, the query parameters are properties of the query and not
+         * the data. It's expected that GET and DELETE requests are idempotent.
+         */
+        return await axios[method](addDomain(path), config);
+    } else {
+        return await axios[method](addDomain(path), body, config);
     }
-    return await axios.get(addDomain(path), { ...header, params });
-}
+};
 
-export const put = async (path: string, body: any) => {
-    /**
-     * Utilizes axios.put(url, body, header) but also passes the logged in user ID token
-     * in the Autorization field in the header.
-     * 
-     * @param { string } path - The URL path. 
-     * @param { any } body - The body of the HTTP request
-    */
-    const headers = {
-        headers: {
-            "Authorization": await getIdTokenFromCurrentUser()
-        }
-    }
-    return await axios.put(addDomain(path), body, headers);
-}
+export const get = (path: string, queryParams: any = {}) => {
+    return request('get', path, null, queryParams);
+};
+  
+export const put = (path: string, body: any = null, queryParams: any = {}) => {
+    return request('put', path, body, queryParams);
+};
+  
+export const post = (path: string, body: any = null, queryParams: any = {}) => {
+    return request('post', path, body, queryParams);
+};
+  
+export const patch = (path: string, body: any = null, queryParams: any = {}) => {
+    return request('patch', path, body, queryParams);
+};
 
-export const post = async (path: string, body: any) => {
-    /**
-     * Utilizes axios.put(path, body, header) but also passes the logged in user ID token
-     * in the Autorization field in the header.
-     * 
-     * @param { string } path - The URL path.
-     * @param { any } body - The body of the HTTP request
-    */
-    const header = {
-        headers: {
-            "Authorization": await getIdTokenFromCurrentUser()
-        }
-    }
-    return await axios.post(addDomain(path), body, header);
-}
-
-export const patch = async (path: string, body: any) => {
-    /**
-     * Utilizes axios.patch(path, body, header) but also passes the logged in user ID token
-     * in the Autorization field in the header.
-     * 
-     * @param { string } path - The URL path.
-     * @param { any } body - The body of the HTTP request
-    */
-    const header = {
-        headers: {
-            "Authorization": await getIdTokenFromCurrentUser()
-        }
-    }
-    return await axios.patch(addDomain(path), body, header);
-}
+export const del = (path: string, queryParams: any = {}) => {
+    return request('delete', path, null, queryParams);
+};

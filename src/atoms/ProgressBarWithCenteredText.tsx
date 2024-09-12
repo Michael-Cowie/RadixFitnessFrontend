@@ -17,7 +17,8 @@ const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({ valu
   const [isEditing, setIsEditing] = useState(false);
   const [goalValue, setGoalValue] = useState(initialGoalValue);
 
-  const progress = (value / goalValue) * 100;
+  const progress = value / goalValue >= 1 ? 100 : (value / goalValue) * 100;
+  
 
   const handleDoubleClick = () => {
     setIsEditing(true);

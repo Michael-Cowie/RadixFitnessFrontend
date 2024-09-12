@@ -13,6 +13,10 @@
     background-color: var(--darkBlue);
 }
 
+.darkBlueBorder {
+    border-color: var(--darkBlue);
+}
+
 .blueWithHover {
     background-color: var(--blue);
 }
