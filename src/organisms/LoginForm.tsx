@@ -40,7 +40,7 @@ export const LoginForm = () => {
             <InputWithLabel
               label="Email "
               name="email"
-              placeholder="Email is not verified"
+              placeholder="Email is not verified during creation"
             />
             <InputWithLabel
               label="Password "

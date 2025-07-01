@@ -5,8 +5,9 @@
 1. [Development Setup](#development-setup)  
    1.1. [Dependency Gathering](#dependency-gathering)  
    1.2. [Starting the Development Server](#starting-the-development-server)  
+   1.3. [Environment Variables](#environment-variables)  
 
-2. [Architecture](#architecture)  
+2. [Tooling Architecture](#tooling-architecture)  
    2.1. [Vite](#vite)  
    2.2. [React](#react)  
    2.3. [TypeScript](#typescript)  
@@ -15,7 +16,12 @@
    &nbsp;&nbsp;&nbsp;&nbsp;2.4.2. [DaisyUI](#daisyui)  
    &nbsp;&nbsp;&nbsp;&nbsp;2.4.3. [styled-components](#styled-components)  
 
-3. [Authorization](#authorization)  
+3. [Code Architecture](#code-architecture)  
+   3.1. [Routing](#routing)  
+   &nbsp;&nbsp;&nbsp;&nbsp;3.1.1. [Routing in a Single Page Application](#routing-in-a-single-page-application)  
+   &nbsp;&nbsp;&nbsp;&nbsp;3.1.2. [Routing Architecture](#routing-architecture)  
+   &nbsp;&nbsp;&nbsp;&nbsp;3.1.3. [Routing Configuration](#routing-configuration)  
+   3.2. [Authorization](#authorization)  
 
 4. [Contribution](#contribution)  
    4.1. [UI Components](#ui-components)  
@@ -47,8 +53,49 @@ To start the server, run the command `npm run dev`. This will run the `dev` comm
   }
 ```
 
+#### Environment Variables
+
+Vite supports the use of environment variables to inject dynamic values into the source code at build time. These values can differ across environments and modes (`development`, `production`, `test`, ...).
+
+By convention, Vite loads environment variables from special `.env` files located in the root of the project. These variables are statically replaced during build time, enabling the bundler to optimize the resulting code by eliminating unused branches or code paths.
+
+Vite supports the following naming conventions for environment variables,
+
+| Filename            | Loaded In                   | Purpose                            |
+| ------------------- | --------------------------- | ---------------------------------- |
+| `.env`              | All modes                   | Shared variables                   |
+| `.env.local`        | All modes (ignored by Git)  | Developer-specific overrides       |
+| `.env.development`  | Development mode only       | Variables specific to development  |
+| `.env.production`   | Production mode only        | Variables specific to production   |
+| `.env.[mode].local` | Specific mode (Git ignored) | Local overrides for specific modes |
+
+
+Vite determines the active mode via the `--mode` CLI flag or defaults to `development` when running the dev server via `vite dev`. To prevent accidental leakage of sensitive information into the client-side bundle, Vite uses a strict naming convention, **only variables prefixed with** `VITE_` **are exposed to the application** through `import.meta.env`.
+
+Therefore, `npm run dev` or `npm run dev --mode development` will automatically load,
+
+- `.env`
+- `.env.local`
+- `.env.development`
+- `.env.development.local`
+
+Within this base project I primarily have configured `.env.development`.
+
+`.env.development`
+
+```ini
+VITE_API_END_POINT=https://localhost:1337
+SECRET_KEY=should_not_be_exposed
+```
+
+`example.com`
+```JavaScript
+console.log(import.meta.env.VITE_API_END_POINT); // accessible
+console.log(import.meta.env.SECRET_KEY);         // undefined
+```
+
 <div align="center">
-  <h1> Architecture </h1>
+  <h1> Tooling Architecture </h1>
 </div>
 
 #### Vite
@@ -155,8 +202,63 @@ export default ExampleComponent;
 This approach is used in the project for quick creation of reusable, styled HTML elements where Tailwind or DaisyUI may not be ideal or expressive enough.
 
 <div align="center">
-  <h1> Authorization </h1>
+  <h1> Code Architecture </h1>
 </div>
+
+#### Routing
+
+
+##### Routing in a Single Page Application
+
+Routing in a Single Page Application (SPA) enables navigation between different views or components based on the URL path **without triggering a full page reload**. In React applications, routing is typically handled using the `react-router-dom` library, which provides a declarative API for mapping URL paths to React components and managing navigation state.
+
+##### Routing Architecture
+
+This project uses the `createBrowserRouter` API from React Router to define a hierarchical routing configuration. The structure separates routes into two categories,
+
+- **Public routes** - Accessible without authentication.
+- **Protected routes** - Accessible only to authenticated users.
+
+Access control for protected routes is enforced using a custom `ProtectedRoute` component.
+
+##### Routing Configuration
+
+```TSX
+const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "weight_tracking",
+        element: <WeightTrackingPage />,
+      },
+      // Additional protected routes...
+    ],
+  },
+]);
+```
+
+- `path` - Defines the URL segment for the route.
+- `element` - Specifies the React component to render when the route is matched.
+- `children` - Defines nested routes beneath the parent route.
+
+In this setup,
+
+- The `/login` route is public and renders the `LoginPage` component.
+- All other routes are nested under `ProtectedRoute`, which guards access to authenticated areas of the application.
+
+The `ProtectedRoute` component is responsible for verifying user authentication. If the user is authenticated, it renders an `<Outlet />`, which is a placeholder for the matched child routes component. If not, it redirects the user to the login page using `<Navigate to="/login" />`. When a route defines both `element` and `children`, React Router renders the parents `element` first and then injects the child routes `element` via `<Outlet />`. Effectively, `ProtectedRoute` acts as a gatekeeper. It renders no content of its own except for `<Outlet />`, which will render the matched child route if authenticated.
+
+
+#### Authorization
 
 Firebase is used to deal with the process of account creation, logging in the user in, etc. When the user successfully logins we receive a JWT (JSON Web Token) from [Firebase](https://firebase.google.com/docs/auth/admin/verify-id-tokens#retrieve_id_tokens_on_clients), this is referred to as the "ID token". This ID Token uniquely identifies a user and grants them access to resources from our backend. The JWT also contains information about the user such as the UID, this is utilized on the backend. Losing the ID Token can lead to session hijacking and it is crucial to not expose this information.
 
@@ -168,9 +270,9 @@ Firebase is used to deal with the process of account creation, logging in the us
 
 When the user first creates an account, we make a call to the Firebase API by calling `signInWithEmailAndPassword` inside the Firebase services. Once the account has been created, the user will automatically be logged in. This will then call `onAuthStateChanged` and update the user state inside the `authContext`.
 
-When we refresh the page and the user is already logged in, during the initialization of Firebase inside of the `firebease.ts`, Firebease will check for Cookies for the loggedin state of the user. Firebase will then call `onAuthStateChanged` again and from there we can restore the user to the loggedin state.
+When we refresh the page and the user is already logged in, during the initialization of Firebase inside of the `firebease.ts`, Firebase will check for Cookies for the loggedin state of the user. Firebase will then call `onAuthStateChanged` again and from there we can restore the user to the loggedin state.
 
-Using Google Chrome, below is an example of Firebase storing my current user state.
+Using Google Chrome, below is an example of Firebase storing the current user state.
 
 ![](./images/firebase_cookies_location.png)
 
@@ -186,6 +288,7 @@ This project leverages **Material-UI (MUI)**, a widely adopted React component l
 #### Atomic Design Structure
 
 The UI components follow the **Atomic Design** methodology, organized into three hierarchical layers to promote reusability and maintainaibility.
+
 
 ##### Atoms
 

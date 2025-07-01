@@ -44,7 +44,7 @@ const CompleteCenteringContainer: React.FC<CenteringContainerProps> = ({ childre
     return (
         <div
             ref={containerRef}
-            className={`flex flex-1 flex-col overflow-auto items-center ${isOverflowing ? 'justify-start' : 'justify-center'}`}
+            className={`flex flex-1 flex-col h-full w-full overflow-auto items-center ${isOverflowing ? 'justify-start' : 'justify-center'}`}
         >
             {children}
         </div>
