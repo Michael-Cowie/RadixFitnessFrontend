@@ -13,7 +13,7 @@ const LoadingButton: React.FC<Props> = ({ buttonText, displayLoadingAnimation, d
   
     return (
         <button 
-            className={ `btn ${ styles.blueWithHover } w-full font-sans font-black` } 
+            className={ `btn ${ styles.orangeWithHover } w-full font-sans font-black` } 
             type="submit"
         >
             { displayLoadingAnimation ? (
@@ -22,7 +22,7 @@ const LoadingButton: React.FC<Props> = ({ buttonText, displayLoadingAnimation, d
                 />
             ) : (
                 <>
-                    { buttonText } { displayIcon && <img width="25px" src="public/flexing_arm.svg"/> }
+                    { buttonText } { displayIcon && <img width="25px" src="flexing_arm.svg"/> }
                 </>
             ) }
         </button>

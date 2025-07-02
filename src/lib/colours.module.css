@@ -1,9 +1,23 @@
 :root {
     --blue: #35A2EB;
-    --darkBlue: #0074c9;
+    --darkBlue: #2a64e5;
     --green: #55b646;
     --darkGreen: #32a91e;
+    --orange: #f59b0b;
+    --darkOrange: #c47f08;
   }  
+
+.orange {
+    background-color: var(--orange);
+}
+
+.orangeWithHover {
+    background-color: var(--orange);
+}
+
+.orangeWithHover:hover {
+    background-color: var(--darkOrange);
+}
 
 .blue {
     background-color: var(--blue);

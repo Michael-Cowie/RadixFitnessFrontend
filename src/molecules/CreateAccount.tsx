@@ -50,7 +50,7 @@ const CreateAccountComponent = () => {
     return (
         <div>
             <button 
-                className={ `${ styles.greenWithHover } btn w-full font-sans font-black` }
+                className={ `${ styles.blueWithHover } btn w-full font-sans font-black` }
                 type="submit"
                 // @ts-ignore
                 onClick={ ()=>document.getElementById('create_account_modal').showModal() }

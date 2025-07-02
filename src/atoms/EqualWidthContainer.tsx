@@ -1,17 +1,35 @@
-import styled from 'styled-components';
+interface EqualWidthContainerProps {
+  children: React.ReactNode;
+  width: string; // e.g., "80%" or "300px"
+}
+
+import React from 'react';
+
+interface EqualWidthContainerProps {
+  /**
+   * The content to be rendered inside the container.
+   * These children should have width: 100% to match the container width.
+   */
+  children: React.ReactNode;
+
+  /**
+   * The desired width of the container.
+   * Accepts any valid CSS width value such as "80%", "300px", "40rem", etc.
+   */
+  width: string;
+}
 
 /**
- * The purpose of this container is to hold a series of elements which all contain
- * the css property, `width: 100%`. This element will become the width of the widest
- * element and all other elements will expand to the width due to `width: 100%`. This
- * element will create a consistent width when this is done repeatadly throughout
- * the codebase.
-*/
+ * EqualWidthContainer is a layout utility component used to wrap other components
+ * that are styled with `width: 100%`. It ensures a consistent outer width for its
+ * children, making it easy to create fluid, responsive layouts.
+ */
+const EqualWidthContainer: React.FC<EqualWidthContainerProps> = ({ children, width }) => {
+  const containerStyle: React.CSSProperties = {
+    width,
+  };
 
-const EqualWidthContainer = styled.div`
-    width: 15%;
-    min-width: 200px;
-    max-width: 300px;
-`
+  return <div style={containerStyle}> {children} </div>;
+};
 
 export default EqualWidthContainer;

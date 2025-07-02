@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import FoodIntakeTrackingPage from 'routes/FoodIntakeTrackingPage/FoodIntakeTrackingPage.tsx';
 import HomePage from 'routes/HomePage.tsx';
-import LoginPage from 'routes/LoginPage';
+import LoginPage from 'routes/LoginPage/LoginPage.tsx';
 import ProtectedRoute from 'routes/ProtectedRoute';
 import WeightTrackingPage from 'routes/WeightTrackingPage/WeightTrackingPage.tsx';
 
