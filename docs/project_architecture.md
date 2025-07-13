@@ -104,7 +104,7 @@ export default ExampleComponent;
 ```
 
 <div align="center">
-  <h1> Component Structure </h1>
+  <h1> Folder Structure </h1>
 </div>
 
 This approach is used in the project for quick creation of reusable, styled HTML elements where Tailwind or DaisyUI may not be ideal or expressive enough.
@@ -133,3 +133,29 @@ Organisms are **relatively complex, functional UI sections that group multiple m
 #### Services
 
 The `src/services` directory contains modules responsible for interacting with the backend APIs. These modules encapsulate HTTP request logic for fetching, updating and managing user data and other external resources, thereby separating data access concerns from UI components.
+
+#### Images
+
+Images used via the `src` attribute inside the `img` tag are searched within the `public` directory.
+
+In the following example, `add_weight_icon.png` will be searched and found at `public/add_weight_icon.png`. It is not necessary to inside `public` in the location.
+
+```TSX
+<img title="Add an entry" src="add_weight_icon.png" onClick={() => onClick()} />
+```
+
+#### Lib
+
+The Lib folder holds code that can be used throughout the codebase or utility functions.
+
+Examples include,
+
+1. `statePersistence.ts` - Utility functions to store UI states that should not require database persistance such as having a checkbox selected. This is helpful for the user to refresh the page and keep state.
+
+2. `dateUtils.ts` - Utility functions for calculations related for date calculations.
+
+3. `colours.module.css` - A one place definition for colours used throughout the application that can be accessed in child CSS modules through using variable names.
+
+#### Context
+
+Contains the [React contexts](https://react.dev/reference/react/useContext).
