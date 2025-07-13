@@ -15,3 +15,7 @@ Users can,
 - Have a goal weight on a particular date and optionally display a trendline to see future progress.
 - Manually record daily food intake using calories, protein, carbohydrates and fats on a particular date.
 - Search food by name to autofill macronutrient information.
+
+## Developer Documentation
+
+Developer documentation can be found within the `docs` folder. This includes folder includes numerous information about the current project architecture, environment setup and educational information. 
