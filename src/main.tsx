@@ -6,7 +6,6 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import AppContextComponent from 'context/AppContext.tsx';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -15,35 +14,33 @@ import HomePage from 'routes/HomePage.tsx';
 import LoginPage from 'routes/LoginPage/LoginPage.tsx';
 import ProtectedRoute from 'routes/ProtectedRoute';
 import WeightTrackingPage from 'routes/WeightTrackingPage/WeightTrackingPage.tsx';
+import AccountPrerequisites from 'routes/AccountPrerequisites.tsx';
+import RootLayout from 'routes/RootLayout.tsx';
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
-    path: "/login",
-    element: <LoginPage/>,
-  },
-  {
-    element: <ProtectedRoute/>,
+    element: <RootLayout />,
     children: [
-    {
-      path: "/",
-      element: <HomePage/>,
-    },
-    {
-      path: "weight_tracking",
-      element: <WeightTrackingPage/>
-    },
-    {
-      path: "food_intake_tracking",
-      element: <FoodIntakeTrackingPage/>
-    }  
-    ]
-  }
+      { path: "/login", element: <LoginPage /> },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            element: <AccountPrerequisites />,
+            children: [
+              { index: true, element: <HomePage /> },
+              { path: "weight_tracking", element: <WeightTrackingPage /> },
+              { path: "food_intake_tracking", element: <FoodIntakeTrackingPage /> },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AppContextComponent>
-      <RouterProvider router={ router } />
-    </AppContextComponent>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );

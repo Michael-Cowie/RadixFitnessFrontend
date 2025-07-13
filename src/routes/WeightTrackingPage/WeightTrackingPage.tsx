@@ -45,7 +45,7 @@ const WeightTrackingPage = () => {
         { /* This component will make confetti appear and then slowly fade. */}
         { useConfetti && <Confetti className={ `${ styles.fadeOut }` } width={width} height={height}/> }
         
-        <div className="h-screen flex flex-col justify-center items-center">
+        <div className="h-screen w-screen flex flex-col justify-center items-center">
             <div className="w-full h-3/6 md:w-3/6 p-3">
               <WeightTrackingLineGraph/>
             </div>

@@ -5,13 +5,14 @@ import { loginUser, signOutUser } from 'services/FirebaseUtils';
 import { AuthProviderContextData, Props } from './AuthContextInterfaces';
 
 const auth = getAuth(); // getAuth() returns the same object each time, hence, only call it once.
+const isDebug = import.meta.env.VITE_DEBUG === 'true';
 
 const AuthContext = createContext<AuthProviderContextData>({
     "loading": true,
     "user": null,
     "userIsLoggedIn": false,
     "loginUser": loginUser,
-    "signOutUser": signOutUser
+    "logoutUser": async () => {}
 });
 
 
@@ -24,6 +25,12 @@ export const AuthContextComponent: React.FC<Props> = ({ children }) => {
      * and then back in again. The handling of contexts from logging in and out
      * will be done using the user and userIsLoggedIn states.
      */
+    const logoutUser = async () => {
+        if (await signOutUser()) {
+            setUserIsLoggedIn(false);
+        };
+    };
+
     const [loading, setLoading] = useState<boolean>(true);
 
     const [user, setUser] = useState<User | null>(null);
@@ -31,8 +38,9 @@ export const AuthContextComponent: React.FC<Props> = ({ children }) => {
 
     useEffect(() => {
         onAuthStateChanged(auth, (newUser: User | null) => {
-             /** ----- DEBUGGING ----- */
-            console.log("Access Token: ", newUser?.accessToken);
+            if (isDebug) {
+                console.log("Access Token: ", newUser.accessToken);
+            }
 
             /* 
               Retrieve the idToken from Firebase and then finish loading.
@@ -52,7 +60,6 @@ export const AuthContextComponent: React.FC<Props> = ({ children }) => {
             setUserIsLoggedIn(!!newUser);
         })
     }, []) // Pass an array, so that that is called when we have been added to the DOM (first render) and not each re-render.
-
     return (
         /*
          Calling useContext(AuthContext) will return the value of "value" here. Hence, 
@@ -64,7 +71,7 @@ export const AuthContextComponent: React.FC<Props> = ({ children }) => {
 
          will destruct and pull "userIsLoggedIn" from the object.
         */
-        <AuthContext.Provider value={{ loading, user, userIsLoggedIn, loginUser, signOutUser }} >
+        <AuthContext.Provider value={{ loading, user, userIsLoggedIn, loginUser, logoutUser }} >
             { children }
         </AuthContext.Provider>
     )

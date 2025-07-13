@@ -1,0 +1,123 @@
+<svg viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1000" height="600" fill="#f8f9fa"/>
+  
+  <!-- Title -->
+  <text x="500" y="40" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#2c3e50">
+    Firebase Authentication Flow
+  </text>
+  
+  <!-- Web Page -->
+  <g transform="translate(50, 100)">
+    <rect x="0" y="0" width="200" height="300" fill="#ffffff" stroke="#3498db" stroke-width="3" rx="10"/>
+    <rect x="0" y="0" width="200" height="40" fill="#3498db" rx="10"/>
+    <rect x="0" y="28" width="200" height="12" fill="#3498db"/>
+    
+    <!-- Browser buttons -->
+    <circle cx="20" cy="20" r="6" fill="#e74c3c"/>
+    <circle cx="40" cy="20" r="6" fill="#f39c12"/>
+    <circle cx="60" cy="20" r="6" fill="#2ecc71"/>
+    
+    <!-- Login form -->
+    <text x="100" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2c3e50">Login</text>
+    
+    <rect x="20" y="100" width="160" height="25" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1" rx="3"/>
+    <text x="25" y="117" font-family="Arial, sans-serif" font-size="12" fill="#7f8c8d">Email</text>
+    
+    <rect x="20" y="135" width="160" height="25" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1" rx="3"/>
+    <text x="25" y="152" font-family="Arial, sans-serif" font-size="12" fill="#7f8c8d">Password</text>
+    
+    <rect x="20" y="175" width="160" height="35" fill="#3498db" stroke="#2980b9" stroke-width="1" rx="5"/>
+    <text x="100" y="197" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Login</text>
+    
+    <text x="100" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#2c3e50">Web Page</text>
+  </g>
+  
+  <!-- Arrow 1 -->
+  <path d="M 270 200 L 370 200" stroke="#333" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+  <text x="320" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#666">Firebase Auth</text>
+  <text x="320" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">SDK method</text>
+  
+  <!-- Firebase API -->
+  <g transform="translate(390, 130)">
+    <rect x="0" y="0" width="220" height="140" fill="#ff6b35" stroke="#e55a2b" stroke-width="3" rx="10"/>
+    
+    <!-- Firebase logo area -->
+    <rect x="10" y="10" width="200" height="30" fill="#ff5722" rx="5"/>
+    <text x="110" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Firebase Auth SDK</text>
+    
+    <!-- API methods -->
+    <rect x="10" y="50" width="200" height="80" fill="#ffffff" stroke="#ddd" stroke-width="1" rx="5"/>
+    <text x="110" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#333">Authentication Methods</text>
+    <text x="110" y="90" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">signInWithEmailAndPassword()</text>
+    <text x="110" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">createUserWithEmailAndPassword()</text>
+    <text x="110" y="120" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">onAuthStateChanged()</text>
+  </g>
+  
+  <!-- Arrow 2 Success -->
+  <path d="M 630 200 L 730 200" stroke="#2ecc71" stroke-width="3" fill="none" marker-end="url(#arrowheadGreen)"/>
+  <text x="680" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#27ae60" font-weight="bold">SUCCESS</text>
+  <text x="680" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#27ae60">onAuthStateChanged</text>
+  
+  <!-- Local Storage -->
+  <g transform="translate(750, 130)">
+    <rect x="0" y="0" width="200" height="140" fill="#2ecc71" stroke="#27ae60" stroke-width="3" rx="10"/>
+    
+    <!-- Storage header -->
+    <rect x="10" y="10" width="180" height="30" fill="#27ae60" rx="5"/>
+    <text x="100" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="white">Page Rerender</text>
+    
+    <!-- Storage content -->
+    <rect x="10" y="50" width="180" height="80" fill="#ffffff" stroke="#ddd" stroke-width="1" rx="5"/>
+    <text x="100" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#333">onAuthStateChanged</text>
+    <text x="100" y="85" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#666">triggers component rerender</text>
+    <text x="100" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#666">JWT stored in localStorage</text>
+    <text x="100" y="115" text-anchor="middle" font-family="Arial, sans-serif" font-size="9" fill="#666">User state updated</text>
+  </g>
+  
+  <!-- Error flow -->
+  <path d="M 500 270 L 500 350" stroke="#e74c3c" stroke-width="3" fill="none" marker-end="url(#arrowheadRed)"/>
+  <text x="520" y="310" font-family="Arial, sans-serif" font-size="12" fill="#c0392b" font-weight="bold">ERROR</text>
+  <text x="520" y="325" font-family="Arial, sans-serif" font-size="10" fill="#c0392b">Invalid credentials</text>
+  
+  <!-- Error message -->
+  <g transform="translate(390, 370)">
+    <rect x="0" y="0" width="220" height="60" fill="#e74c3c" stroke="#c0392b" stroke-width="2" rx="5"/>
+    <text x="110" y="25" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white">Authentication Failed</text>
+    <text x="110" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="white">Error: Invalid email or password</text>
+  </g>
+  
+  <!-- Process Steps -->
+  <g transform="translate(50, 450)">
+    <text x="0" y="0" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#2c3e50">Process:</text>
+    
+    <circle cx="20" cy="25" r="8" fill="#3498db"/>
+    <text x="20" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">1</text>
+    <text x="40" y="30" font-family="Arial, sans-serif" font-size="12" fill="#333">User enters credentials and clicks login</text>
+    
+    <circle cx="20" cy="50" r="8" fill="#ff6b35"/>
+    <text x="20" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">2</text>
+    <text x="40" y="55" font-family="Arial, sans-serif" font-size="12" fill="#333">Firebase SDK method called (signInWithEmailAndPassword or createUserWithEmailAndPassword)</text>
+    
+    <circle cx="20" cy="75" r="8" fill="#2ecc71"/>
+    <text x="20" y="80" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">3</text>
+    <text x="40" y="80" font-family="Arial, sans-serif" font-size="12" fill="#333">If successful, onAuthStateChanged triggers, JWT stored, and page rerenders</text>
+    
+    <circle cx="20" cy="100" r="8" fill="#e74c3c"/>
+    <text x="20" y="105" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white" font-weight="bold">4</text>
+    <text x="40" y="105" font-family="Arial, sans-serif" font-size="12" fill="#333">If failed, error message displayed to user</text>
+  </g>
+  
+  <!-- Arrow marker definitions -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+    </marker>
+    <marker id="arrowheadGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2ecc71"/>
+    </marker>
+    <marker id="arrowheadRed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#e74c3c"/>
+    </marker>
+  </defs>
+</svg>

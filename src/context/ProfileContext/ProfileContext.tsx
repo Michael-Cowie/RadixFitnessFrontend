@@ -9,13 +9,15 @@ const ProfileContext = createContext<Profile>({
     loading: true,
     updateProfileContext: () => null,
     name: "",
-    measurementSystem: defaultMeasurementSystem
+    measurementSystem: defaultMeasurementSystem,
+    hasProfile: false,
 });
 
 export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [name, setName] = useState('');
     const [measurementSystem, setMeasurementSystem] = useState<MeasurementSystem>(defaultMeasurementSystem);
+    const [hasProfile, setHasProfile] = useState<boolean>(false);
 
     const {loading: authLoading, userIsLoggedIn, user } = useAuthContext();
 
@@ -29,6 +31,7 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
         if (!authLoading && !userIsLoggedIn) {
             setName('');
             setMeasurementSystem(defaultMeasurementSystem);
+            setHasProfile(false);
         }
 
         if (authLoading || !userIsLoggedIn) return;
@@ -39,9 +42,10 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
             .then(data => {
                 setName(data.name);
                 setMeasurementSystem(data.measurement_system);
+                setHasProfile(true);
             })
             .catch(error => {
-                console.log(error);
+                setHasProfile(false);
             })
             .finally(() => setLoading(false));
     /**
@@ -67,7 +71,7 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
     }
 
     return (
-        <ProfileContext.Provider value={ { loading, updateProfileContext, name, measurementSystem } } >
+        <ProfileContext.Provider value={ { loading, updateProfileContext, name, measurementSystem, hasProfile } } >
             { children }
         </ProfileContext.Provider>
     )

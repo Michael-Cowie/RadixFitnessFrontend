@@ -42,13 +42,12 @@ const request = async (
   ): Promise<any> => {
     const config = {
         headers: {
-            "Authorization": await getIdTokenFromCurrentUser()
+            "Authorization": 'Bearer ' + await getIdTokenFromCurrentUser()
         },
         params: queryParams
     };
     if (method === 'get' || method === 'delete') {
         /** 
-         * ---------- NOTE ----------
          * For GET and DELETE requests, exclude the body parameter.
          * 
          * A REST API can have arguments in several places:

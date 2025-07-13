@@ -41,10 +41,11 @@ export const createNewUser = async (email: string, password: string): Promise<Re
     }
 };
 
-export const signOutUser = async (): Promise<void> => {
+export const signOutUser = async (): Promise<boolean> => {
     try {
         await signOut(auth);
+        return true;
     } catch (error) {
-        // An error happened.
+        return false;
     }
 }

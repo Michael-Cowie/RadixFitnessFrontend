@@ -1,9 +1,9 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { get, patch, post } from 'services/DataService';
+import { get, put } from 'services/DataService';
 
 import { WeightGoal } from './goalWeightOnDateInterface';
 
-const END_POINT_PATH = "/api/v1/measurements/weights/goal_weight/";
+const END_POINT_PATH = "/api/v1/goals/weight/";
 
 export const getGoalWeightOnDate = async (): Promise<WeightGoal | null> => {
     /**
@@ -24,22 +24,6 @@ export const getGoalWeightOnDate = async (): Promise<WeightGoal | null> => {
     }
 }
 
-export const createGoalWeightOnDate = async (goalDate: Dayjs, goalWeightKg: number) => {
-  /**
-   * Create a users goal weight on date entry.
-   */
-  const body = {
-    'goal_date': goalDate.format("YYYY-MM-DD"),
-    'goal_weight_kg': goalWeightKg
-  }
-  try {
-      const response = await post(END_POINT_PATH, body);
-  
-      return response.status === 201 ? response.data : null
-    } catch (error) {
-      return null;
-  }
-};
 
 /**
  * 
@@ -48,17 +32,20 @@ export const createGoalWeightOnDate = async (goalDate: Dayjs, goalWeightKg: numb
  * @param displayUnit Current unit that the goalWeight is in.
  * @returns 200 success or null.
  */
-export const updateGoalWeightOnDate = async (goalDate: Dayjs, goalWeightKg: number) => {
+export const setGoalWeightOnDate = async (goalDate: Dayjs, goalWeightKg: number) => {
+  /**
+   * Sets the user's goal weight for a specific date.
+   * This will create a new record or update the existing one.
+   */
   const body = {
-    'goal_date': goalDate.format("YYYY-MM-DD"),
-    'goal_weight_kg': goalWeightKg
-  }
+    goal_date: goalDate.format("YYYY-MM-DD"),
+    goal_weight_kg: goalWeightKg,
+  };
 
   try {
-      const response = await patch(END_POINT_PATH, body);
-  
-      return response.status === 200 ? true : null
-    } catch (error) {
-      return null;
+    const response = await put(END_POINT_PATH, body);
+    return response.status === 200 ? true : null;
+  } catch (error) {
+    return null;
   }
-}
+};

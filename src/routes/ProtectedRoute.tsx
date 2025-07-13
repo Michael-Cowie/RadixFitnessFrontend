@@ -11,12 +11,12 @@ import { Navigate, Outlet } from 'react-router-dom';
  * would be each loaded page.
  */
 const ProtectedRoute = () => {
-	const { userIsLoggedIn } = useAuthContext();
-	return (
-		<>
-			{ userIsLoggedIn ? <Outlet /> : <Navigate to="/login"  replace/> }
-		</>
-	);
+  const { loading, userIsLoggedIn } = useAuthContext();
+
+  if (loading)         return null;
+  if (!userIsLoggedIn) return <Navigate to="/login" replace />;
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

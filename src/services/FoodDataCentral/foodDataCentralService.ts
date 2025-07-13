@@ -4,7 +4,7 @@ import {
     SearchForNutritionalContentProps, searchForNutritionalContentResponse
 } from './foodDataCentralInterface';
 
-const FOODDATA_CENTRAL_END_POINT = '/api/v1/fooddata-central/';
+const FOODDATA_CENTRAL_END_POINT = '/api/v1/foods/';
 const SEARCH_END_POINT = FOODDATA_CENTRAL_END_POINT + "search/";
   
 

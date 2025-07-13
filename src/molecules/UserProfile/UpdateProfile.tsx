@@ -5,7 +5,7 @@ import Title from 'atoms/Title';
 import useProfileContext from 'context/ProfileContext/ProfileContext';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { updateProfile } from 'services/Profile/Profile';
+import { saveProfile } from 'services/Profile/Profile';
 
 import { FormContainer } from './shared';
 
@@ -27,7 +27,7 @@ const UpdateProfile: React.FC<Props> = ({ onSuccess }) => {
 
     const attemptUpdateProfile = async(data: any): Promise<void> => {
         // @ts-ignore
-        const success = await updateProfile(data.name, data.measurementSystemName);
+        const success = await saveProfile(data.name, data.measurementSystemName);
         if (success) {
             updateProfileContext(data.name, data.measurementSystemName)
             onSuccess()

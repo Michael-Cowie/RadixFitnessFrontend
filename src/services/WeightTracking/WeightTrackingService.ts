@@ -6,7 +6,7 @@ export const getAllWeights = async () => {
      * Retrieve all of the existing weight entries for the current user.
      */
     try {
-        const response = await get("/api/v1/measurements/weights/all/");
+        const response = await get("/api/v1/measurements/weights/history/");
     
         return response.status === 200 ? response.data : null
       } catch (error) {

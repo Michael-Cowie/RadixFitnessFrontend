@@ -7,9 +7,11 @@ import {
     getFoodEntriesOnDateProps, GetMacroNutrientProgressOnDateProps, PatchBody
 } from './dailyIntakeTrackingInterface';
 
-const FOOD_INTAKE_END_POINT = '/api/v1/food-intake/';
-const MACRONUTRIENT_PROGRESS_END_POINT = FOOD_INTAKE_END_POINT + "macronutrient-progress/";
-const FOOD_ENTRIES_END_POINT = FOOD_INTAKE_END_POINT + "food-entries/";
+const GOALS_ENDPOINT = "api/v1/goals/"
+const MACRONUTRIENT_PROGRESS_ENDPOINT = GOALS_ENDPOINT + "macronutrient/daily/";
+
+const INTAKE_ENDPOINT = '/api/v1/intake/';
+const FOOD_ENTRIES_ENDPOINT = INTAKE_ENDPOINT + "foods/";
 
 /**
  * Retrieves the macronutrient progress on the provided date.
@@ -18,7 +20,7 @@ const FOOD_ENTRIES_END_POINT = FOOD_INTAKE_END_POINT + "food-entries/";
  */
 export const getMacroNutrientProgressOnDate: GetMacroNutrientProgressOnDateProps = async (date) => {
     try {
-        const response = await get(MACRONUTRIENT_PROGRESS_END_POINT, { date: date.format("YYYY-MM-DD")});
+        const response = await get(MACRONUTRIENT_PROGRESS_ENDPOINT, { date: date.format("YYYY-MM-DD")});
 
         const successful = response.status === 200;
         if (successful) {
@@ -46,7 +48,7 @@ export const createUpdateMacroNutrientProgressOnDate: createMacroNutrientProgres
 ): Promise<boolean> => {
   try {
       const response = await put(
-        MACRONUTRIENT_PROGRESS_END_POINT, 
+        MACRONUTRIENT_PROGRESS_ENDPOINT, 
           {
             date: date.format("YYYY-MM-DD"), 
             goal_calories: goalCalories,
@@ -84,7 +86,7 @@ const remapEntryCase = (entry: FoodEntryAPIResponse): FoodEntry =>  {
  */
 export const getFoodEntriesOnDate: getFoodEntriesOnDateProps = async (date: Dayjs): Promise<FoodEntry[]> => {
   try {
-    const response = await get(FOOD_ENTRIES_END_POINT, {date: date.format("YYYY-MM-DD")})
+    const response = await get(FOOD_ENTRIES_ENDPOINT, {date: date.format("YYYY-MM-DD")})
     if (response.status === 200) {
       const mappedData = response.data.map((entry: FoodEntryAPIResponse) => {
         return remapEntryCase(entry);
@@ -116,7 +118,7 @@ export const createFoodEntryOnDate = async (date: Dayjs, foodEntry: FoodEntryCre
       total_carbs: foodEntry.totalCarbs,
       food_weight: foodEntry.foodWeight,
     }
-    const response = await post(FOOD_ENTRIES_END_POINT, body, {date: date.format("YYYY-MM-DD")});
+    const response = await post(FOOD_ENTRIES_ENDPOINT, body, {date: date.format("YYYY-MM-DD")});
     if (response.status === 201) {
       return remapEntryCase(response.data);
     }
@@ -136,7 +138,7 @@ export const createFoodEntryOnDate = async (date: Dayjs, foodEntry: FoodEntryCre
  */
 export const updateExistingFoodEntry = async (foodEntryId: number, updateData: PatchBody): Promise<boolean> => {
   try {
-    const response = await patch(FOOD_INTAKE_END_POINT, updateData, {id: foodEntryId});
+    const response = await patch(INTAKE_ENDPOINT, updateData, {id: foodEntryId});
     return response.status === 200;
   } catch (error) {
     return false;
@@ -151,7 +153,7 @@ export const updateExistingFoodEntry = async (foodEntryId: number, updateData: P
  */
 export const deleteFoodEntry = async (foodEntryId: number): Promise<boolean> => {
   try {
-    const response = await del(FOOD_ENTRIES_END_POINT, {id: foodEntryId});
+    const response = await del(FOOD_ENTRIES_ENDPOINT, {id: foodEntryId});
     return response.status === 204;
   } catch (error) {
     return false;

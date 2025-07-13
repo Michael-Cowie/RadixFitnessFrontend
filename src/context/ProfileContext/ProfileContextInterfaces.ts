@@ -7,7 +7,8 @@ export interface Profile {
     loading: boolean,
     updateProfileContext: (name: string, measurementSystem: MeasurementSystem) => void;
     name: string,
-    measurementSystem: MeasurementSystem
+    measurementSystem: MeasurementSystem,
+    hasProfile: boolean,
 }
 
 export interface Props {

@@ -6,9 +6,7 @@ import SelectableButton from 'atoms/SelectableButton';
 import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import dayjs, { Dayjs } from 'dayjs';
 import { SyntheticEvent, useEffect, useState } from 'react';
-import {
-    createGoalWeightOnDate, updateGoalWeightOnDate
-} from 'services/WeightGoal/goalWeightOnDateService';
+import { setGoalWeightOnDate } from 'services/WeightGoal/goalWeightOnDateService';
 import { convertKgTo, convertWeight } from 'services/WeightTracking/utils';
 import {
     AvailableWeightUnits, availableWeightUnits
@@ -61,8 +59,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
         const weightInput = parseFloat((form.elements.namedItem('goalWeightSpinButton') as HTMLInputElement).value);
         const goalWeightKg = convertWeight(displayUnit, "kg", weightInput);
 
-        const apiCall = updatingGoalWeight ? updateGoalWeightOnDate : createGoalWeightOnDate
-        apiCall(goalDate, goalWeightKg)
+        setGoalWeightOnDate(goalDate, goalWeightKg)
             .then((success) => {
                 /**
                  * Once the API call has been successful, keep track of the user UI setup.

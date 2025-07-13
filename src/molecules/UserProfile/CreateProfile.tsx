@@ -4,7 +4,7 @@ import { ValidatedInputWithLabel } from 'atoms/inputs/ValidatedInputWithLabel';
 import Title from 'atoms/Title';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { createProfile } from 'services/Profile/Profile';
+import { saveProfile } from 'services/Profile/Profile';
 import { measurementSystems } from 'services/Profile/ProfileInterfaces';
 
 import { FormContainer } from './shared';
@@ -18,7 +18,7 @@ const CreateProfile = () => {
 
     const attemptCreateNewProfile = async(data: any): Promise<void> => {
         // @ts-ignore
-        const success = await createProfile(data.name, data.selectionOptionsName);
+        const success = await saveProfile(data.name, data.selectionOptionsName);
         if (success) {
             setShowModal(false)
         }
