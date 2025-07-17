@@ -1,4 +1,4 @@
-import CenterContainer from 'atoms/CenterContainer';
+import CenterContainer from 'atoms/design_patterns/CenterContainer';
 import Seperator from 'atoms/Seperator';
 import CreateAccountComponent from 'molecules/CreateAccount';
 import { LoginForm } from 'organisms/LoginForm';

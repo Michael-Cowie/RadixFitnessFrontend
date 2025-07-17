@@ -50,7 +50,6 @@ export function convertWeight(fromUnit: AvailableWeightUnits, toUnit: AvailableW
       switch (toUnit) {
         case "lbs":
           return kgToLbs(weight);
-      
       default:
         throw new Error("Invalid to unit");
       }

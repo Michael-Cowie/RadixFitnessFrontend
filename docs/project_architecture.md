@@ -103,20 +103,19 @@ const ExampleComponent: React.FC = () => {
 export default ExampleComponent;
 ```
 
+#### UI Components
+
+This project leverages **Material-UI (MUI)**, a widely adopted React component library that implements Google's Material Design specifications. Commonly used MUI components in this codebase includes buttons, input fields and form controls providing a consistent and accessible UI foundation.
+
 <div align="center">
   <h1> Folder Structure </h1>
 </div>
 
 This approach is used in the project for quick creation of reusable, styled HTML elements where Tailwind or DaisyUI may not be ideal or expressive enough.
 
-#### UI Components
-
-This project leverages **Material-UI (MUI)**, a widely adopted React component library that implements Google's Material Design specifications. Commonly used MUI components in this codebase includes buttons, input fields and form controls providing a consistent and accessible UI foundation.
-
 #### Atomic Design Structure
 
 The UI components follow the **Atomic Design** methodology, organized into three hierarchical layers to promote reusability and maintainaibility.
-
 
 #### Atoms
 
@@ -136,13 +135,34 @@ The `src/services` directory contains modules responsible for interacting with t
 
 #### Images
 
-Images used via the `src` attribute inside the `img` tag are searched within the `public` directory.
+Images throughout the application are stored are stored in the `public` directory. The contents of the `public/` folder are copied as-is to the root server
 
-In the following example, `add_weight_icon.png` will be searched and found at `public/add_weight_icon.png`. It is not necessary to inside `public` in the location.
+So if we have,
 
-```TSX
-<img title="Add an entry" src="add_weight_icon.png" onClick={() => onClick()} />
+```cpp
+public/
+└── blank_profile.svg
 ```
+
+Then it is available at,
+
+```bash
+http://localhost:5173/blank_profile.svg
+```
+
+The correct way to reference public assets is to **always use absolute paths** from the root.
+
+```tsx
+<img src="/blank_profile.svg" alt="..." />
+```
+
+This guarantees the browser requests,
+
+```
+http://localhost:5173/blank_profile.svg
+```
+
+Accidentally doing relative routes such as `./blank_profile.svg` will make the browser search for the image relative for the current URL, e.g. `www.localhost:5137/profile/settings` will make the browser search for the svg at `/profile/blank/blank_profile.svg`, leading to images not being found.
 
 #### Lib
 
@@ -155,6 +175,14 @@ Examples include,
 2. `dateUtils.ts` - Utility functions for calculations related for date calculations.
 
 3. `colours.module.css` - A one place definition for colours used throughout the application that can be accessed in child CSS modules through using variable names.
+
+The module will be imported as,
+
+```TSX
+import styles from 'lib/colours.module.css';
+
+<button className={ `btn ${ styles.blueWithHover }`} </button>
+```
 
 #### Context
 

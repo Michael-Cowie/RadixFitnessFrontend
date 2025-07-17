@@ -1,15 +1,14 @@
 interface Props {
-    information: string,
-    faded?: boolean,
+    information: string
 }
 
-const InformationHover: React.FC<Props> = ({ information, faded=false }) => {
+const InformationHover: React.FC<Props> = ({ information }) => {
     return (
         <>
             <img 
-                className = { `h-4 w-4 ${ faded ? 'opacity-40' : '' }` }
-                src="information-icon.svg"
-                title={ faded ? '' : information }
+                className = { `h-4 w-4}` }
+                src="/information-icon.svg"
+                title={ information }
             />
         </>
     )

@@ -1,4 +1,4 @@
-import CompleteCenteringContainer from 'atoms/CenterContainer';
+import HorizontalVerticalCenteringContainer from 'atoms/design_patterns/CenterContainer';
 import Footer from 'organisms/Footer';
 import NavBar from 'organisms/NavBar';
 import { ReactNode } from 'react';
@@ -12,9 +12,9 @@ const PageTemplate: React.FC<Props> = ({ children }) => {
         <div className="flex flex-col h-full w-full">
             <NavBar/>
 
-            <CompleteCenteringContainer>
+            <HorizontalVerticalCenteringContainer>
                 { children }
-            </CompleteCenteringContainer>
+            </HorizontalVerticalCenteringContainer>
 
             <Footer/>
         </div>

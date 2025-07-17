@@ -1,18 +1,19 @@
-import CenterContainer from 'atoms/CenterContainer';
-import EqualWidthContainer from 'atoms/EqualWidthContainer';
+import CenterContainer from 'atoms/design_patterns/CenterContainer';
 import RouterButton from 'atoms/RouterButton';
+import { FOOD_INTAKE_TRACKING_ROUTE, WEIGHT_TRACKING_ROUTE } from 'lib/routing_routes';
 import PageTemplate from 'templates/PageTemplate';
+
 
 const HomePage = () => {
     return (
         <PageTemplate>
             <CenterContainer>
-                <EqualWidthContainer width="15%">
-                    <RouterButton button_text="Track my Weight" route="/weight_tracking"/>
-                    <RouterButton button_text="Nutrient Intake" route="/food_intake_tracking"/>
+                <div className="w-[80%] sm:w-[60%] md:w-[45%] lg:w-[30%] xl:w-[20%]">
+                    <RouterButton button_text="Track my Weight" route={WEIGHT_TRACKING_ROUTE}/>
+                    <RouterButton button_text="Nutrient Intake" route={FOOD_INTAKE_TRACKING_ROUTE}/>
                     <button className="btn mt-4 mb-4 w-full" disabled> Exercise Finder </button>
                     <button className="btn mt-4 mb-4 w-full" disabled> Education </button>
-                </EqualWidthContainer>
+                </div>
             </CenterContainer>
         </PageTemplate> 
     );

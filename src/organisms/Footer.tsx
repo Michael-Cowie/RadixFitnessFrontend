@@ -10,7 +10,7 @@ const Footer = () => {
                     <div className="flex justify-center items-center w-full md:justify-end">
                         <span className="mr-2 font-bold"> Radix Fitness </span>
                         <a href="https://github.com/Michael-Cowie/RadixFitnessFrontend" target="_blank">
-                            <img alt="Github" src="github-11-24.png"/>
+                            <img alt="Github" src="/github-11-24.png"/>
                         </a>
                     </div>
 

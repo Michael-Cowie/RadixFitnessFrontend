@@ -2,7 +2,7 @@ import InfoTextField from 'atoms/InfoTextField';
 import NumberedTextFieldWithRange, {
     AvailableUnits
 } from 'atoms/inputs/NumberedTextFieldWithRange/NumberedTextFieldWithRange';
-import LoadingButton from 'atoms/LoadingButton';
+import SubmitButtonWithProgress from 'atoms/design_patterns/SubmitButtonWithProgress';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/FoodIntakeTrackingContext';
 import { useEffect, useState } from 'react';
 
@@ -114,7 +114,7 @@ const ManualAddFoodEntry: React.FC<ManualAddFoodEntryProps> = ({  closeModalWind
 
             <div className='w-full mt-4 flex justify-center items-center'>
                 <div className='w-40' onClick={ handleSubmit }>
-                    <LoadingButton
+                    <SubmitButtonWithProgress
                         buttonText='Submit'
                         displayLoadingAnimation={ isLoading }
                     />

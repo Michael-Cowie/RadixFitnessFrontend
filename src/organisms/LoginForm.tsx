@@ -1,6 +1,6 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import { InputWithLabel } from 'atoms/inputs/InputWithLabel';
-import LoadingButton from 'atoms/LoadingButton';
+import SubmitButtonWithProgress from 'atoms/design_patterns/SubmitButtonWithProgress';
 import useAuth from 'context/AuthContext/AuthContext';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +40,6 @@ export const LoginForm = () => {
             <InputWithLabel
               label="Email "
               name="email"
-              placeholder="Email is not verified during creation"
             />
             <InputWithLabel
               label="Password "
@@ -50,10 +49,10 @@ export const LoginForm = () => {
 
             { loginError && <ErrorMessage errorMessage="Invalid Email or Password"/> }
 
-            <LoadingButton 
+            <SubmitButtonWithProgress 
               buttonText="Log in" 
               displayLoadingAnimation={ isLoading }
-              displayIcon={ true }
+              iconSrc={ '/flexing_arm.svg' }
             />
         </form>
       </div>

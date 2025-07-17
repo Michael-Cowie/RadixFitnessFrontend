@@ -1,5 +1,3 @@
-import styled from 'styled-components';
-
 import { TextField } from '@mui/material';
 
 export interface Props {
@@ -11,21 +9,16 @@ export interface Props {
 
 export const InputWithLabel: React.FC<Props> = ({ label, name, type="text", placeholder="Type here" }) => {
   return (
-    <Container>
-      <TextField 
-        name={ name} 
-        variant="standard" 
-        label={ label }
-        placeholder={ placeholder }
-        type={ type }
-      />
-    </Container>
+    <TextField
+      InputProps={{
+        className: 'mb-5 mt-5'
+      }}
+      name={ name} 
+      variant="standard" 
+      label={ label }
+      placeholder={ placeholder }
+      type={ type }
+      fullWidth
+    />
   );
 };
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-  width: 100%;
-`

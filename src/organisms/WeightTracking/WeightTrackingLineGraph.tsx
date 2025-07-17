@@ -84,8 +84,8 @@ const WeightTrackingLineGraph = () => {
   let trendLineData = null;
   if (trendlineEnabled && userData.filter(v => v != null).length > 1) {
     trendLineData = {
-        colorMin: "green",
-        colorMax: "green",
+        colorMin: "orange",
+        colorMax: "orange",
         lineStyle: "dotted",
         width: 3
     }

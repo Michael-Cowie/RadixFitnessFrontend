@@ -1,0 +1,14 @@
+<svg viewBox="0 0 1422.22 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <!-- Journey/Progress themed background -->
+  <defs>
+    <linearGradient id="horizonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="30%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="70%" style="stop-color:#334155;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#475569;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Gradient horizon background -->
+  <rect width="1422.22" height="800" fill="url(#horizonGradient)"/>
+</svg>

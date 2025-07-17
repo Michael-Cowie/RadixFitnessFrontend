@@ -65,9 +65,11 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
      */
     }, [authLoading, userIsLoggedIn, user]);
 
-    function updateProfileContext(name: string, measurementSystem: MeasurementSystem) {
+    function updateProfileContext(name: string, measurementSystem: MeasurementSystem, hasProfile: boolean) {
         setName(name);
         setMeasurementSystem(measurementSystem);
+        setHasProfile(hasProfile);
+
     }
 
     return (

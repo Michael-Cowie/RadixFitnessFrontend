@@ -1,12 +1,15 @@
 import { Dayjs } from 'dayjs';
-import { get, patch, post } from 'services/DataService';
+import { get, put } from 'services/DataService';
+
+const WEIGHT_END_POINT_PATH = "/api/v1/measurements/weights/";
+const WEIGHT_HISTORY_END_POINT_PATH = WEIGHT_END_POINT_PATH + "history/";
 
 export const getAllWeights = async () => {
     /**
      * Retrieve all of the existing weight entries for the current user.
      */
     try {
-        const response = await get("/api/v1/measurements/weights/history/");
+        const response = await get(WEIGHT_HISTORY_END_POINT_PATH);
     
         return response.status === 200 ? response.data : null
       } catch (error) {
@@ -14,7 +17,7 @@ export const getAllWeights = async () => {
     }
 }
 
-export const createNewWeight = async (date: Dayjs, weight_kg: number, notes: string) => {
+export const setWeightOnDate = async (date: Dayjs, weight_kg: number, notes: string) => {
     /**
      * Create a weight entry for the current user on the specified date with the provided weight in kilograms.
      */
@@ -24,29 +27,10 @@ export const createNewWeight = async (date: Dayjs, weight_kg: number, notes: str
         'notes': notes
     }
     try {
-        const response = await post("/api/v1/measurements/weights/", body);
+        const response = await put(WEIGHT_END_POINT_PATH, body);
     
-        return response.status === 201 ? response.data : null
+        return response.status === 200 ? response.data : null
       } catch (error) {
         return null;
     }
 };
-
-export const updateWeight = async(date: Dayjs, weight_kg: number, notes: string): Promise<boolean> => {
-    /**
-     * Retrieve all of the existing weight entries for the current user.
-     */
-    const body = {
-        'date': date.format("YYYY-MM-DD"),
-        'weight_kg': weight_kg,
-        'notes': notes
-    }
-
-    try {
-        const response = await patch("/api/v1/measurements/weights/", body);
-    
-        return response.status === 200 ? true : false
-      } catch (error) {
-        return false;
-    }
-}

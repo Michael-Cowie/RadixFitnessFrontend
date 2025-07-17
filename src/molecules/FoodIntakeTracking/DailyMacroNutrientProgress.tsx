@@ -1,4 +1,4 @@
-import LoadingButton from 'atoms/LoadingButton';
+import SubmitButtonWithProgress from 'atoms/design_patterns/SubmitButtonWithProgress';
 import ProgressBarWithCenteredText from 'atoms/ProgressBarWithCenteredText';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/FoodIntakeTrackingContext';
 import React from 'react';
@@ -58,7 +58,7 @@ const DailyMacroNutrientProgress = () => {
     return (
         <div className='flex flex-col h-40'>
             {isLoading ? (
-                <LoadingButton buttonText='Loading' displayLoadingAnimation={true} />
+                <SubmitButtonWithProgress buttonText='Loading' displayLoadingAnimation={true} />
             ) : (
                 allGoalMacronutrientGoals.map((macronutrientGoal, i) => (
                     <MacroNutrientRow

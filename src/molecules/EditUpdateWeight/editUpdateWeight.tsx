@@ -1,11 +1,11 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import WeightTrackingSpinbutton from 'atoms/inputs/weights/WeightTrackingSpinbutton';
-import LoadingButton from 'atoms/LoadingButton';
+import SubmitButtonWithProgress from 'atoms/design_patterns/SubmitButtonWithProgress';
 import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import dayjs, { Dayjs } from 'dayjs';
 import { dateObjectToFormattedDate } from 'lib/dateUtils';
 import { SyntheticEvent, useState } from 'react';
-import { createNewWeight, updateWeight } from 'services/WeightTracking/WeightTrackingService';
+import { setWeightOnDate } from 'services/WeightTracking/WeightTrackingService';
 import styled from 'styled-components';
 
 import { TextField } from '@mui/material';
@@ -19,7 +19,7 @@ import { Props } from './editUpdateInterfaces';
 const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
     const today = dayjs(new Date());
 
-    const { displayUnit, datesWithWeight, dateToNotes, dateToWeightKg,setPartialState} = useWeightTrackingGraphContext();
+    const { displayUnit, datesWithWeight, dateToNotes, dateToWeightKg, setPartialState} = useWeightTrackingGraphContext();
 
     const [date, setDate] = useState<Dayjs>(today);
     const [errorMessage, setErrorMessage] = useState<string>('');
@@ -35,8 +35,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
 
         setIsLoading(true);
 
-        const apiCall = updating ? updateWeight : createNewWeight;
-        apiCall(date, weight_kg, notes).then((success) => {
+        setWeightOnDate(date, weight_kg, notes).then((success) => {
             // @ts-ignore
             if (success) {
                 dateToWeightKg[formattedDate] = weight_kg;
@@ -91,7 +90,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
                             </div>
                         </div>
 
-                        <div className="mb-5 w-full">
+                        <div className="mb-5 mt-5 w-full">
                             <TextField
                                 id="notesTextArea"
                                 className="resize-none w-full" 
@@ -106,7 +105,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
 
                         <div className="w-full flex justify-center items-center">
                             <div className="w-40">
-                                <LoadingButton
+                                <SubmitButtonWithProgress
                                     buttonText="Submit"
                                     displayLoadingAnimation={ isLoading }
                                 />

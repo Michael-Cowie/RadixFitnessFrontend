@@ -1,6 +1,6 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import { ValidatedInputWithLabel } from 'atoms/inputs/ValidatedInputWithLabel';
-import LoadingButton from 'atoms/LoadingButton';
+import SubmitButtonWithProgress from 'atoms/design_patterns/SubmitButtonWithProgress';
 import Title from 'atoms/Title';
 import styles from 'lib/colours.module.css';
 import { useState } from 'react';
@@ -83,10 +83,10 @@ const CreateAccountComponent = () => {
                                 />
 
 
-                                <LoadingButton
+                                <SubmitButtonWithProgress
                                     buttonText="Create account"
                                     displayLoadingAnimation={ isLoading }
-                                    displayIcon={ true }
+                                    iconSrc={ '/flexing_arm.svg' }
                                 />
 
                                 <ErrorMessage errorMessage={ errorMessage } />

@@ -5,7 +5,7 @@ export const defaultMeasurementSystem = "Metric";
 
 export interface Profile {
     loading: boolean,
-    updateProfileContext: (name: string, measurementSystem: MeasurementSystem) => void;
+    updateProfileContext: (name: string, measurementSystem: MeasurementSystem, hasProfile: boolean) => void;
     name: string,
     measurementSystem: MeasurementSystem,
     hasProfile: boolean,

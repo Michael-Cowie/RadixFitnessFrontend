@@ -10,7 +10,7 @@ interface CenteringContainerProps {
  * than the flex-container, the centering is not within the scrollarea. Therefore, dynamically adjust
  * the justify-start and justify-center depending if the scrollarea is enabled.
  */
-const CompleteCenteringContainer: React.FC<CenteringContainerProps> = ({ children }) => {
+const HorizontalVerticalCenteringContainer: React.FC<CenteringContainerProps> = ({ children }) => {
     const [isOverflowing, setIsOverflowing] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -51,4 +51,4 @@ const CompleteCenteringContainer: React.FC<CenteringContainerProps> = ({ childre
     );
 };
 
-export default CompleteCenteringContainer;
+export default HorizontalVerticalCenteringContainer;

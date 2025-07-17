@@ -57,7 +57,7 @@ const WeightTrackingPage = () => {
                   </div>
 
                   <div className="h-8 w-8 md:h-9 md:w-9">
-                    <img title="Settings" src="settings_cogwheel.svg" onClick={ () => setCreateGoalWeight(true) }/>
+                    <img title="Settings" src="/settings_cogwheel.svg" onClick={ () => setCreateGoalWeight(true) }/>
                   </div>
               </div>
 

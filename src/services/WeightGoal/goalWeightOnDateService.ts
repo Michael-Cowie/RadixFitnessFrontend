@@ -15,7 +15,7 @@ export const getGoalWeightOnDate = async (): Promise<WeightGoal | null> => {
         if (response.status === 200) {
           return {
             goalDate: dayjs(response.data.goal_date),
-            goalWeightKg: response.data.goal_weight_kg 
+            goalWeightKg: parseFloat(response.data.goal_weight_kg) 
           }
         }
         return null;

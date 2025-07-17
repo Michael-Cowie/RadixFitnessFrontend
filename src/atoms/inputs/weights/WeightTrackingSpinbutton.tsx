@@ -8,7 +8,7 @@ import { Props } from './WeightTrackingSpinbuttonInterface';
 
 const WeightTrackingSpinbutton: React.FC<Props> = ({ defaultValue, displayUnit, name, label, disabled=false }) => {
     return (
-        <div className={`w-48 mb-5 ${ styles.weightUnitWrapper } ${ styles[displayUnit] }` }>
+        <div className={`w-full mt-3 ${ styles.weightUnitWrapper } ${ styles[displayUnit] }` }>
             <TextField
                 disabled= { disabled }
                 name={ name }

@@ -16,21 +16,24 @@ import ProtectedRoute from 'routes/ProtectedRoute';
 import WeightTrackingPage from 'routes/WeightTrackingPage/WeightTrackingPage.tsx';
 import AccountPrerequisites from 'routes/AccountPrerequisites.tsx';
 import RootLayout from 'routes/RootLayout.tsx';
+import { ProfileSettingsPage } from 'routes/ProfileSettingPage.tsx';
+import { FOOD_INTAKE_TRACKING_ROUTE, HOME_ROUTE, LOGIN_PAGE_ROUTE, PROFILE_SETTINGS_ROUTE, WEIGHT_TRACKING_ROUTE } from 'lib/routing_routes.ts';
 
 export const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
-      { path: "/login", element: <LoginPage /> },
+      { path: LOGIN_PAGE_ROUTE, element: <LoginPage /> },
       {
         element: <ProtectedRoute />,
         children: [
           {
             element: <AccountPrerequisites />,
             children: [
-              { index: true, element: <HomePage /> },
-              { path: "weight_tracking", element: <WeightTrackingPage /> },
-              { path: "food_intake_tracking", element: <FoodIntakeTrackingPage /> },
+              { path: HOME_ROUTE, element: <HomePage /> },
+              { path: WEIGHT_TRACKING_ROUTE, element: <WeightTrackingPage /> },
+              { path: FOOD_INTAKE_TRACKING_ROUTE, element: <FoodIntakeTrackingPage /> },
+              { path: PROFILE_SETTINGS_ROUTE, element: <ProfileSettingsPage /> }
             ],
           },
         ],

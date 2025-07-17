@@ -15,6 +15,68 @@ This project uses the `createBrowserRouter` API from React Router to define a hi
 
 Access control for protected routes is enforced using a custom `ProtectedRoute` component.
 
+The `AccountPrerequisites` component is to force the user to create a profile and prerequisities before accesing the full page.
+
+## Route Creation
+
+All routes are defined inside `routing_routes.ts` and are exported as constants.
+
+When defining routes using React Router the routes the link should be **an absolute path that starts with** `/`. The default behaviour of React Router is such that a plain string without a leading `/` will be appended to the current URL.
+
+This means,
+
+```TSX
+export const PROFILE_SETTINGS_ROUTE = "profile/settings";
+```
+
+with,
+
+```TSX
+<Link to={PROFILE_SETTINGS_ROUTE}>Profile Settings</Link>
+```
+
+when on the `/weight-tracking` page, will navigate you to.
+
+```
+dashboard/profile/settings
+```
+
+Instead, define `PROFILE_SETTINGS_ROUTE` as `"/profile/settings"` to correctly go to `"/profile/settings"`
+
+## Routing Techniques
+
+#### Declarative Routing - Using JSX
+
+The most common and accessible way to handle routing in React is declaratively through JSX components such as `<Link>` and `<NavLink>`. These components render as standard HTML `<a>` tags but are enhanced to work seamlessly within the React Router context. The `<Link to="/path">` is used to navigate to another route without reloading the page. It is ideal for menus, navbars or breadcrumb components where static navigation is required. **Use** `<Link>` **for navigation triggered by user interaction and UI elements**.
+
+```JSX
+<Link to={ PROFILE_SETTINGS_ROUTE }>Settings</Link>
+```
+
+#### Programmatic Routing - The `useNavigate` Hook
+
+While declarative routing is excellent is excellent for static scenarios, dynamic or logic-based navigation is better handled using the `useNavigate` hook. This hook provides a function that enables imperative navigation.
+
+```TSX
+const navigate = useNavigate();
+
+navigate("/dashboard");
+navigate("/login", { replace: true }); // avoids back-navigation
+```
+
+Use `useNavigate()` for logic-driven routing, such as API responses, user actions or conditionally based on app state.
+
+#### Render-Time Redirection - The `<Navigate />` Component
+
+React Router also supports declarative redirection via the `<Navigate />` component. This is especially useful in components that **need to conditionally reroute users at render time**, such as auth guards.
+
+```TSX
+if (!user) return <Navigate to="/login" replace />;
+```
+
+Unlike `useNavigate`, `<Navigate />` executes during render and can be used as a drop-in replacement for returned JSX, enabling powerful, clean route guards and redirects without introducing side effects/
+
+
 ## Routing Configuration
 
 The user routing process is primarily broken into a few key stages.

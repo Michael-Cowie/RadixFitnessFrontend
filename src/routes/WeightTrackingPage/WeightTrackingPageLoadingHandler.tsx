@@ -1,4 +1,4 @@
-import LoadingButton from 'atoms/LoadingButton';
+import SubmitButtonWithProgress from 'atoms/design_patterns/SubmitButtonWithProgress';
 import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import { ReactNode } from 'react';
 
@@ -13,7 +13,7 @@ const WeightTrackingPageLoadingHandler: React.FC<Props> = ({ children }) => {
         return (
             <>
                 <div className="w-5/6 md:w-1/6">
-                    <LoadingButton buttonText='' displayLoadingAnimation={true} />
+                    <SubmitButtonWithProgress buttonText='' displayLoadingAnimation={true} />
                 </div>
             </>
         );
