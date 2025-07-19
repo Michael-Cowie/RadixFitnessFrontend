@@ -1,13 +1,15 @@
 import HorizontalVerticalCenteringContainer from 'atoms/design_patterns/CenterContainer';
-import MainBackground from 'atoms/MainBackground';
 import ProfileSettings from 'molecules/UserProfile/ProfileSettings';
 import PageTemplate from 'templates/PageTemplate';
 import LoginPageBackground from './LoginPage/LoginPageBackground';
+import { FORM_RESIZER } from 'atoms/design_patterns/constants';
 
 export const ProfileSettingsPage = () => {
     return (
         <PageTemplate>
-            <ProfileSettings />
+            <OnboardProfileSettingsPageContainer>
+                <ProfileSettings />
+            </OnboardProfileSettingsPageContainer>
         </PageTemplate> 
     );
 }
@@ -23,7 +25,7 @@ const OnboardProfileSettingsPageContainer: React.FC<LoginPageContainerProps> = (
     };
 
   return (
-      <div style={containerStyle} className="w-[80%] sm:w-[60%] md:w-[45%] lg:w-[35%] xl:w-[25%]">
+      <div style={containerStyle} className={FORM_RESIZER}>
         {children}
       </div>
   );

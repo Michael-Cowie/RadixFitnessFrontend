@@ -1,10 +1,8 @@
-
-import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
-
 export interface Props {
-    defaultValue: number
-    displayUnit: AvailableWeightUnits
-    name: string,
-    label: string,
-    disabled?: boolean,
+  value: number;
+  onChange: (newValue: number) => void;
+  displayUnit: string;
+  name: string;
+  label: string;
+  disabled?: boolean;
 }

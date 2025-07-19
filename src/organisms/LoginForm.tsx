@@ -47,7 +47,8 @@ export const LoginForm = () => {
               type="password"
             />
 
-            { loginError && <ErrorMessage errorMessage="Invalid Email or Password"/> }
+            { loginError && <ErrorMessage errorMessage="Invalid Email or Password" /> }
+
 
             <SubmitButtonWithProgress 
               buttonText="Log in" 

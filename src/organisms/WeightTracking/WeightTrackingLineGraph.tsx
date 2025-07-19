@@ -7,7 +7,7 @@ import { Line } from 'react-chartjs-2';
 
 import {
     calculateGoalWeightData, calculatePredictedData, calculateUserData, convertDataToDisplayUnit,
-    determine_tooltip, formatLabels, generateDateRange, generateLabelsFromDates
+    determine_tooltip, formatLabels, generateDateRangeAxisData, generateLabelsFromDates
 } from './WeightTrackingAlgorithms';
 import useProfileContext from 'context/ProfileContext/ProfileContext';
 import { measurementSystemToUnit } from 'lib/weightTranslations';
@@ -54,21 +54,28 @@ const WeightTrackingLineGraph = () => {
       trendlineEnabled,
       goalWeightEnabled,
       enableWeightPrediction,
+      dateRange
+    },
+    userData: {
+      goalWeightKg,
+      goalDate
     },
     data: {
-      dateToNotes,
+      dateToWeightKg,
+      datesWithWeight,
+      dateToNotes
     }
   } = useWeightTrackingGraphContext();
 
   const { measurementSystem } = useProfileContext();
   const displayUnit = measurementSystemToUnit(measurementSystem);
 
-  const dateRange = generateDateRange();
-  const labels = generateLabelsFromDates(dateRange);
+  const dataRangeAxisData = generateDateRangeAxisData(dateRange, datesWithWeight, goalWeightEnabled, goalDate);
+  const labels = generateLabelsFromDates(dataRangeAxisData);
 
-  const userData = calculateUserData(labels);
-  const predictedData = calculatePredictedData(labels, userData);
-  const goalWeightData = calculateGoalWeightData(dateRange);
+  const userData = calculateUserData(labels, dateToWeightKg);
+  const predictedData = calculatePredictedData(labels, userData, enableWeightPrediction, goalDate, datesWithWeight, dateToWeightKg);
+  const goalWeightData = calculateGoalWeightData(dataRangeAxisData, goalWeightEnabled, goalWeightKg, goalDate);
 
   const convertedUserData = convertDataToDisplayUnit(userData, measurementSystem);
   const convertedPredictedData = convertDataToDisplayUnit(predictedData, measurementSystem);

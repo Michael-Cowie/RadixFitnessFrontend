@@ -1,73 +1,89 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import SelectionInput from 'atoms/inputs/SelectionInput';
 import { ValidatedInputWithLabel } from 'atoms/inputs/ValidatedInputWithLabel';
-import Title from 'atoms/Title';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { saveProfile } from 'services/Profile/Profile';
-import { measurementSystems } from 'services/Profile/ProfileInterfaces';
-import styled from 'styled-components';
-
+import { Group, GroupContainer, SubmitButton } from 'atoms/design_patterns/Group';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import useProfileContext from 'context/ProfileContext/ProfileContext';
+import { measurementSystems } from 'services/Profile/ProfileInterfaces';
+import { useNavigate } from 'react-router-dom';
+
+const measurementSystemField = 'measurementSystem' as const;
+
+const schema = z.object({
+  name: z
+    .string()
+    .min(1, 'Name is required')
+    .regex(/^[a-zA-Z]+$/, 'Name must only contain letters'),
+  [measurementSystemField]: z.enum(measurementSystems, {
+    required_error: 'Measurement system is required',
+  }),
+});
 
 const ProfileSettings = () => {
-    const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const { createAndSaveProfile, hasProfile, name: profileName, measurementSystem } = useProfileContext();
+  const navigate = useNavigate();
 
-    const measuremmentSystemName = 'measuremmentSystemName';
+  const methods = useForm({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: hasProfile ? profileName : '',
+      [measurementSystemField]: hasProfile ? measurementSystem : measurementSystems[0],
+    },
+  });
 
-    const { updateProfileContext } = useProfileContext();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = methods;
 
-    const methods = useForm();
+  const attemptCreateNewProfile = async (data: z.infer<typeof schema>): Promise<void> => {
+    setIsLoading(true);
+    const name = data.name;
+    const system = data[measurementSystemField];
 
-    const attemptCreateNewProfile = async(data: any): Promise<void> => {
-        // @ts-ignore
-        const success = await saveProfile(data.name, data.measuremmentSystemName);
+    const success = await createAndSaveProfile(name, system);
+    
+    if (success) {
+        navigate("/")
+    } else {
+        setErrorMessage('Unable to create profile');
+    }
 
-        if (success) {
-            const name = data.name;
-            const measurementSystem = data.measuremmentSystemName;
-            const hasProfile = true;
-            updateProfileContext(name, measurementSystem, hasProfile);
-        } else {
-            setErrorMessage('Unable to create profile')
-        }
-      };
+    setIsLoading(false);
+  };
 
-    return (
-        <>
-            <FormProvider { ...methods }>
-                <FormContainer>
-                    <Title>  Profile Settings </Title>
+  return (
+    <FormProvider {...methods}>
+        <GroupContainer>
+            <Group title="Profile Settings">
+                <form onSubmit={handleSubmit(attemptCreateNewProfile)}>
+                    <ValidatedInputWithLabel
+                        label="Name"
+                        name="name"
+                        register={register}
+                        error={errors.name?.message as string}
+                    />
 
-                    <form className="w-full" onSubmit={ methods.handleSubmit(attemptCreateNewProfile) }>
-                        <ValidatedInputWithLabel 
-                            label="Name" 
-                            name="name"
-                        />
+                    <SelectionInput
+                        name={measurementSystemField}
+                        label="Measurement system"
+                        options={measurementSystems}
+                    />
 
-                        <SelectionInput 
-                            name={ measuremmentSystemName } 
-                            label='Measurement system' 
-                            options={ measurementSystems }
-                        />
+                    <SubmitButton displayLoadingAnimation={isLoading} />
 
-                        <div className="w-full text-center">
-                            <button type="submit" className="btn w-1/2"> Continue </button>
-                        </div>
-                    
-                        <ErrorMessage errorMessage={ errorMessage } />
-                    </form>
-                </FormContainer>
-            </FormProvider>
-        </> 
-    );
-}
-
-export const FormContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`
+                    <ErrorMessage errorMessage={errorMessage} />
+                </form>
+            </Group>
+        </GroupContainer>
+    </FormProvider>
+  );
+};
 
 export default ProfileSettings;

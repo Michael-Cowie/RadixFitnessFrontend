@@ -1,7 +1,8 @@
 import { TooltipItem } from 'chart.js';
 import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import {
-    DateToNotes
+    DateToNotes,
+    DateToWeight
 } from 'context/WeightTrackingGraphContext/WeightTrackingGraphContextInterfaces';
 import dayjs, { Dayjs } from 'dayjs';
 import {
@@ -68,49 +69,35 @@ export function calculateLossOrGain(weightList: number[]) {
 }
 
 /**
- * 
- * @param dateToUserData Users weight entries
- * @param dateRange Selected date range
- * @returns The minimum label that is to be used in the X axis, a date in YYYY-MM-DD format.
+ * Computes the minimum X-axis date for the weight chart.
+ *
+ * @param dateRange Number of days or `Infinity` for full range
+ * @param datesWithWeight List of dates with weight entries in "YYYY-MM-DD" format
+ * @returns A Dayjs object representing the minimum date to display
  */
-function getMinimumDate(): Dayjs {
-    const {
-        ui: {
-            dateRange,
-        },
-        data: {
-            datesWithWeight,
-        }
-    } = useWeightTrackingGraphContext();
-
-    if (dateRange === Infinity) {
-        return dayjs(findFurtherestDateFromToday(datesWithWeight));
-    } else {
-        return dayjs().subtract(dateRange, 'days');
-    }
+export function getMinimumDate(dateRange: number, datesWithWeight: string[]): Dayjs {
+  if (dateRange === Infinity) {
+    return dayjs(findFurtherestDateFromToday(datesWithWeight));
+  } else {
+    return dayjs().subtract(dateRange, 'days');
+  }
 }
 
 /**
- * 
- * @param goalInformation Information on the user settings for the goal date and weight.
- * @returns The maximum label that is to be used in the X axis, a date in YYYY-MM-DD format.
+ * Computes the maximum X-axis date for the weight chart.
+ *
+ * @param goalWeightEnabled Whether goal weight tracking is enabled
+ * @param goalDate The goal date (Dayjs object)
+ * @returns A Dayjs object representing the maximum date to display
  */
-function getMaximumDateFromGoalInformation(): Dayjs {
-    const {
-        ui: {
-            goalWeightEnabled,
-        },
-        userData: {
-            goalDate,
-        }
-    } = useWeightTrackingGraphContext();
+export function getMaximumDateFromGoalInformation(goalWeightEnabled: boolean, goalDate: Dayjs): Dayjs {
+  const today = dayjs();
 
-    let today = dayjs()
+  if (!goalWeightEnabled || goalDate.isBefore(today)) {
+    return today;
+  }
 
-    if (!goalWeightEnabled) return today;
-    if (goalDate.isBefore(today)) return today;
-
-    return goalDate;
+  return goalDate;
 }
 
 /**
@@ -151,9 +138,9 @@ function getMaximumDateFromGoalInformation(): Dayjs {
  * will be at 11am on the 25th of February.
  * 
 */
-export function generateDateRange(): Dayjs[] {
-    const minimumDate = getMinimumDate();
-    const maximumDate = getMaximumDateFromGoalInformation();
+export function generateDateRangeAxisData(dateRange: number, datesWithWeight: string[], goalWeightEnabled:boolean, goalDate: Dayjs): Dayjs[] {
+    const minimumDate = getMinimumDate(dateRange, datesWithWeight);
+    const maximumDate = getMaximumDateFromGoalInformation(goalWeightEnabled, goalDate);
 
     let date = minimumDate.startOf('day'); // Adjust to the start of the day, maximum date is always beginning of day.
     let dates: Dayjs[] = [];
@@ -183,13 +170,10 @@ export function convertDataToDisplayUnit(dataList: (number | null)[], userMeasur
 /**
  * Returns the Y axis plotted data for the user dataset.
  */
-export function calculateUserData(labels: string[]): (number | null)[] {
-    const {
-        data: {
-            dateToWeightKg
-        }
-     } = useWeightTrackingGraphContext();
-
+export function calculateUserData(
+  labels: string[],
+  dateToWeightKg: DateToWeight,
+): (number | null)[] {
     let userData = [];
     for (let label of labels) {
         if (label in dateToWeightKg) {
@@ -201,22 +185,14 @@ export function calculateUserData(labels: string[]): (number | null)[] {
     return userData;
 }
 
-/**
- * Returns the Y axis plotted data for the predicted dataset.
- */
-export function calculatePredictedData(labels: string[], userData: (number | null)[]) {
-    const {
-        ui: {
-            enableWeightPrediction,
-        },
-        userData: {
-            goalDate,
-        },
-        data: {
-            datesWithWeight,
-            dateToWeightKg
-        }
-    } = useWeightTrackingGraphContext();
+export function calculatePredictedData(
+  labels: string[],
+  userData: (number | null)[],
+  enableWeightPrediction: boolean,
+  goalDate: Dayjs,
+  datesWithWeight: string[],
+  dateToWeightKg: DateToWeight,
+): (number | null)[] {
 
     const pastPredictedDate = goalDate.diff(dayjs(), 'days') <= 0;
     /**
@@ -246,19 +222,12 @@ export function calculatePredictedData(labels: string[], userData: (number | nul
     return predictedData;
 }
 
-/**
- * Returns the Y axis dataset for the goal weight.
- */
-export function calculateGoalWeightData(allDates: Dayjs[]): (number | null)[] {
-    const {
-        ui: {
-            goalWeightEnabled,
-        },
-        userData: {
-            goalWeightKg,
-            goalDate,
-        }
-    } = useWeightTrackingGraphContext();
+export function calculateGoalWeightData(
+  allDates: Dayjs[],
+  goalWeightEnabled: boolean,
+  goalWeightKg: number,
+  goalDate: Dayjs
+): (number | null)[] {
 
     if (!goalWeightEnabled) return [];
 

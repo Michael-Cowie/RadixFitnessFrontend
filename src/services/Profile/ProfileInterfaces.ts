@@ -1,3 +1,3 @@
-export type MeasurementSystem = "Metric" | "Imperial";
+export const measurementSystems = ['Metric', 'Imperial'] as const;
 
-export const measurementSystems: MeasurementSystem[] = ["Metric", "Imperial"];
+export type MeasurementSystem = (typeof measurementSystems)[number];

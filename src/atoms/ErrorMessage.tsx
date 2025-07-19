@@ -1,20 +1,17 @@
+import { FormHelperText } from '@mui/material';
+
 interface Props {
-    errorMessage: string | undefined
+  errorMessage: string | undefined;
 }
 
 const ErrorMessage: React.FC<Props> = ({ errorMessage }) => {
-    const errorMessageStyle: React.CSSProperties = {
-        color: 'red',
-        marginTop: '10px',
-        marginBottom: '10px',
-        fontFamily: 'sans-serif',
-        fontWeight: '600',
-        textAlign: 'center',
-    };
+  if (!errorMessage) return null;
 
-    return errorMessage ? (
-        <p style={errorMessageStyle}>{errorMessage}</p>
-    ) : null;
+  return (
+    <FormHelperText error style={{ marginTop: '0px', marginLeft: '0' }}>
+      {errorMessage}
+    </FormHelperText>
+  );
 };
 
 export default ErrorMessage;

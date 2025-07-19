@@ -141,6 +141,7 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children 
 
           const restoredUserInterfaceState = userInterfaceLocalStorageKeys.reduce((acc, uiStateKey) => {
             const uiState = getLocalStorage(uiStateKey, user_uid);
+
             if (uiState !== null) {
               acc['ui'][uiStateKey] = uiState;
             }
