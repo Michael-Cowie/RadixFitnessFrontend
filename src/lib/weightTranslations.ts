@@ -1,8 +1,13 @@
 import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
 
-import { AvailableWeightUnits } from './WeightTrackingInterfaces';
+import { AvailableWeightUnits } from '../services/WeightTracking/WeightTrackingInterfaces';
 
 const kg_to_lbs = 2.2046226218488;
+
+const measurementSystemToWeightUnit: Record<MeasurementSystem, AvailableWeightUnits> = {
+  "Metric": "kg",
+  "Imperial": "lbs"
+}
 
 export function formatToTwoPrecision(weight: number): string {
   return String(weight.toFixed(2));
@@ -15,6 +20,7 @@ function kgToLbs(kg: number): number {
 function lbsToKg(lbs: number): number {
   return lbs / kg_to_lbs;
 }
+
 
 /**
  * 
@@ -72,9 +78,23 @@ export function convertWeight(fromUnit: AvailableWeightUnits, toUnit: AvailableW
  * @returns Returns an availabe weight from the current measurement system.
  */
 export function measurementSystemToUnit(system: MeasurementSystem): AvailableWeightUnits {
-    const conversion: Record<MeasurementSystem, AvailableWeightUnits> = {
-      "Metric": "kg",
-      "Imperial": "lbs"
-    }
-    return conversion[system];
+    return measurementSystemToWeightUnit[system];
+}
+
+/**
+ * 
+ * @param weight Unit agnostic weight.
+ * @returns Weight in kg.
+ */
+export function weightFromUserMeasurementSystemtoKg(weight: number, userMeasurementSystem: MeasurementSystem): number {
+  return convertWeight(measurementSystemToUnit(userMeasurementSystem), "kg", weight);
+}
+
+/**
+ * 
+ * @param weight Weight in kg.
+ * @returns Weight in user profile measurement system.
+ */
+export function weightFromKgToUserMeasurementSystem(weight: number, userMeasurementSystem: MeasurementSystem): number {
+  return convertWeight("kg", measurementSystemToUnit(userMeasurementSystem), weight);
 }

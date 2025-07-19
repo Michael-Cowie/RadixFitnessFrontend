@@ -25,8 +25,8 @@ export const GroupContainer: React.FC<GroupContainerProps> = ({ children }) => {
 export const Group: React.FC<GroupProps> = ({ title, children}) => {
   return (
     <div className='flex flex-col'>
-        <div className="font-bold text-left"> { title } </div>
-        <div className="ml-2">
+        <div className="font-bold text-left mb-1"> { title } </div>
+        <div className="ml-2 space-y-3">
             { children }
         </div>
     </div>

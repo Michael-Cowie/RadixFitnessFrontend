@@ -28,15 +28,10 @@ export const getGoalWeightOnDate = async (): Promise<WeightGoal | null> => {
 /**
  * 
  * @param goalDate Dayjs object representing the users new goal date.
- * @param goalWeight Currently chosen goal weight.
- * @param displayUnit Current unit that the goalWeight is in.
- * @returns 200 success or null.
+ * @param goalWeight Currently chosen goal weight that will be translated to kg.
+ * @returns ture or false.
  */
-export const setGoalWeightOnDate = async (goalDate: Dayjs, goalWeightKg: number) => {
-  /**
-   * Sets the user's goal weight for a specific date.
-   * This will create a new record or update the existing one.
-   */
+export const saveGoalWeightKgOnDate = async (goalDate: Dayjs, goalWeightKg: number): Promise<boolean> => {
   const body = {
     goal_date: goalDate.format("YYYY-MM-DD"),
     goal_weight_kg: goalWeightKg,
@@ -44,8 +39,9 @@ export const setGoalWeightOnDate = async (goalDate: Dayjs, goalWeightKg: number)
 
   try {
     const response = await put(END_POINT_PATH, body);
-    return response.status === 200 ? true : null;
+    return response.status === 200;
   } catch (error) {
-    return null;
+    return false;
   }
 };
+

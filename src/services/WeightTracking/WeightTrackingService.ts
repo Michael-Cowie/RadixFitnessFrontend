@@ -1,4 +1,3 @@
-import { Dayjs } from 'dayjs';
 import { get, put } from 'services/DataService';
 
 const WEIGHT_END_POINT_PATH = "/api/v1/measurements/weights/";
@@ -17,20 +16,19 @@ export const getAllWeights = async () => {
     }
 }
 
-export const setWeightOnDate = async (date: Dayjs, weight_kg: number, notes: string) => {
+export const saveWeightEntry = async (date: string, weightKg: number, notes: string) => {
     /**
      * Create a weight entry for the current user on the specified date with the provided weight in kilograms.
      */
     const body = {
-        'date': date.format("YYYY-MM-DD"),
-        'weight_kg': weight_kg,
+        'date': date,
+        'weight_kg': weightKg,
         'notes': notes
     }
     try {
         const response = await put(WEIGHT_END_POINT_PATH, body);
-    
-        return response.status === 200 ? response.data : null
+        return response.status === 200;
       } catch (error) {
-        return null;
+        return false;
     }
 };

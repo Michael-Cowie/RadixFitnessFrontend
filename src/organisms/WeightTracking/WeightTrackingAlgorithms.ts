@@ -5,10 +5,10 @@ import {
 } from 'context/WeightTrackingGraphContext/WeightTrackingGraphContextInterfaces';
 import dayjs, { Dayjs } from 'dayjs';
 import {
-    findClosestDateFromToday, findFurtherestDateFromToday, getFurthestFutureDate,
-    getFurthestPastDate
+    findClosestDateFromToday, findFurtherestDateFromToday
 } from 'lib/dateUtils';
-import { convertKgTo } from 'services/WeightTracking/utils';
+import { weightFromKgToUserMeasurementSystem } from 'lib/weightTranslations';
+import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
 
 function splitStringIntoArray(inputString: string, maxLength: number): string[] {
@@ -74,7 +74,14 @@ export function calculateLossOrGain(weightList: number[]) {
  * @returns The minimum label that is to be used in the X axis, a date in YYYY-MM-DD format.
  */
 function getMinimumDate(): Dayjs {
-    const { datesWithWeight, dateRange } = useWeightTrackingGraphContext();
+    const {
+        ui: {
+            dateRange,
+        },
+        data: {
+            datesWithWeight,
+        }
+    } = useWeightTrackingGraphContext();
 
     if (dateRange === Infinity) {
         return dayjs(findFurtherestDateFromToday(datesWithWeight));
@@ -89,7 +96,15 @@ function getMinimumDate(): Dayjs {
  * @returns The maximum label that is to be used in the X axis, a date in YYYY-MM-DD format.
  */
 function getMaximumDateFromGoalInformation(): Dayjs {
-    const { goalWeightEnabled, goalDate } = useWeightTrackingGraphContext();
+    const {
+        ui: {
+            goalWeightEnabled,
+        },
+        userData: {
+            goalDate,
+        }
+    } = useWeightTrackingGraphContext();
+
     let today = dayjs()
 
     if (!goalWeightEnabled) return today;
@@ -155,14 +170,12 @@ export function generateLabelsFromDates(dates: Dayjs[]): string[] {
     return dates.map(date => date.format('YYYY-MM-DD'));
 }
 
-export function convertDataToDisplayUnit(dataList: (number | null)[]): (number | null)[] {
-    const { displayUnit } = useWeightTrackingGraphContext();
-
+export function convertDataToDisplayUnit(dataList: (number | null)[], userMeasurementSystem: MeasurementSystem): (number | null)[] {
     return dataList.map((point => {
         if (point === null) {
             return point;
         } else {
-            return convertKgTo(displayUnit, point);
+            return weightFromKgToUserMeasurementSystem(point, userMeasurementSystem);
         }
     }))
 }
@@ -171,7 +184,11 @@ export function convertDataToDisplayUnit(dataList: (number | null)[]): (number |
  * Returns the Y axis plotted data for the user dataset.
  */
 export function calculateUserData(labels: string[]): (number | null)[] {
-    const { dateToWeightKg } = useWeightTrackingGraphContext();
+    const {
+        data: {
+            dateToWeightKg
+        }
+     } = useWeightTrackingGraphContext();
 
     let userData = [];
     for (let label of labels) {
@@ -188,7 +205,18 @@ export function calculateUserData(labels: string[]): (number | null)[] {
  * Returns the Y axis plotted data for the predicted dataset.
  */
 export function calculatePredictedData(labels: string[], userData: (number | null)[]) {
-    const { datesWithWeight, goalDate, enableWeightPrediction, dateToWeightKg } = useWeightTrackingGraphContext();
+    const {
+        ui: {
+            enableWeightPrediction,
+        },
+        userData: {
+            goalDate,
+        },
+        data: {
+            datesWithWeight,
+            dateToWeightKg
+        }
+    } = useWeightTrackingGraphContext();
 
     const pastPredictedDate = goalDate.diff(dayjs(), 'days') <= 0;
     /**
@@ -221,13 +249,21 @@ export function calculatePredictedData(labels: string[], userData: (number | nul
 /**
  * Returns the Y axis dataset for the goal weight.
  */
-export function calculateGoalWeightData(dates: Dayjs[]): (number | null)[] {
-    const { goalWeightEnabled, goalWeightKg, goalDate } = useWeightTrackingGraphContext();
-    
+export function calculateGoalWeightData(allDates: Dayjs[]): (number | null)[] {
+    const {
+        ui: {
+            goalWeightEnabled,
+        },
+        userData: {
+            goalWeightKg,
+            goalDate,
+        }
+    } = useWeightTrackingGraphContext();
+
     if (!goalWeightEnabled) return [];
 
     let goalWeightData: (number | null)[] = [];
-    for (let date of dates) {
+    for (let date of allDates) {
         if (date.diff(goalDate) == 0){
             goalWeightData.push(goalWeightKg)
         } else {

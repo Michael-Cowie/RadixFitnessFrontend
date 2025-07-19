@@ -1,12 +1,13 @@
 import React from 'react';
 
 interface CheckBoxProps {
-  checked: boolean;
-  onChange: () => void;
   label: string;
+  checked?: boolean;
+  defaultChecked?: boolean;
+  onChange?: () => void;
+  name?: string;
 }
-
-const CheckBox: React.FC<CheckBoxProps> = ({ checked, onChange, label }) => {
+const CheckBoxWithLabel: React.FC<CheckBoxProps> = ({ label, checked, onChange, name, defaultChecked }) => {
   return (
     <label className="flex items-center select-none cursor-pointer">
       <input
@@ -14,10 +15,12 @@ const CheckBox: React.FC<CheckBoxProps> = ({ checked, onChange, label }) => {
         type="checkbox"
         checked={checked}
         onChange={onChange}
+        name={name}
+        defaultChecked={defaultChecked}
       />
       <span> { label } </span>
     </label>
   );
 };
 
-export default CheckBox;
+export default CheckBoxWithLabel;

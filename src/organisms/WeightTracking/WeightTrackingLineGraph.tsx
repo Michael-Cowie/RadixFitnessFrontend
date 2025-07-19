@@ -9,6 +9,8 @@ import {
     calculateGoalWeightData, calculatePredictedData, calculateUserData, convertDataToDisplayUnit,
     determine_tooltip, formatLabels, generateDateRange, generateLabelsFromDates
 } from './WeightTrackingAlgorithms';
+import useProfileContext from 'context/ProfileContext/ProfileContext';
+import { measurementSystemToUnit } from 'lib/weightTranslations';
 
 Chart.register(
   chartTrendline,
@@ -47,7 +49,19 @@ const options = {
 };
 
 const WeightTrackingLineGraph = () => {
-  const { trendlineEnabled, displayUnit, goalWeightEnabled, enableWeightPrediction, dateToNotes } = useWeightTrackingGraphContext();
+  const {
+    ui: {
+      trendlineEnabled,
+      goalWeightEnabled,
+      enableWeightPrediction,
+    },
+    data: {
+      dateToNotes,
+    }
+  } = useWeightTrackingGraphContext();
+
+  const { measurementSystem } = useProfileContext();
+  const displayUnit = measurementSystemToUnit(measurementSystem);
 
   const dateRange = generateDateRange();
   const labels = generateLabelsFromDates(dateRange);
@@ -56,9 +70,9 @@ const WeightTrackingLineGraph = () => {
   const predictedData = calculatePredictedData(labels, userData);
   const goalWeightData = calculateGoalWeightData(dateRange);
 
-  const convertedUserData = convertDataToDisplayUnit(userData);
-  const convertedPredictedData = convertDataToDisplayUnit(predictedData);
-  const convertedGoalWeightData = convertDataToDisplayUnit(goalWeightData);
+  const convertedUserData = convertDataToDisplayUnit(userData, measurementSystem);
+  const convertedPredictedData = convertDataToDisplayUnit(predictedData, measurementSystem);
+  const convertedGoalWeightData = convertDataToDisplayUnit(goalWeightData, measurementSystem);
 
 
   // @ts-ignore

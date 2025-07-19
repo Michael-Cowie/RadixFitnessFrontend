@@ -1,12 +1,9 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import WeightTrackingSpinbutton from 'atoms/inputs/weights/WeightTrackingSpinbutton';
-import SubmitButtonWithProgress from 'atoms/design_patterns/SubmitButtonWithProgress';
 import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import dayjs, { Dayjs } from 'dayjs';
 import { dateObjectToFormattedDate } from 'lib/dateUtils';
 import { SyntheticEvent, useState } from 'react';
-import { setWeightOnDate } from 'services/WeightTracking/WeightTrackingService';
-import styled from 'styled-components';
 
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -15,11 +12,20 @@ import {
     getDefaultValue, getNotesFromDate, getResultsFromForm, getWeightText
 } from './editUpdateAlgorithms';
 import { Props } from './editUpdateInterfaces';
+import useProfileContext from 'context/ProfileContext/ProfileContext';
+import { measurementSystemToUnit } from 'lib/weightTranslations';
+import { Group, GroupContainer, SubmitButton } from 'atoms/design_patterns/Group';
+import ModalForm from 'atoms/design_patterns/ModalForm';
 
 const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
-    const today = dayjs(new Date());
+    const {
+        data: { datesWithWeight, dateToWeightKg },
+        syncWeightEntry
+    } = useWeightTrackingGraphContext();
 
-    const { displayUnit, datesWithWeight, dateToNotes, dateToWeightKg, setPartialState} = useWeightTrackingGraphContext();
+    const { measurementSystem }= useProfileContext();
+
+    const today = dayjs(new Date());
 
     const [date, setDate] = useState<Dayjs>(today);
     const [errorMessage, setErrorMessage] = useState<string>('');
@@ -31,100 +37,69 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow}) => {
     const onSubmit = async(event: SyntheticEvent) => {
         event.preventDefault();
 
-        const [date, weight_kg, notes] = getResultsFromForm(event, displayUnit);
+        const [date, weight, notes] = getResultsFromForm(event, measurementSystem);
 
         setIsLoading(true);
 
-        setWeightOnDate(date, weight_kg, notes).then((success) => {
-            // @ts-ignore
-            if (success) {
-                dateToWeightKg[formattedDate] = weight_kg;
-                dateToNotes[formattedDate] = notes;
-
-                if (!datesWithWeight.includes(formattedDate)) {
-                    datesWithWeight.push(formattedDate);
-                }
-                setPartialState({
-                    dateToWeightKg,
-                    dateToNotes,
-                    datesWithWeight
-                })
+        syncWeightEntry(date, weight, notes)
+            .then(() => {
                 closeModalWindow(true);
-            } else {
+            })
+            .catch(() => {
                 setErrorMessage(`Unable to ${ updating ? 'update' : 'add' } weight`);
-            }
-
-            setIsLoading(false);
-        })
-    };
+            })
+            .finally(() => {
+                setIsLoading(false);
+            })
+    }
 
     return (
-        <dialog id="my_modal" className={"modal modal-open"}>
-            <div className="modal-box h-96">
-                <FormContainer>
-                    <form onSubmit={ onSubmit } className="w-80">
-                        <button onClick={ () => closeModalWindow(false) } className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"> ✕ </button>
-
-                        <div className="flex flex-col">
-                            <div className="flex w-full items-center justify-center">
-                                <div className="mb-5">
-                                    <DatePicker
-                                        name='datePicker'
-                                        className='w-48'
-                                        label={ updating ? `Updating weight on` : `Add weight on` }
-                                        defaultValue={ today }
-                                        maxDate={ today }
-                                        // @ts-ignore - Remove the null type check as we will never receive it.
-                                        onChange={ (v: Dayjs) => setDate(v) }
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flex w-full items-center justify-center">
-                                <WeightTrackingSpinbutton 
-                                    defaultValue={ getDefaultValue() }
-                                    displayUnit={ displayUnit }
-                                    name={ "weightInput" }
-                                    label={ getWeightText(updating, formattedDate) }
-                                />
-                            </div>
-                        </div>
-
-                        <div className="mb-5 mt-5 w-full">
-                            <TextField
-                                id="notesTextArea"
-                                className="resize-none w-full" 
-                                defaultValue={ getNotesFromDate(formattedDate) }
-                                placeholder="Optional notes"
-                                label="Notes"
-                                variant="outlined" 
-                                multiline
-                                rows={3}
+        <ModalForm onSubmit={onSubmit} closeModalWindow={() => closeModalWindow(false)}>
+            <GroupContainer>
+                <Group title='Entry Details'>
+                    <div className='mt-1 w-2/3 space-y-2'>
+                        <div className='w-full'>
+                            <DatePicker
+                                name='datePicker'
+                                label={ updating ? `Updating weight on` : `Add weight on` }
+                                defaultValue={ today }
+                                maxDate={ today }
+                                // @ts-ignore - Remove the null type check as we will never receive it.
+                                onChange={ (v: Dayjs) => setDate(v) }
+                                slotProps={{
+                                    textField: {
+                                        fullWidth: true,
+                                    },
+                                }}
                             />
                         </div>
 
-                        <div className="w-full flex justify-center items-center">
-                            <div className="w-40">
-                                <SubmitButtonWithProgress
-                                    buttonText="Submit"
-                                    displayLoadingAnimation={ isLoading }
-                                />
-                            </div>
-                            
-                        </div>
-                    </form>
-                    <ErrorMessage errorMessage={ errorMessage } />
-                </FormContainer>
-            </div>
-        </dialog>
+                        <WeightTrackingSpinbutton 
+                            defaultValue={ getDefaultValue(measurementSystem, datesWithWeight, dateToWeightKg) }
+                            displayUnit={ measurementSystemToUnit(measurementSystem) }
+                            name={ "weightInput" }
+                            label={ getWeightText(updating, formattedDate, measurementSystem) }
+                        />
+                    </div>
+
+                    <TextField
+                        id="notesTextArea"
+                        className="resize-none w-full" 
+                        defaultValue={ getNotesFromDate(formattedDate) }
+                        placeholder="Optional notes"
+                        label="Notes"
+                        variant="outlined" 
+                        multiline
+                        rows={3}
+                    />
+
+                    <SubmitButton displayLoadingAnimation= { isLoading }/>
+                </Group>
+            </GroupContainer>
+
+            <ErrorMessage errorMessage={ errorMessage } />
+        </ModalForm>
     );
 }
-
-const FormContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-`
 
 export default EditUpdateWeight;

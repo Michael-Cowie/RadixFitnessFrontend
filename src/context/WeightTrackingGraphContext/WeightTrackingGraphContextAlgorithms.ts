@@ -1,6 +1,4 @@
 import dayjs from 'dayjs';
-import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
-import { measurementSystemToUnit } from 'services/WeightTracking/utils';
 import { WeightEntry } from 'services/WeightTracking/WeightTrackingInterfaces';
 
 import {
@@ -12,28 +10,37 @@ export const goalWeightEnabledLocalStorageKey ='goalWeightEnabled';
 export const weightPredictionEnabledLocalStorageKey = 'enableWeightPrediction';
 export const selectedDateRangeLocalStorageKey = 'dateRange';
 
-export const localStorageKeys: (keyof WeightTrackingGraphContext)[] = [
+export const userInterfaceLocalStorageKeys: (keyof WeightTrackingGraphContext['ui'])[] = [
     trendlineEnabledLocalStorageKey,
     goalWeightEnabledLocalStorageKey,
     weightPredictionEnabledLocalStorageKey,
     selectedDateRangeLocalStorageKey,
 ]
 
-export const createDefaultState = (measurementSystem: MeasurementSystem): WeightTrackingGraphContext => ({
-    displayUnit: measurementSystemToUnit(measurementSystem),
+export const DefaultWeightTrackingGraphContext: WeightTrackingGraphContext = {
+  ui: {
     trendlineEnabled: false,
     goalWeightEnabled: false,
-    goalDate: dayjs(new Date()).add(7, 'days'),
-    goalWeightKg: 70,
     enableWeightPrediction: false,
+    dateRange: 7,
+    isLoading: true,
+  },
+
+  userData: {
+    goalDate: dayjs(),
+    goalWeightKg: 0,
+    hasGoalWeight: false,
+  },
+
+  data: {
     dateToWeightKg: {},
     dateToNotes: {},
-    updatingGoalWeight: false,
     datesWithWeight: [],
-    isLoading: true,
-    dateRange: 7,
-    setPartialState: () => {}
-});
+  },
+  setPartialState: () => {},
+  syncGoalWeight: async () => false,
+  syncWeightEntry: async() => false,
+};
 
 export function gatherDateInformation(userEntries: WeightEntry[]): [DateToWeight, DateToNotes, string[]] {
     let dateToWeightKg: DateToWeight = {};
