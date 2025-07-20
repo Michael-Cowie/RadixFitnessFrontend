@@ -3,11 +3,10 @@ import { FoodEntry } from 'services/DailyIntakeTracking/dailyIntakeTrackingInter
 export const pageSize = 6;
 
 export interface TableProps {
-    entries: FoodEntry[];
-    handleContextMenu: (event: React.MouseEvent, entryId: number, foodName: string) => void;
+  entries: FoodEntry[];
+  handleContextMenu: (event: React.MouseEvent, entryId: number, foodName: string) => void;
 }
-  
+
 export interface EmptyCellsProps {
-    amount: number
+  amount: number;
 }
-  

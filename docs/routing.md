@@ -76,7 +76,6 @@ if (!user) return <Navigate to="/login" replace />;
 
 Unlike `useNavigate`, `<Navigate />` executes during render and can be used as a drop-in replacement for returned JSX, enabling powerful, clean route guards and redirects without introducing side effects/
 
-
 ## Routing Configuration
 
 The user routing process is primarily broken into a few key stages.
@@ -201,9 +200,9 @@ The final rendered tree will be,
 
 1. `RootLayout` is rendered first, always.
 2. Inside its `<Outlet />`, `ProtectedRoute` is rendered. It checks if the user is authenticated,
-    - If not, it redirects to `/login`.
-    - If yes, it renders `<Outlet />`, allowing the next component to load.
+   - If not, it redirects to `/login`.
+   - If yes, it renders `<Outlet />`, allowing the next component to load.
 3. Next, `AccountPrerequisites` runs. It checks whether the user has a completed profile,
-    - If not, it renders the onboarding screen `<CreateProfilePage />`.
-    - If yes, it allows the requested page to be rendered via `<Outlet />`.
+   - If not, it renders the onboarding screen `<CreateProfilePage />`.
+   - If yes, it allows the requested page to be rendered via `<Outlet />`.
 4. Finally, since `/weight_tracking` matches the last route, `WeightTrackingPage` is mounted inside the outlet.

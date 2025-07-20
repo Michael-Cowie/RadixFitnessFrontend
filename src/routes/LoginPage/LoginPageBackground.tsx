@@ -1,9 +1,6 @@
 const LoginPageBackground = () => (
   <picture>
-    <source
-      media="(orientation: landscape)"
-      srcSet="/homepage_background/desktop_16_9.svg"
-    />
+    <source media="(orientation: landscape)" srcSet="/homepage_background/desktop_16_9.svg" />
     <img
       src="/homepage_background/mobile_9_16.svg"
       alt="Homepage background"

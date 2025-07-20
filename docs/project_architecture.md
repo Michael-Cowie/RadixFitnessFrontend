@@ -48,7 +48,7 @@ Using TypeScript provides several key advantages:
 
 This decision aligns with modern frontend development practices and contributes to a more robust and maintainable codebase over time.
 
-##  CSS
+## CSS
 
 This project uses a combination of **Tailwind CSS, DaisyUI** and **styled-components** to handle styling and UI design.
 

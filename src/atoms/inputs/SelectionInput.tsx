@@ -1,11 +1,5 @@
 import { Controller, useFormContext } from 'react-hook-form';
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 interface Props {
   name: string;
@@ -14,12 +8,7 @@ interface Props {
   defaultIndex?: number;
 }
 
-const SelectionInput: React.FC<Props> = ({
-  name,
-  label,
-  options,
-  defaultIndex = 0,
-}) => {
+const SelectionInput: React.FC<Props> = ({ name, label, options, defaultIndex = 0 }) => {
   const { control } = useFormContext();
 
   return (

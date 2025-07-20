@@ -14,12 +14,12 @@ export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (userIsLoggedIn) { 
+    if (userIsLoggedIn) {
       navigate('/');
     }
-  }, [userIsLoggedIn])
+  }, [userIsLoggedIn, navigate]);
 
-  const onLogin = async(event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const onLogin = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -31,31 +31,23 @@ export const LoginForm = () => {
     loginUser(email.value, password.value).then((successful) => {
       setLoginError(successful === false);
       setIsLoading(false);
-    })
+    });
   };
 
   return (
     <div>
-        <form onSubmit={ onLogin }>
-            <InputWithLabel
-              label="Email "
-              name="email"
-            />
-            <InputWithLabel
-              label="Password "
-              name="password"
-              type="password"
-            />
+      <form onSubmit={onLogin}>
+        <InputWithLabel label="Email " name="email" />
+        <InputWithLabel label="Password " name="password" type="password" />
 
-            { loginError && <ErrorMessage errorMessage="Invalid Email or Password" /> }
+        {loginError && <ErrorMessage errorMessage="Invalid Email or Password" />}
 
-
-            <SubmitButtonWithProgress 
-              buttonText="Log in" 
-              displayLoadingAnimation={ isLoading }
-              iconSrc={ '/flexing_arm.svg' }
-            />
-        </form>
-      </div>
+        <SubmitButtonWithProgress
+          buttonText="Log in"
+          displayLoadingAnimation={isLoading}
+          iconSrc={'/flexing_arm.svg'}
+        />
+      </form>
+    </div>
   );
 };

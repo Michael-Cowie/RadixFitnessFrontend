@@ -22,7 +22,6 @@ Vite supports the following naming conventions for environment variables,
 | `.env.production`   | Production mode only        | Variables specific to production   |
 | `.env.[mode].local` | Specific mode (Git ignored) | Local overrides for specific modes |
 
-
 Vite determines the active mode via the `--mode` CLI flag or defaults to `development` when running the dev server via `vite dev`. To prevent accidental leakage of sensitive information into the client-side bundle, Vite uses a strict naming convention, **only variables prefixed with** `VITE_` **are exposed to the application** through `import.meta.env`.
 
 Therefore, `npm run dev` or `npm run dev --mode development` will automatically load,
@@ -42,14 +41,78 @@ SECRET_KEY=should_not_be_exposed
 ```
 
 `example.com`
+
 ```JavaScript
 console.log(import.meta.env.VITE_API_END_POINT); // accessible
 console.log(import.meta.env.SECRET_KEY);         // undefined
 ```
 
-## 3. Import Sorting
+## 3. Code Linters
 
-Import statements throughout the codebase follow a consistent order enforced by the [TypeScript Import Sorter](https://marketplace.visualstudio.com/items?itemName=mike-co.import-sorter) Visual Studio Code extension. This ensures a clean, maintainable import structure.
+Maintaining consistent and high-quality code is essential in modern development. ESLint and Prettier are two widely adopted tools that address this need and are used throughout this project. Each have distinct roles. ESLint focuses on code correctness and style enforcement, Prettier ensures consistent formatting.
+
+GitHub actions is configured to make these checks once pushed.
+
+#### ESLint
+
+ESLint is a linter for JavaScript and TypeScript. It analyzes source code to identify syntax errors, potential bugs and deviations from coding standards. It supports,
+
+- **Code Correctness** - This can include unused variables and unreachable code.
+- **Best Practices** - This can include preferring `const` over `var`.
+- **Styles Rules** - This can include spacing and semicolons.
+
+ESLint is configured in the `package.json` with the following configuration,
+
+```JSON
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    ...
+  },
+```
+
+It can therefore be checked running `npx eslint . --ext .ts,.tsx,.js,.jsx --fix` which can help auto in automatic fixes.
+
+ESLint can be included as a VS Code extension for automatic formatting.
+
+<div align="center">
+  <img src="./images/ESLint_extension.png">
+</div>
+
+Once the extension has been installed `View → Problems` show the list of current problems found by ESLint.
+
+<div align="center">
+  <img src="./images/ESLint_example.png">
+</div>
+
+#### Prettier
+
+Prettier is a code formatter that enforces a uniform appearance by reprinting code using predefined formatting rules. It focuses exclusively on code style,
+
+- Indentation
+- Line length
+- Quote style
+- Trailing commas
+
+Unlike ESLint, Prettier has minimal configuration and avoids debates about formatting preferences by enforcing consistent output. Prettier style enforcement is required via GitHub actions.
+
+VS Code has a Prettier extenson which can be installed.
+
+<div align="center">
+  <img src="./images/prettier_code_formatter.png">
+</div>
+
+Once installed, within user settings `Ctrl + Shift + P` → `Preferences: Open Settings (UI)` the section `Default Formatter` can select `Prettier - Code formatter`.
+
+<div align="center">
+  <img src="./images/prettier_default_formatter.png">
+</div>
+
+Finally, configure this to be ran when saving.
+
+<div align="center">
+  <img src="./images/format_on_save.png">
+</div>
 
 ## 4. Debugging in Visual Studio Code
 

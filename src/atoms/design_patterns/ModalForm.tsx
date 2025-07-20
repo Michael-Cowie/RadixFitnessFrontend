@@ -3,23 +3,24 @@ import HorizontalVerticalCenteringContainer from 'atoms/design_patterns/CenterCo
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
 interface ModalFormProps {
-    onSubmit: (e: SyntheticEvent) => void;
-    closeModalWindow: () => void;
-    children: ReactNode;
-    formProviderProps?: UseFormReturn<any>; // Optional react-hook-form context
+  onSubmit: (e: SyntheticEvent) => void;
+  closeModalWindow: () => void;
+  children: ReactNode;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  formProviderProps?: UseFormReturn<any>; // Optional react-hook-form context
 }
 
 const ModalForm: React.FC<ModalFormProps> = ({
-    onSubmit,
-    closeModalWindow,
-    children,
-    formProviderProps,
+  onSubmit,
+  closeModalWindow,
+  children,
+  formProviderProps,
 }) => {
-
-    const handleSubmit = (e: SyntheticEvent) => {
-        e.preventDefault();
-        onSubmit(e);
-    };
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    onSubmit(e);
+  };
 
   const form = (
     <form onSubmit={handleSubmit} className="w-full max-w-xs">
@@ -38,11 +39,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
     <div className="modal modal-open">
       <div className="modal-box">
         <HorizontalVerticalCenteringContainer>
-          {formProviderProps ? (
-            <FormProvider {...formProviderProps}>{form}</FormProvider>
-          ) : (
-            form
-          )}
+          {formProviderProps ? <FormProvider {...formProviderProps}>{form}</FormProvider> : form}
         </HorizontalVerticalCenteringContainer>
       </div>
     </div>

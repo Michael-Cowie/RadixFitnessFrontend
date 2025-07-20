@@ -4,22 +4,19 @@ import NavBar from 'organisms/NavBar';
 import { ReactNode } from 'react';
 
 interface Props {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 const PageTemplate: React.FC<Props> = ({ children }) => {
-    return (
-        <div className="flex flex-col h-full w-full">
-            <NavBar/>
+  return (
+    <div className="flex flex-col h-full w-full">
+      <NavBar />
 
-            <HorizontalVerticalCenteringContainer>
-                { children }
-            </HorizontalVerticalCenteringContainer>
+      <HorizontalVerticalCenteringContainer>{children}</HorizontalVerticalCenteringContainer>
 
-            <Footer/>
-        </div>
-    )
-
-}
+      <Footer />
+    </div>
+  );
+};
 
 export default PageTemplate;

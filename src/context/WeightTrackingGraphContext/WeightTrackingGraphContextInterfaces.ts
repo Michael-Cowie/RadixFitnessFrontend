@@ -5,7 +5,7 @@ export type DateToWeight = Record<string, number>;
 export type DateToNotes = Record<string, string>;
 
 export interface Props {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 export type WeightTrackingGraphContextPartial = {
@@ -15,31 +15,31 @@ export type WeightTrackingGraphContextPartial = {
 };
 
 export type WeightTrackingUIPartial = {
-    ui : Partial<WeightTrackingGraphContext['ui']>;
-}
+  ui: Partial<WeightTrackingGraphContext['ui']>;
+};
 
 export interface WeightTrackingGraphContext {
-    ui: {
-        trendlineEnabled: boolean;
-        goalWeightEnabled: boolean;
-        enableWeightPrediction: boolean;
-        dateRange: number;
-        isLoading: boolean;
-    }
+  ui: {
+    trendlineEnabled: boolean;
+    goalWeightEnabled: boolean;
+    enableWeightPrediction: boolean;
+    dateRange: number;
+    isLoading: boolean;
+  };
 
-    userData: {
-        goalDate: Dayjs;
-        goalWeightKg: number;
-        hasGoalWeight: boolean;
-    };
+  userData: {
+    goalDate: Dayjs;
+    goalWeightKg: number;
+    hasGoalWeight: boolean;
+  };
 
-    data: {
-        dateToWeightKg: DateToWeight;
-        dateToNotes: DateToNotes;
-        datesWithWeight: string[];
-    };
+  data: {
+    dateToWeightKg: DateToWeight;
+    dateToNotes: DateToNotes;
+    datesWithWeight: string[];
+  };
 
-    setPartialState: (partialState: Partial<WeightTrackingGraphContextPartial>) => void;
-    syncGoalWeight: (goalDate: Dayjs, weightInUserUnit: number) => Promise<boolean>;
-    syncWeightEntry: (date: Dayjs, weightInUserUnit: number, notes: string ) => Promise<boolean>;
-};
+  setPartialState: (partialState: Partial<WeightTrackingGraphContextPartial>) => void;
+  syncGoalWeight: (goalDate: Dayjs, weightInUserUnit: number) => Promise<boolean>;
+  syncWeightEntry: (date: Dayjs, weightInUserUnit: number, notes: string) => Promise<boolean>;
+}

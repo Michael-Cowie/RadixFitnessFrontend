@@ -17,7 +17,13 @@ import WeightTrackingPage from 'routes/WeightTrackingPage/WeightTrackingPage.tsx
 import AccountPrerequisites from 'routes/AccountPrerequisites.tsx';
 import RootLayout from 'routes/RootLayout.tsx';
 import { ProfileSettingsPage } from 'routes/ProfileSettingPage.tsx';
-import { FOOD_INTAKE_TRACKING_ROUTE, HOME_ROUTE, LOGIN_PAGE_ROUTE, PROFILE_SETTINGS_ROUTE, WEIGHT_TRACKING_ROUTE } from 'lib/routing_routes.ts';
+import {
+  FOOD_INTAKE_TRACKING_ROUTE,
+  HOME_ROUTE,
+  LOGIN_PAGE_ROUTE,
+  PROFILE_SETTINGS_ROUTE,
+  WEIGHT_TRACKING_ROUTE,
+} from 'lib/routing_routes.ts';
 
 export const router = createBrowserRouter([
   {
@@ -33,7 +39,7 @@ export const router = createBrowserRouter([
               { path: HOME_ROUTE, element: <HomePage /> },
               { path: WEIGHT_TRACKING_ROUTE, element: <WeightTrackingPage /> },
               { path: FOOD_INTAKE_TRACKING_ROUTE, element: <FoodIntakeTrackingPage /> },
-              { path: PROFILE_SETTINGS_ROUTE, element: <ProfileSettingsPage /> }
+              { path: PROFILE_SETTINGS_ROUTE, element: <ProfileSettingsPage /> },
             ],
           },
         ],
@@ -42,8 +48,8 @@ export const router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

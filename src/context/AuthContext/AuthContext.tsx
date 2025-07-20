@@ -1,5 +1,5 @@
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { loginUser, signOutUser } from 'services/FirebaseUtils';
 
 import { AuthProviderContextData, Props } from './AuthContextInterfaces';
@@ -7,42 +7,41 @@ import { AuthProviderContextData, Props } from './AuthContextInterfaces';
 const auth = getAuth(); // getAuth() returns the same object each time, hence, only call it once.
 const isDebug = import.meta.env.VITE_DEBUG === 'true';
 
-const AuthContext = createContext<AuthProviderContextData>({
-    "loading": true,
-    "user": null,
-    "userIsLoggedIn": false,
-    "loginUser": loginUser,
-    "logoutUser": async () => {}
+export const AuthContext = createContext<AuthProviderContextData>({
+  loading: true,
+  user: null,
+  userIsLoggedIn: false,
+  loginUser: loginUser,
+  logoutUser: async () => {},
 });
 
-
 export const AuthContextComponent: React.FC<Props> = ({ children }) => {
-    /**
-     * The authentication loading state could potentially be renamed to initializing,
-     * as it will be initialized to True and will be set to False when the Firebase
-     * callbacks and initiailization is complete. Once the loading state is set
-     * to False, it will not be set back to True, even if the users logs out
-     * and then back in again. The handling of contexts from logging in and out
-     * will be done using the user and userIsLoggedIn states.
-     */
-    const logoutUser = async () => {
-        if (await signOutUser()) {
-            setUserIsLoggedIn(false);
-        };
-    };
+  /**
+   * The authentication loading state could potentially be renamed to initializing,
+   * as it will be initialized to True and will be set to False when the Firebase
+   * callbacks and initiailization is complete. Once the loading state is set
+   * to False, it will not be set back to True, even if the users logs out
+   * and then back in again. The handling of contexts from logging in and out
+   * will be done using the user and userIsLoggedIn states.
+   */
+  const logoutUser = async () => {
+    if (await signOutUser()) {
+      setUserIsLoggedIn(false);
+    }
+  };
 
-    const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
-    const [user, setUser] = useState<User | null>(null);
-    const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
 
-    useEffect(() => {
-        onAuthStateChanged(auth, (newUser: User | null) => {
-            if (isDebug) {
-                console.log("Access Token: ", newUser.accessToken);
-            }
+  useEffect(() => {
+    onAuthStateChanged(auth, (newUser: User | null) => {
+      if (isDebug) {
+        console.log('Access Token: ', newUser.accessToken);
+      }
 
-            /* 
+      /* 
               Retrieve the idToken from Firebase and then finish loading.
 
               The user is unitialized and null when first loading the webpage. Hence, we set the loading
@@ -55,13 +54,13 @@ export const AuthContextComponent: React.FC<Props> = ({ children }) => {
               will only be made to the Firebase API if the token is expired, calling getIdToken
               will cache it for future use.
             */
-            setUser(newUser);
-            setLoading(false);
-            setUserIsLoggedIn(!!newUser);
-        })
-    }, []) // Pass an array, so that that is called when we have been added to the DOM (first render) and not each re-render.
-    return (
-        /*
+      setUser(newUser);
+      setLoading(false);
+      setUserIsLoggedIn(!!newUser);
+    });
+  }, []); // Pass an array, so that that is called when we have been added to the DOM (first render) and not each re-render.
+  return (
+    /*
          Calling useContext(AuthContext) will return the value of "value" here. Hence, 
          useAuthContext() is a shortcut to reduce calling this in multiple locations.
         
@@ -71,14 +70,8 @@ export const AuthContextComponent: React.FC<Props> = ({ children }) => {
 
          will destruct and pull "userIsLoggedIn" from the object.
         */
-        <AuthContext.Provider value={{ loading, user, userIsLoggedIn, loginUser, logoutUser }} >
-            { children }
-        </AuthContext.Provider>
-    )
-}
-
-const useAuthContext = () => {
-    return useContext(AuthContext);
-}
-
-export default useAuthContext;
+    <AuthContext.Provider value={{ loading, user, userIsLoggedIn, loginUser, logoutUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};

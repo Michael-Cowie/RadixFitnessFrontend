@@ -1,29 +1,24 @@
-import useAuthContext from 'context/AuthContext/AuthContext';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { getProfile, saveProfile } from 'services/Profile/Profile';
 import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
 
-import {
-  defaultMeasurementSystem,
-  Profile,
-  Props
-} from './ProfileContextInterfaces';
+import { defaultMeasurementSystem, Profile, Props } from './ProfileContextInterfaces';
+import useAuthContext from 'context/AuthContext/hooks';
 
-const ProfileContext = createContext<Profile>({
+export const ProfileContext = createContext<Profile>({
   loading: true,
   updateProfileContext: () => null,
   createAndSaveProfile: async () => false,
   name: '',
   measurementSystem: defaultMeasurementSystem,
-  hasProfile: false
+  hasProfile: false,
 });
 
 export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
-  const [measurementSystem, setMeasurementSystem] = useState<MeasurementSystem>(
-    defaultMeasurementSystem
-  );
+  const [measurementSystem, setMeasurementSystem] =
+    useState<MeasurementSystem>(defaultMeasurementSystem);
   const [hasProfile, setHasProfile] = useState<boolean>(false);
 
   const { loading: authLoading, userIsLoggedIn, user } = useAuthContext();
@@ -54,17 +49,14 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
   function updateProfileContext(
     name: string,
     measurementSystem: MeasurementSystem,
-    hasProfile: boolean
+    hasProfile: boolean,
   ) {
     setName(name);
     setMeasurementSystem(measurementSystem);
     setHasProfile(hasProfile);
   }
 
-  async function createAndSaveProfile(
-    name: string,
-    system: MeasurementSystem
-  ): Promise<boolean> {
+  async function createAndSaveProfile(name: string, system: MeasurementSystem): Promise<boolean> {
     const success = await saveProfile(name, system);
     if (success) {
       updateProfileContext(name, system, true);
@@ -80,16 +72,10 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
         createAndSaveProfile,
         name,
         measurementSystem,
-        hasProfile
+        hasProfile,
       }}
     >
       {children}
     </ProfileContext.Provider>
   );
 };
-
-const useProfileContext = () => {
-  return useContext(ProfileContext);
-};
-
-export default useProfileContext;

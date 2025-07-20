@@ -1,6 +1,5 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import WeightTrackingSpinbutton from 'atoms/inputs/weights/WeightTrackingSpinbutton';
-import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import dayjs, { Dayjs } from 'dayjs';
 import { dateObjectToFormattedDate } from 'lib/dateUtils';
 import { useEffect, useState, SyntheticEvent } from 'react';
@@ -8,22 +7,19 @@ import { useEffect, useState, SyntheticEvent } from 'react';
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import {
-  getDefaultValue,
-  getNotesFromDate,
-  getWeightText
-} from './editUpdateAlgorithms';
+import { getDefaultValue, getNotesFromDate, getWeightText } from './editUpdateAlgorithms';
 
 import { Props } from './editUpdateInterfaces';
-import useProfileContext from 'context/ProfileContext/ProfileContext';
 import { measurementSystemToUnit } from 'lib/weightTranslations';
 import { Group, GroupContainer, SubmitButton } from 'atoms/design_patterns/Group';
 import ModalForm from 'atoms/design_patterns/ModalForm';
+import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/hooks';
+import useProfileContext from 'context/ProfileContext/hooks';
 
 const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
   const {
     data: { datesWithWeight, dateToWeightKg, dateToNotes },
-    syncWeightEntry
+    syncWeightEntry,
   } = useWeightTrackingGraphContext();
 
   const { measurementSystem } = useProfileContext();
@@ -31,10 +27,15 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
 
   const [date, setDate] = useState<Dayjs>(today);
   const [weight, setWeight] = useState<number>(
-    getDefaultValue(dateObjectToFormattedDate(date), measurementSystem, datesWithWeight, dateToWeightKg)
+    getDefaultValue(
+      dateObjectToFormattedDate(date),
+      measurementSystem,
+      datesWithWeight,
+      dateToWeightKg,
+    ),
   );
   const [notes, setNotes] = useState<string>(
-    getNotesFromDate(dateObjectToFormattedDate(today), dateToNotes)
+    getNotesFromDate(dateObjectToFormattedDate(today), dateToNotes),
   );
 
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -47,7 +48,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
     const formattedDate = dateObjectToFormattedDate(date);
     setWeight(getDefaultValue(formattedDate, measurementSystem, datesWithWeight, dateToWeightKg));
     setNotes(getNotesFromDate(formattedDate, dateToNotes));
-  }, [date]);
+  }, [date, dateToNotes, dateToWeightKg, datesWithWeight, measurementSystem]);
 
   const onSubmit = async (event: SyntheticEvent) => {
     event.preventDefault();
@@ -55,9 +56,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
 
     syncWeightEntry(date, weight, notes)
       .then(() => closeModalWindow(true))
-      .catch(() =>
-        setErrorMessage(`Unable to ${updating ? 'update' : 'add'} weight`)
-      )
+      .catch(() => setErrorMessage(`Unable to ${updating ? 'update' : 'add'} weight`))
       .finally(() => setIsLoading(false));
   };
 
@@ -74,7 +73,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
                 maxDate={today}
                 onChange={(v: Dayjs | null) => v && setDate(v)}
                 slotProps={{
-                  textField: { fullWidth: true }
+                  textField: { fullWidth: true },
                 }}
               />
             </div>

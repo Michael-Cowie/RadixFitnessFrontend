@@ -1,3 +1,3 @@
-interface LoginPageContainerProps {
+export interface LoginPageContainerProps {
   children: React.ReactNode;
 }

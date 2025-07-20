@@ -1,16 +1,29 @@
 import {
-    CategoryScale, Chart, Legend, LinearScale, LineElement, PointElement, Title, Tooltip
+  CategoryScale,
+  Chart,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
 } from 'chart.js';
 import chartTrendline from 'chartjs-plugin-trendline';
-import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import { Line } from 'react-chartjs-2';
 
 import {
-    calculateGoalWeightData, calculatePredictedData, calculateUserData, convertDataToDisplayUnit,
-    determine_tooltip, formatLabels, generateDateRangeAxisData, generateLabelsFromDates
+  calculateGoalWeightData,
+  calculatePredictedData,
+  calculateUserData,
+  convertDataToDisplayUnit,
+  determine_tooltip,
+  formatLabels,
+  generateDateRangeAxisData,
+  generateLabelsFromDates,
 } from './WeightTrackingAlgorithms';
-import useProfileContext from 'context/ProfileContext/ProfileContext';
 import { measurementSystemToUnit } from 'lib/weightTranslations';
+import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/hooks';
+import useProfileContext from 'context/ProfileContext/hooks';
 
 Chart.register(
   chartTrendline,
@@ -20,7 +33,7 @@ Chart.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const options = {
@@ -28,7 +41,7 @@ const options = {
   responsive: true,
   maintainAspectRatio: false,
   animation: {
-    duration: 0
+    duration: 0,
   },
   plugins: {
     title: {
@@ -41,122 +54,125 @@ const options = {
     },
     tooltip: {
       callbacks: {
-        title: () => null
+        title: () => null,
       },
-      displayColors: false
-    }
-  }
+      displayColors: false,
+    },
+  },
 };
 
 const WeightTrackingLineGraph = () => {
   const {
-    ui: {
-      trendlineEnabled,
-      goalWeightEnabled,
-      enableWeightPrediction,
-      dateRange
-    },
-    userData: {
-      goalWeightKg,
-      goalDate
-    },
-    data: {
-      dateToWeightKg,
-      datesWithWeight,
-      dateToNotes
-    }
+    ui: { trendlineEnabled, goalWeightEnabled, enableWeightPrediction, dateRange },
+    userData: { goalWeightKg, goalDate },
+    data: { dateToWeightKg, datesWithWeight, dateToNotes },
   } = useWeightTrackingGraphContext();
 
   const { measurementSystem } = useProfileContext();
   const displayUnit = measurementSystemToUnit(measurementSystem);
 
-  const dataRangeAxisData = generateDateRangeAxisData(dateRange, datesWithWeight, goalWeightEnabled, goalDate);
+  const dataRangeAxisData = generateDateRangeAxisData(
+    dateRange,
+    datesWithWeight,
+    goalWeightEnabled,
+    goalDate,
+  );
   const labels = generateLabelsFromDates(dataRangeAxisData);
 
   const userData = calculateUserData(labels, dateToWeightKg);
-  const predictedData = calculatePredictedData(labels, userData, enableWeightPrediction, goalDate, datesWithWeight, dateToWeightKg);
-  const goalWeightData = calculateGoalWeightData(dataRangeAxisData, goalWeightEnabled, goalWeightKg, goalDate);
+  const predictedData = calculatePredictedData(
+    labels,
+    userData,
+    enableWeightPrediction,
+    goalDate,
+    datesWithWeight,
+    dateToWeightKg,
+  );
+  const goalWeightData = calculateGoalWeightData(
+    dataRangeAxisData,
+    goalWeightEnabled,
+    goalWeightKg,
+    goalDate,
+  );
 
   const convertedUserData = convertDataToDisplayUnit(userData, measurementSystem);
   const convertedPredictedData = convertDataToDisplayUnit(predictedData, measurementSystem);
   const convertedGoalWeightData = convertDataToDisplayUnit(goalWeightData, measurementSystem);
 
-
-  // @ts-ignore
+  // @ts-expect-error Third party TypeScript errors
   options.plugins.tooltip.callbacks.label = determine_tooltip(labels, dateToNotes, displayUnit);
 
   window.addEventListener('resize', function () {
-    for (let chart of Object.values(Chart.instances)) {
+    for (const chart of Object.values(Chart.instances)) {
       chart.resize();
     }
-  })
+  });
 
   /**
-   * We need to reset this to null to remove it, if it has been previously displayed. 
+   * We need to reset this to null to remove it, if it has been previously displayed.
    * Conditionally adding it such as ,
-   * 
+   *
    * ...(createTrendLine && {
    *      trendlineLinear: {
    *        ...
    * }})
-   * 
+   *
    * will not remove it from the canvas after it had been rendered.
    */
   let trendLineData = null;
-  if (trendlineEnabled && userData.filter(v => v != null).length > 1) {
+  if (trendlineEnabled && userData.filter((v) => v != null).length > 1) {
     trendLineData = {
-        colorMin: "orange",
-        colorMax: "orange",
-        lineStyle: "dotted",
-        width: 3
-    }
+      colorMin: 'orange',
+      colorMax: 'orange',
+      lineStyle: 'dotted',
+      width: 3,
+    };
   }
 
-  let datasets = [
+  const datasets = [
     {
-      label: `Weight in ${ displayUnit }`,
+      label: `Weight in ${displayUnit}`,
       data: convertedUserData,
       borderColor: 'rgb(53, 162, 235)',
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
       spanGaps: true, // Connect the line for null points
-      trendlineLinear: trendLineData
-    }
-  ]
+      trendlineLinear: trendLineData,
+    },
+  ];
 
-  const displayPredictedDataset = predictedData.length > 1 && goalWeightEnabled && enableWeightPrediction;
+  const displayPredictedDataset =
+    predictedData.length > 1 && goalWeightEnabled && enableWeightPrediction;
   if (displayPredictedDataset) {
-    //@ts-ignore
+    //@ts-expect-error Third party TypeScript errors
     datasets.push({
-      label: "Goal Prediction",
+      label: 'Goal Prediction',
       data: convertedPredictedData,
       borderColor: '#55b646',
       backgroundColor: '#3f9532',
     });
   }
-  
+
   if (goalWeightEnabled) {
-    //@ts-ignore
+    //@ts-expect-error Third party TypeScript errors
     datasets.push({
-      label: "Goal Weight",
+      label: 'Goal Weight',
       data: convertedGoalWeightData,
       borderColor: '#6dc162',
       backgroundColor: '#6dc162',
     });
   }
 
-
   const data = {
-      labels: formatLabels(labels),
-      datasets
+    labels: formatLabels(labels),
+    datasets,
   };
 
   return (
     <Line
-      //@ts-ignore
-      options={ options } 
-      //@ts-ignore
-      data={ data }
+      //@ts-expect-error Third party TypeScript errors
+      options={options}
+      data={data}
     />
-  )
-}
+  );
+};
 export default WeightTrackingLineGraph;

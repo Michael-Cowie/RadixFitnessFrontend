@@ -2,7 +2,7 @@
     <h1> Radix Fitness - Frontend
 </div>
 
-This is the frontend web application for Radix Fitness, a health and fitness tracking platform. 
+This is the frontend web application for Radix Fitness, a health and fitness tracking platform.
 
 Radix Fitness interfaces with the [Radix Fitness backend](https://github.com/Michael-Cowie/RadixFitnessBackend) API.
 
@@ -18,4 +18,4 @@ Users can,
 
 ## Developer Documentation
 
-Developer documentation can be found within the `docs` folder. This includes folder includes numerous information about the current project architecture, environment setup and educational information. 
+Developer documentation can be found within the `docs` folder. This includes folder includes numerous information about the current project architecture, environment setup and educational information.

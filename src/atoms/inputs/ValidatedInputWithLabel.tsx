@@ -8,6 +8,8 @@ interface Props {
   type?: string;
   placeholder?: string;
   defaultValue?: string;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: UseFormRegister<any>;
   error?: string;
 }
@@ -15,10 +17,10 @@ interface Props {
 export const ValidatedInputWithLabel: React.FC<Props> = ({
   label,
   name,
-  type = "text",
-  placeholder = "Type Here",
+  type = 'text',
+  placeholder = 'Type Here',
   register,
-  error
+  error,
 }) => {
   return (
     <Container>

@@ -10,7 +10,10 @@ interface CircularBoxProps {
 
 const CircularBox: React.FC<CircularBoxProps> = ({ number, text, selected }) => {
   return (
-    <div className={`${styles.circularContainer} ${selected ? styles.selected : ''}`} style= {{ userSelect: 'none' }}>
+    <div
+      className={`${styles.circularContainer} ${selected ? styles.selected : ''}`}
+      style={{ userSelect: 'none' }}
+    >
       <div className={styles.textTop}>{text}</div>
       <div className={styles.numberCircle}>{number}</div>
     </div>

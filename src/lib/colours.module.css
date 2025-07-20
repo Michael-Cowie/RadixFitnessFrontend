@@ -1,53 +1,52 @@
 :root {
-    --blue: #35A2EB;
-    --darkBlue: #2a64e5;
-    --green: #55b646;
-    --darkGreen: #32a91e;
-    --orange: #f59b0b;
-    --darkOrange: #c47f08;
-  }  
+  --blue: #35a2eb;
+  --darkBlue: #2a64e5;
+  --green: #55b646;
+  --darkGreen: #32a91e;
+  --orange: #f59b0b;
+  --darkOrange: #c47f08;
+}
 
 .orange {
-    background-color: var(--orange);
+  background-color: var(--orange);
 }
 
 .orangeWithHover {
-    background-color: var(--orange);
+  background-color: var(--orange);
 }
 
 .orangeWithHover:hover {
-    background-color: var(--darkOrange);
+  background-color: var(--darkOrange);
 }
 
 .blue {
-    background-color: var(--blue);
+  background-color: var(--blue);
 }
 
 .darkBlue {
-    background-color: var(--darkBlue);
+  background-color: var(--darkBlue);
 }
 
-
 .blueWithHover {
-    background-color: var(--blue);
+  background-color: var(--blue);
 }
 
 .blueWithHover:hover {
-    background-color: var(--darkBlue);
+  background-color: var(--darkBlue);
 }
 
 .green {
-    background-color: var(--green);
+  background-color: var(--green);
 }
 
 .darkGreen {
-    background-color: var(--darkGreen);
+  background-color: var(--darkGreen);
 }
 
 .greenWithHover {
-    background-color: var(--green);
+  background-color: var(--green);
 }
 
 .greenWithHover:hover {
-    background-color: var(--darkGreen);
+  background-color: var(--darkGreen);
 }

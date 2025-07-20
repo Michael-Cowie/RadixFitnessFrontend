@@ -6,9 +6,9 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { Group, GroupContainer, SubmitButton } from 'atoms/design_patterns/Group';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import useProfileContext from 'context/ProfileContext/ProfileContext';
 import { measurementSystems } from 'services/Profile/ProfileInterfaces';
 import { useNavigate } from 'react-router-dom';
+import useProfileContext from 'context/ProfileContext/hooks';
 
 const measurementSystemField = 'measurementSystem' as const;
 
@@ -25,7 +25,12 @@ const schema = z.object({
 const ProfileSettings = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { createAndSaveProfile, hasProfile, name: profileName, measurementSystem } = useProfileContext();
+  const {
+    createAndSaveProfile,
+    hasProfile,
+    name: profileName,
+    measurementSystem,
+  } = useProfileContext();
   const navigate = useNavigate();
 
   const methods = useForm({
@@ -48,11 +53,11 @@ const ProfileSettings = () => {
     const system = data[measurementSystemField];
 
     const success = await createAndSaveProfile(name, system);
-    
+
     if (success) {
-        navigate("/")
+      navigate('/');
     } else {
-        setErrorMessage('Unable to create profile');
+      setErrorMessage('Unable to create profile');
     }
 
     setIsLoading(false);
@@ -60,28 +65,28 @@ const ProfileSettings = () => {
 
   return (
     <FormProvider {...methods}>
-        <GroupContainer>
-            <Group title="Profile Settings">
-                <form onSubmit={handleSubmit(attemptCreateNewProfile)}>
-                    <ValidatedInputWithLabel
-                        label="Name"
-                        name="name"
-                        register={register}
-                        error={errors.name?.message as string}
-                    />
+      <GroupContainer>
+        <Group title="Profile Settings">
+          <form onSubmit={handleSubmit(attemptCreateNewProfile)}>
+            <ValidatedInputWithLabel
+              label="Name"
+              name="name"
+              register={register}
+              error={errors.name?.message as string}
+            />
 
-                    <SelectionInput
-                        name={measurementSystemField}
-                        label="Measurement system"
-                        options={measurementSystems}
-                    />
+            <SelectionInput
+              name={measurementSystemField}
+              label="Measurement system"
+              options={measurementSystems}
+            />
 
-                    <SubmitButton displayLoadingAnimation={isLoading} />
+            <SubmitButton displayLoadingAnimation={isLoading} />
 
-                    <ErrorMessage errorMessage={errorMessage} />
-                </form>
-            </Group>
-        </GroupContainer>
+            <ErrorMessage errorMessage={errorMessage} />
+          </form>
+        </Group>
+      </GroupContainer>
     </FormProvider>
   );
 };

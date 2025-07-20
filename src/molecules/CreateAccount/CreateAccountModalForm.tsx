@@ -3,13 +3,14 @@ import ModalForm from 'atoms/design_patterns/ModalForm';
 import ErrorMessage from 'atoms/ErrorMessage';
 import { ValidatedInputWithLabel } from 'atoms/inputs/ValidatedInputWithLabel';
 import { UseFormReturn } from 'react-hook-form';
+import { CreateAccountFormData } from './CreateAccount';
 
 interface Props {
-  methods: UseFormReturn<any>;
+  methods: UseFormReturn<CreateAccountFormData>;
   closeModalWindow: () => void;
   isLoading: boolean;
   errorMessage: string;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: CreateAccountFormData) => void;
 }
 
 const CreateAccountModal: React.FC<Props> = ({
@@ -17,7 +18,7 @@ const CreateAccountModal: React.FC<Props> = ({
   closeModalWindow,
   isLoading,
   errorMessage,
-  onSubmit
+  onSubmit,
 }) => {
   return (
     <ModalForm

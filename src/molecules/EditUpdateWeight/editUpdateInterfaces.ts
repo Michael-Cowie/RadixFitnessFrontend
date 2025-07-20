@@ -1,3 +1,3 @@
 export interface Props {
-    closeModalWindow: (showConfetti: boolean) => void,
+  closeModalWindow: (showConfetti: boolean) => void;
 }

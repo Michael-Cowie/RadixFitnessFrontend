@@ -7,7 +7,13 @@ interface CheckBoxProps {
   onChange?: () => void;
   name?: string;
 }
-const CheckBoxWithLabel: React.FC<CheckBoxProps> = ({ label, checked, onChange, name, defaultChecked }) => {
+const CheckBoxWithLabel: React.FC<CheckBoxProps> = ({
+  label,
+  checked,
+  onChange,
+  name,
+  defaultChecked,
+}) => {
   return (
     <label className="flex items-center select-none cursor-pointer">
       <input
@@ -18,7 +24,7 @@ const CheckBoxWithLabel: React.FC<CheckBoxProps> = ({ label, checked, onChange, 
         name={name}
         defaultChecked={defaultChecked}
       />
-      <span> { label } </span>
+      <span> {label} </span>
     </label>
   );
 };

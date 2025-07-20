@@ -1,5 +1,5 @@
-import AppContextComponent from "context/AppContext";
-import { Outlet } from "react-router-dom";
+import AppContextComponent from 'context/AppContext';
+import { Outlet } from 'react-router-dom';
 
 const RootLayout = () => {
   return (
@@ -7,6 +7,6 @@ const RootLayout = () => {
       <Outlet />
     </AppContextComponent>
   );
-}
+};
 
 export default RootLayout;

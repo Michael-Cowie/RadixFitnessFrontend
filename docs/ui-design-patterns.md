@@ -8,14 +8,13 @@ In large or long-lived applications, the cost of this inconsitency compounds. Te
 
 To address these challenges, this project introduces a centralized set of UI design patterns - a collection of composable, reusable components encapsulated under the `atoms/design_patterns/` directory. These components act as building blocks for constructing predictable, accessible and aesthetically consistent user interfaces.
 
-
 ## Centering
 
 Having the requirement of both vertical and horizontal centering is a common requirement. To resolve this issue the component `HorizontalVerticalCenteringContainer` can be used. All children within this component will be vertically and horizontally centered. This component also has fixes for vertically centering when the child component has a scrollbar.
 
 ```tsx
 <HorizontalVerticalCenteringContainer>
-    <div> I am vertically and horizontally centered </div>
+  <div> I am vertically and horizontally centered </div>
 </HorizontalVerticalCenteringContainer>
 ```
 
@@ -72,7 +71,7 @@ When performing an API request after submitting a button such as logging in, it'
     <img src="./images/loading_button_display.png">
 </div>
 
-The expected use is to be within a `<form>` that performs the next request and sets the `isLoading` to `true` 
+The expected use is to be within a `<form>` that performs the next request and sets the `isLoading` to `true`
 
 ```TSX
 const onLogin = async(event: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -88,8 +87,8 @@ const onLogin = async(event: React.FormEvent<HTMLFormElement>): Promise<void> =>
 };
 
 <form onSubmit={ onLogin }>
-    <SubmitButtonWithProgress 
-        buttonText="Log in" 
+    <SubmitButtonWithProgress
+        buttonText="Log in"
         displayLoadingAnimation={ isLoading }
         iconSrc={ '/flexing_arm.svg' }
     />

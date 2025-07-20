@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 interface CenteringContainerProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 /**
@@ -11,44 +11,46 @@ interface CenteringContainerProps {
  * the justify-start and justify-center depending if the scrollarea is enabled.
  */
 const HorizontalVerticalCenteringContainer: React.FC<CenteringContainerProps> = ({ children }) => {
-    const [isOverflowing, setIsOverflowing] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        /*
-            scrollHeight = This is the total height of the content inside an element, including the content not visible on the screen due to overflow.
-            clientHeight = This is the height of the visible content inside an element, i.e., the portion of the element that is visible within the viewport, 
-                           excluding the content that is hidden because of scrolling.
-        */
-        const checkOverflow = () => {
-            if (containerRef.current) {
-                setIsOverflowing(containerRef.current.scrollHeight > containerRef.current.clientHeight);
-            }
-        };
+  useEffect(() => {
+    /*
+      scrollHeight = This is the total height of the content inside an element, including the content not visible on the screen due to overflow.
+      clientHeight = This is the height of the visible content inside an element, i.e., the portion of the element that is visible within the viewport, 
+                     excluding the content that is hidden because of scrolling.
+    */
+    const element = containerRef.current;
 
-        const resizeObserver = new ResizeObserver(() => {
-            checkOverflow();
-        });
+    const checkOverflow = () => {
+      if (element) {
+        setIsOverflowing(element.scrollHeight > element.clientHeight);
+      }
+    };
 
-        if (containerRef.current) {
-            resizeObserver.observe(containerRef.current);
-        }
+    const resizeObserver = new ResizeObserver(() => {
+      checkOverflow();
+    });
 
-        return () => {
-            if (containerRef.current) {
-                resizeObserver.unobserve(containerRef.current);
-            }
-        };
-    }, [children]);
+    if (element) {
+      resizeObserver.observe(element);
+    }
 
-    return (
-        <div
-            ref={containerRef}
-            className={`flex flex-1 flex-col h-full w-full overflow-auto items-center ${isOverflowing ? 'justify-start' : 'justify-center'}`}
-        >
-            {children}
-        </div>
-    );
+    return () => {
+      if (element) {
+        resizeObserver.unobserve(element);
+      }
+    };
+  }, [children]);
+
+  return (
+    <div
+      ref={containerRef}
+      className={`flex flex-1 flex-col h-full w-full overflow-auto items-center ${isOverflowing ? 'justify-start' : 'justify-center'}`}
+    >
+      {children}
+    </div>
+  );
 };
 
 export default HorizontalVerticalCenteringContainer;

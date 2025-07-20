@@ -9,7 +9,7 @@
   position: absolute;
   top: 15.5px;
   right: 2.5rem;
-  transition: all .05s ease-in-out;
+  transition: all 0.05s ease-in-out;
 }
 
 /* set the unit abbreviation for each weight unit */
@@ -22,5 +22,5 @@
 }
 
 .g::after {
-  content: 'g'
+  content: 'g';
 }

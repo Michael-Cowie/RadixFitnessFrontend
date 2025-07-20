@@ -15,25 +15,27 @@ const rowHeight = '48px';
 
 const EmptyRows: React.FC<EmptyCellsProps> = ({ amount }) => {
   return (
-      <>
-          {Array.from({ length: amount }).map((_, index) => (
-              <TableRow key={index} sx={{ height: rowHeight }}>
-                  {Array.from({ length: expectedColumnNumber}).map((_, index) => <TableCell key={index} />)}
-              </TableRow>
+    <>
+      {Array.from({ length: amount }).map((_, index) => (
+        <TableRow key={index} sx={{ height: rowHeight }}>
+          {Array.from({ length: expectedColumnNumber }).map((_, index) => (
+            <TableCell key={index} />
           ))}
-      </>
+        </TableRow>
+      ))}
+    </>
   );
 };
 
-const DesktopTable: React.FC<TableProps> = ({ entries, handleContextMenu}) => {
+const DesktopTable: React.FC<TableProps> = ({ entries, handleContextMenu }) => {
   return (
     <>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" >
+        <Table sx={{ minWidth: 650 }} size="small">
           <TableHead>
             <TableRow sx={{ height: rowHeight }}>
-              <TableCell align="left"/>
-              <TableCell align="right" > Calories </TableCell>
+              <TableCell align="left" />
+              <TableCell align="right"> Calories </TableCell>
               <TableCell align="right"> Fat (g) </TableCell>
               <TableCell align="right"> Carbs (g) </TableCell>
               <TableCell align="right"> Protein (g) </TableCell>
@@ -43,8 +45,8 @@ const DesktopTable: React.FC<TableProps> = ({ entries, handleContextMenu}) => {
 
           <TableBody>
             {entries.map((row) => (
-              <TableRow 
-                key={row.id} 
+              <TableRow
+                key={row.id}
                 onContextMenu={(e) => handleContextMenu(e, row.id, row.foodName)}
                 sx={{ height: rowHeight }}
               >
@@ -57,12 +59,12 @@ const DesktopTable: React.FC<TableProps> = ({ entries, handleContextMenu}) => {
               </TableRow>
             ))}
 
-            <EmptyRows amount={ pageSize - entries.length }/>
+            <EmptyRows amount={pageSize - entries.length} />
           </TableBody>
         </Table>
       </TableContainer>
     </>
-  )
+  );
 };
 
 export default DesktopTable;

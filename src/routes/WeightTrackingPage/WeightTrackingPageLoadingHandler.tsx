@@ -1,29 +1,27 @@
 import SubmitButtonWithProgress from 'atoms/design_patterns/SubmitButtonWithProgress';
-import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
+import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/hooks';
 import { ReactNode } from 'react';
 
 interface Props {
-    children: ReactNode
+  children: ReactNode;
 }
 
 const WeightTrackingPageLoadingHandler: React.FC<Props> = ({ children }) => {
-    const { isLoading } = useWeightTrackingGraphContext();
+  const {
+    ui: { isLoading },
+  } = useWeightTrackingGraphContext();
 
-    if ( isLoading ) {
-        return (
-            <>
-                <div className="w-5/6 md:w-1/6">
-                    <SubmitButtonWithProgress buttonText='' displayLoadingAnimation={true} />
-                </div>
-            </>
-        );
-    }
-
+  if (isLoading) {
     return (
-        <>
-            { children }
-        </>
-    )
-}
+      <>
+        <div className="w-5/6 md:w-1/6">
+          <SubmitButtonWithProgress buttonText="" displayLoadingAnimation={true} />
+        </div>
+      </>
+    );
+  }
 
-export default WeightTrackingPageLoadingHandler
+  return <>{children}</>;
+};
+
+export default WeightTrackingPageLoadingHandler;

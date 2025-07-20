@@ -1,27 +1,23 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import InformationHover from 'atoms/InformationHover';
 import WeightTrackingSpinbutton from 'atoms/inputs/weights/WeightTrackingSpinbutton';
-import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/WeightTrackingGraphContext';
 import dayjs from 'dayjs';
 import { SyntheticEvent, useState } from 'react';
 import {
   measurementSystemToUnit,
-  weightFromKgToUserMeasurementSystem
+  weightFromKgToUserMeasurementSystem,
 } from 'lib/weightTranslations';
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import styles from './styles.module.css';
 import { Props } from './WeightGraphSettingsInterfaces';
-import {
-  Group,
-  GroupContainer,
-  SubmitButton
-} from 'atoms/design_patterns/Group';
+import { Group, GroupContainer, SubmitButton } from 'atoms/design_patterns/Group';
 import CheckBoxWithLabel from 'atoms/design_patterns/CheckBox';
 import SensitivityController from 'atoms/design_patterns/SensitivityWrapper';
-import useProfileContext from 'context/ProfileContext/ProfileContext';
 import ModalForm from 'atoms/design_patterns/ModalForm';
+import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/hooks';
+import useProfileContext from 'context/ProfileContext/hooks';
 
 const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
   const { measurementSystem } = useProfileContext();
@@ -30,21 +26,19 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
     ui: {
       trendlineEnabled: defaultTrendlineEnabled,
       goalWeightEnabled: defaultGoalWeightEnabled,
-      enableWeightPrediction: defaultEnableWeightPrediction
+      enableWeightPrediction: defaultEnableWeightPrediction,
     },
-    userData: {
-      goalDate: defaultGoalDate,
-      goalWeightKg,
-      hasGoalWeight
-    },
+    userData: { goalDate: defaultGoalDate, goalWeightKg, hasGoalWeight },
     syncGoalWeight: updateGoalWeight,
-    setPartialState
+    setPartialState,
   } = useWeightTrackingGraphContext();
 
-  const [enableWeightPrediction, setEnableWeightPrediction] = useState<boolean>(defaultEnableWeightPrediction);
+  const [enableWeightPrediction, setEnableWeightPrediction] = useState<boolean>(
+    defaultEnableWeightPrediction,
+  );
   const [goalWeightEnabled, setGoalWeightEnabled] = useState<boolean>(defaultGoalWeightEnabled);
   const [goalWeight, setGoalWeight] = useState<number>(
-    weightFromKgToUserMeasurementSystem(goalWeightKg, measurementSystem)
+    weightFromKgToUserMeasurementSystem(goalWeightKg, measurementSystem),
   );
 
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -56,7 +50,8 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
 
     const form = event.target as HTMLFormElement;
 
-    const trendlineEnabled = (form.elements.namedItem('trendlineEnabled') as HTMLInputElement).checked;
+    const trendlineEnabled = (form.elements.namedItem('trendlineEnabled') as HTMLInputElement)
+      .checked;
 
     const goalDatePicker = form.elements.namedItem('goalDateDatePicker') as HTMLInputElement;
     const goalDate = dayjs(goalDatePicker.value);
@@ -67,14 +62,13 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
         ui: {
           trendlineEnabled,
           goalWeightEnabled,
-          enableWeightPrediction
-        }
+          enableWeightPrediction,
+        },
       });
       closeModalWindow();
     } else {
-      setErrorMessage(
-        `Unable to ${hasGoalWeight ? 'update' : 'add'} goal information`
-      );
+      setErrorMessage(`Unable to ${hasGoalWeight ? 'update' : 'add'} goal information`);
+      setIsLoading(false);
     }
   };
 
@@ -95,9 +89,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
                   label="Weight Prediction"
                   name="enableWeightPrediction"
                   checked={enableWeightPrediction && goalWeightEnabled}
-                  onChange={() =>
-                    setEnableWeightPrediction(!enableWeightPrediction)
-                  }
+                  onChange={() => setEnableWeightPrediction(!enableWeightPrediction)}
                 />
                 <InformationHover information="Predictions are calculated from the visible weights on the graph." />
               </div>
@@ -112,11 +104,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
 
         <Group title="Goal Settings">
           <div className="mt-1 w-2/3 space-y-2">
-            <div
-              className={`w-full ${
-                !goalWeightEnabled ? styles.fadeImage : ''
-              }`}
-            >
+            <div className={`w-full ${!goalWeightEnabled ? styles.fadeImage : ''}`}>
               <DatePicker
                 name="goalDateDatePicker"
                 disabled={!goalWeightEnabled}
@@ -125,8 +113,8 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
                 minDate={dayjs(new Date()).add(1, 'days')}
                 slotProps={{
                   textField: {
-                    fullWidth: true
-                  }
+                    fullWidth: true,
+                  },
                 }}
               />
             </div>

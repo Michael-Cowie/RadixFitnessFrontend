@@ -1,1 +1,1 @@
-export type DateToWeight = Record<string, string>
+export type DateToWeight = Record<string, string>;
