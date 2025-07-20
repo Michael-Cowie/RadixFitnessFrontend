@@ -1,14 +1,14 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import { InputWithLabel } from 'atoms/inputs/InputWithLabel';
 import SubmitButtonWithProgress from 'atoms/design_patterns/SubmitButtonWithProgress';
-import useAuth from 'context/AuthContext/AuthContext';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useAuthContext from 'context/AuthContext/hooks';
 
 export const LoginForm = () => {
   const navigate = useNavigate();
 
-  const { userIsLoggedIn, loginUser } = useAuth();
+  const { userIsLoggedIn, loginUser } = useAuthContext();
 
   const [loginError, setLoginError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);

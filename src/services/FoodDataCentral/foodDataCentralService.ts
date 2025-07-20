@@ -9,16 +9,18 @@ const FOODDATA_CENTRAL_END_POINT = '/api/v1/foods/';
 const SEARCH_END_POINT = FOODDATA_CENTRAL_END_POINT + 'search/';
 
 export const searchForNutritionalContent: SearchForNutritionalContentProps = async (
-  food_query_string,
-) => {
-  try {
-    const response = await get(SEARCH_END_POINT, { params: { food: food_query_string } });
+  foodName,
+): Promise<searchForNutritionalContentResponse> => {
+  const response = await get(SEARCH_END_POINT, { food: foodName });
 
-    if (response.status === 200) {
-      return response.data as searchForNutritionalContentResponse;
-    }
-    return null;
-  } catch (error) {
-    return null;
+  if (response.status === 200) {
+    const { carbs, fat, protein } = response.data.food_nutrient;
+    return {
+      carbsPer100g: carbs.value,
+      fatPer100g: fat.value,
+      proteinPer100g: protein.value,
+    };
   }
+
+  throw new Error('Unexpected response status');
 };

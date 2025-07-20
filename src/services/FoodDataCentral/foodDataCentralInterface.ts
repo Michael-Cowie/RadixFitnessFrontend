@@ -12,12 +12,11 @@ export interface FoodItem {
 }
 
 export interface searchForNutritionalContentResponse {
-  food_weight: number;
-  food_unit: string;
-  search_query: string;
-  search_results: FoodItem[];
+  proteinPer100g: number;
+  fatPer100g: number;
+  carbsPer100g: number;
 }
 
-export interface SearchForNutritionalContentProps {
-  (food_query_string: string): Promise<searchForNutritionalContentResponse | null>;
-}
+export type SearchForNutritionalContentProps = (
+  foodName: string,
+) => Promise<searchForNutritionalContentResponse>;

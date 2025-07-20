@@ -69,19 +69,19 @@ export default function FoodIntakeTable() {
       </div>
 
       {/* 
-                Right-click context menu. 
+        Right-click context menu. 
 
-                When we anchor a context menu, its position is stuck. We cannot change
-                this position. Therefore, to move the menu we need to change the key.
-                This tells React to unmount the current Menu component and mount
-                an entirely new one in its new anchor position.
+        When we anchor a context menu, its position is stuck. We cannot change
+        this position. Therefore, to move the menu we need to change the key.
+        This tells React to unmount the current Menu component and mount
+        an entirely new one in its new anchor position.
 
-                When we right click a row, it will set the context menu state by
-                calling onContextMenu connected to the table row. When we right click 
-                elsewhere, onBlur will first be called which sets the key of the menu 
-                to undefined. Afterwards onContextMenu will be called again which sets 
-                the key to the row id. This allows for multiple clicks on the same row.
-            */}
+        When we right click a row, it will set the context menu state by
+        calling onContextMenu connected to the table row. When we right click 
+        elsewhere, onBlur will first be called which sets the key of the menu 
+        to undefined. Afterwards onContextMenu will be called again which sets 
+        the key to the row id. This allows for multiple clicks on the same row.
+      */}
       <Menu
         key={contextMenu?.entryId}
         open={contextMenu !== null}

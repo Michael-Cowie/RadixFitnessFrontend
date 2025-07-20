@@ -3,8 +3,8 @@ import { getLocalStorage, usePersistenceKey, setLocalStorage } from 'lib/statePe
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import ManualAddFoodEntry from './ManualAddFoodEntry';
-import SearchAddFoodEntry from './SearchAddFoodEntry';
+import AddFoodEntryModal from './AddFoodEntryModal';
+import { AddFoodEntryMode } from './FoodEntryInterfaces';
 
 export interface Props {
   closeModalWindow: () => void;
@@ -13,9 +13,9 @@ export interface Props {
 const CreateFoodEntry: React.FC<Props> = ({ closeModalWindow }) => {
   const persistenceKey = usePersistenceKey();
 
-  const [selected, setSelected] = useState<string>(() => {
-    const selectedButton = getLocalStorage(persistenceKey, 'selectedSearchButton');
-    return selectedButton ? selectedButton : 'Search';
+  const [selected, setSelected] = useState<AddFoodEntryMode>(() => {
+    const saved = getLocalStorage(persistenceKey, 'selectedSearchButton');
+    return saved === AddFoodEntryMode.Manual ? AddFoodEntryMode.Manual : AddFoodEntryMode.Search;
   });
 
   useEffect(() => {
@@ -32,28 +32,27 @@ const CreateFoodEntry: React.FC<Props> = ({ closeModalWindow }) => {
                 onClick={() => closeModalWindow()}
                 className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
               >
-                {' '}
-                ✕{' '}
+                ✕
               </button>
 
               <div className="w-full flex flex-row justify-center">
                 <SelectableButton
-                  selected={selected === 'Search'}
+                  selected={selected === AddFoodEntryMode.Search}
                   displayText="Search"
-                  onClick={() => setSelected('Search')}
+                  onClick={() => setSelected(AddFoodEntryMode.Search)}
                 />
                 <SelectableButton
-                  selected={selected === 'Manual'}
+                  selected={selected === AddFoodEntryMode.Manual}
                   displayText="Manual"
-                  onClick={() => setSelected('Manual')}
+                  onClick={() => setSelected(AddFoodEntryMode.Manual)}
                 />
               </div>
 
-              {selected === 'Manual' ? (
-                <ManualAddFoodEntry closeModalWindow={closeModalWindow} />
-              ) : (
-                <SearchAddFoodEntry />
-              )}
+              <AddFoodEntryModal
+                key={selected}
+                closeModalWindow={closeModalWindow}
+                mode={selected}
+              />
             </form>
           </div>
         </FormContainer>
