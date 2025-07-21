@@ -1,5 +1,5 @@
 import AddEntry from 'atoms/addEntry';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 import Menu from '@mui/material/Menu';
@@ -21,7 +21,11 @@ export default function FoodIntakeTable() {
     foodName: string;
   } | null>(null);
 
-  const { foodEntries, deleteFoodEntryWithID } = useFoodIntakeTrackingContext();
+  const { foodEntries, deleteFoodEntryWithID, selectedDate } = useFoodIntakeTrackingContext();
+
+  useEffect(() => {
+    setPage(0);
+  }, [selectedDate]);
 
   const handleContextMenu = (event: React.MouseEvent, entryId: number, foodName: string) => {
     event.preventDefault();
