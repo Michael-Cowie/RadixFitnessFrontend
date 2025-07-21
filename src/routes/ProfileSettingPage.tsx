@@ -3,6 +3,7 @@ import ProfileSettings from 'molecules/UserProfile/ProfileSettings';
 import PageTemplate from 'templates/PageTemplate';
 import LoginPageBackground from './LoginPage/LoginPageBackground';
 import { FORM_RESIZER } from 'atoms/design_patterns/constants';
+import { LoginPageContainerProps } from './LoginPage/LoginPageInterfaces';
 
 export const ProfileSettingsPage = () => {
   return (

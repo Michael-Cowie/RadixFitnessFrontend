@@ -85,6 +85,16 @@ Once the extension has been installed `View → Problems` show the list of curre
   <img src="./images/ESLint_example.png">
 </div>
 
+By default the `Problems` tab will only show the current file. Two CLI commands have been added to the `package.json`. Meaning, `npm run lint`can be ran to show all errors visible through the repository and `npm run lint:fix` will run throughout the entire repository and attempt to resolve them inplace where possible.
+
+```JSON
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    ...
+  }
+```
+
 #### Prettier
 
 Prettier is a code formatter that enforces a uniform appearance by reprinting code using predefined formatting rules. It focuses exclusively on code style,
