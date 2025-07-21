@@ -10,8 +10,23 @@ import TableRow from '@mui/material/TableRow/TableRow';
 
 import { EmptyCellsProps, pageSize, TableProps } from './interfaces';
 
-const expectedColumnNumber = 6;
+const expectedColumnNumber = 5;
+const numberOfFoodColumns = 4;
+
 const rowHeight = '48px';
+const labelWidthPercentage = 25;
+const foodWidthPercentage = (100 - 25) / numberOfFoodColumns;
+
+const labelCellStyle = {
+  width: `${labelWidthPercentage}%`,
+  height: rowHeight,
+  padding: '8px',
+};
+
+const foodCellStyle = {
+  width: `${foodWidthPercentage}%`,
+  height: rowHeight,
+};
 
 const EmptyRows: React.FC<EmptyCellsProps> = ({ amount }) => {
   return (
@@ -31,14 +46,22 @@ const DesktopTable: React.FC<TableProps> = ({ entries, handleContextMenu }) => {
   return (
     <>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small">
+        <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} size="small">
           <TableHead>
             <TableRow sx={{ height: rowHeight }}>
-              <TableCell align="left" />
-              <TableCell align="right"> Calories </TableCell>
-              <TableCell align="right"> Fat (g) </TableCell>
-              <TableCell align="right"> Carbs (g) </TableCell>
-              <TableCell align="right"> Protein (g) </TableCell>
+              <TableCell align="left" sx={labelCellStyle} />
+              <TableCell align="right" sx={foodCellStyle}>
+                Calories
+              </TableCell>
+              <TableCell align="right" sx={foodCellStyle}>
+                Fat (g)
+              </TableCell>
+              <TableCell align="right" sx={foodCellStyle}>
+                Carbs (g)
+              </TableCell>
+              <TableCell align="right" sx={foodCellStyle}>
+                Protein (g)
+              </TableCell>
             </TableRow>
           </TableHead>
 

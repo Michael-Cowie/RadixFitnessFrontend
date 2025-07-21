@@ -31,6 +31,7 @@ const EditCalendarIconDatePicker: React.FC<Props> = ({ onDateSelection }) => {
         onClose={() => setOpen(false)}
         value={selectedDate}
         onAccept={handleDateChange}
+        maxDate={dayjs()}
         slotProps={{
           popper: {
             anchorEl: document.getElementById('calendar-icon-button'), // Anchor the position to be at the Icon
