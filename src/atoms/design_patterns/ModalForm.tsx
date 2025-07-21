@@ -1,5 +1,4 @@
 import { SyntheticEvent, ReactNode } from 'react';
-import HorizontalVerticalCenteringContainer from 'atoms/design_patterns/CenterContainer';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
 interface ModalFormProps {
@@ -23,7 +22,7 @@ const ModalForm: React.FC<ModalFormProps> = ({
   };
 
   const form = (
-    <form onSubmit={handleSubmit} className="w-full max-w-xs">
+    <form onSubmit={handleSubmit} className="w-full">
       <button
         type="button"
         onClick={closeModalWindow}
@@ -37,10 +36,8 @@ const ModalForm: React.FC<ModalFormProps> = ({
 
   return (
     <div className="modal modal-open">
-      <div className="modal-box">
-        <HorizontalVerticalCenteringContainer>
-          {formProviderProps ? <FormProvider {...formProviderProps}>{form}</FormProvider> : form}
-        </HorizontalVerticalCenteringContainer>
+      <div className={`modal-box`}>
+        {formProviderProps ? <FormProvider {...formProviderProps}>{form}</FormProvider> : form}
       </div>
     </div>
   );

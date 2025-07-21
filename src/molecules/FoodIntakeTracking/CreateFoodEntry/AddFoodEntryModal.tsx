@@ -1,6 +1,6 @@
 import InfoTextField from 'atoms/InfoTextField';
 import NumberedTextFieldUnitAndInformation from 'atoms/inputs/NumberedTextFieldWithRange/NumberedTextFieldWithRange';
-import { useEffect, useState } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -10,6 +10,9 @@ import { AddFoodEntryMode, AddFoodEntryProps, RowData } from './FoodEntryInterfa
 import { useCommonFoods } from './CommonFoods';
 import { searchForNutritionalContent } from 'services/FoodDataCentral/foodDataCentralService';
 import { CircularProgress } from '@mui/material';
+import ModalForm from 'atoms/design_patterns/ModalForm';
+import { getLocalStorage, setLocalStorage, usePersistenceKey } from 'lib/statePersistence';
+import SelectableButton from 'atoms/SelectableButton';
 
 const caloriesinformationText = `
 Calories are calculated automatically from the macronutrients.
@@ -25,17 +28,26 @@ const macroNutrientInformationText = `
   Per 100g serving size.
 `;
 
-const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow, mode }) => {
-  const isReadOnly = mode === AddFoodEntryMode.Search;
-  const isSearch = mode === AddFoodEntryMode.Search;
+const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) => {
+  const persistenceKey = usePersistenceKey();
+
+  const [selected, setSelected] = useState<AddFoodEntryMode>(() => {
+    const saved = getLocalStorage(persistenceKey, 'selectedSearchButton');
+    return saved === AddFoodEntryMode.Manual ? AddFoodEntryMode.Manual : AddFoodEntryMode.Search;
+  });
+
+  useEffect(() => {
+    setLocalStorage(persistenceKey, 'selectedSearchButton', selected);
+  }, [selected, persistenceKey]);
+
+  const isReadOnly = selected === AddFoodEntryMode.Search;
+  const isSearch = selected === AddFoodEntryMode.Search;
   const macronutrientInformationText = isSearch ? macroNutrientInformationText : '';
 
   const { isLoading, createFoodEntry } = useFoodIntakeTrackingContext();
   const foodOptions = useCommonFoods();
 
   const [queryingAPI, setQueryingAPI] = useState<boolean>(false);
-
-  // <SubmitButtonWithProgress buttonText="" displayLoadingAnimation={true} />
 
   const [foodName, setFoodName] = useState<string>('');
   const [totalCalories, setTotalCalories] = useState<number>(0);
@@ -105,9 +117,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow, mode
     }
   }, [foodName, isSearch]);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     const success = await createFoodEntry({
       foodName,
       totalCalories: totalCalories,
@@ -123,10 +133,23 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow, mode
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <ModalForm onSubmit={handleSubmit} closeModalWindow={closeModalWindow}>
       <GroupContainer>
+        <Group title="Mode">
+          <SelectableButton
+            selected={selected === AddFoodEntryMode.Search}
+            displayText="Search"
+            onClick={() => setSelected(AddFoodEntryMode.Search)}
+          />
+          <SelectableButton
+            selected={selected === AddFoodEntryMode.Manual}
+            displayText="Manual"
+            onClick={() => setSelected(AddFoodEntryMode.Manual)}
+          />
+        </Group>
+
         <Group title="Add Food Entry">
-          {mode === AddFoodEntryMode.Search ? (
+          {selected === AddFoodEntryMode.Search ? (
             <Autocomplete
               options={foodOptions}
               getOptionLabel={(option) => option.label}
@@ -219,7 +242,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow, mode
         </Group>
         <SubmitButton displayLoadingAnimation={isLoading} />
       </GroupContainer>
-    </form>
+    </ModalForm>
   );
 };
 

@@ -59,10 +59,6 @@ const MobileTable: React.FC<TableProps> = ({ entries, handleContextMenu }) => {
                 <FoodCell label="Protein:" amount={`${column.totalProtein} g`} />
                 <FoodCell label="Fats:" amount={`${column.totalFats} g`} />
                 <FoodCell label="Carbs:" amount={`${column.totalCarbs} g`} />
-                <FoodCell
-                  label="Weight:"
-                  amount={column.foodWeight > 0 ? `${column.foodWeight} g` : '-'}
-                />
               </div>
             </CardContent>
           </Card>

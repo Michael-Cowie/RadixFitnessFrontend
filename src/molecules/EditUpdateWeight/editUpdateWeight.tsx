@@ -64,7 +64,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
     <ModalForm onSubmit={onSubmit} closeModalWindow={() => closeModalWindow(false)}>
       <GroupContainer>
         <Group title="Entry Details">
-          <div className="mt-1 w-2/3 space-y-2">
+          <div className="mt-1 w-1/2 space-y-2">
             <div className="w-full mb-1">
               <DatePicker
                 name="datePicker"

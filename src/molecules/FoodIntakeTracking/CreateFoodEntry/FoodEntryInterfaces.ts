@@ -1,4 +1,4 @@
-import { AvailableUnits } from "atoms/inputs/NumberedTextFieldWithRange/NumberedTextFieldWithRange";
+import { AvailableUnits } from 'atoms/inputs/NumberedTextFieldWithRange/NumberedTextFieldWithRange';
 
 export interface RowData {
   min: number;
@@ -17,5 +17,4 @@ export enum AddFoodEntryMode {
 
 export interface AddFoodEntryProps {
   closeModalWindow: () => void;
-  mode: AddFoodEntryMode;
 }

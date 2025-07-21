@@ -103,7 +103,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
         </Group>
 
         <Group title="Goal Settings">
-          <div className="mt-1 w-2/3 space-y-2">
+          <div className="mt-1 w-1/2 space-y-2">
             <div className={`w-full ${!goalWeightEnabled ? styles.fadeImage : ''}`}>
               <DatePicker
                 name="goalDateDatePicker"

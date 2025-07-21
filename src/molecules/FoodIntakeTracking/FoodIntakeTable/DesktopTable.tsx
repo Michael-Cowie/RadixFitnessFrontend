@@ -39,7 +39,6 @@ const DesktopTable: React.FC<TableProps> = ({ entries, handleContextMenu }) => {
               <TableCell align="right"> Fat (g) </TableCell>
               <TableCell align="right"> Carbs (g) </TableCell>
               <TableCell align="right"> Protein (g) </TableCell>
-              <TableCell align="right"> Weight (g) </TableCell>
             </TableRow>
           </TableHead>
 
@@ -55,7 +54,6 @@ const DesktopTable: React.FC<TableProps> = ({ entries, handleContextMenu }) => {
                 <TableCell align="right">{row.totalFats}</TableCell>
                 <TableCell align="right">{row.totalCarbs}</TableCell>
                 <TableCell align="right">{row.totalProtein}</TableCell>
-                <TableCell align="right">{row.foodWeight === 0 ? '-' : row.foodWeight}</TableCell>
               </TableRow>
             ))}
 

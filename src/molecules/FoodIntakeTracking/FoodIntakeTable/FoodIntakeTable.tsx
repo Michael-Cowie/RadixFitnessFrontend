@@ -5,12 +5,11 @@ import { Box } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import TablePagination from '@mui/material/TablePagination';
-
-import CreateFoodEntry from '../CreateFoodEntry/CreateFoodEntry';
 import DesktopTable from './DesktopTable';
 import { pageSize } from './interfaces';
 import MobileTable from './MobileTable';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
+import AddFoodEntryModal from '../CreateFoodEntry/AddFoodEntryModal';
 
 export default function FoodIntakeTable() {
   const [createFoodEntry, setCreateFoodEntry] = useState<boolean>(false);
@@ -95,7 +94,7 @@ export default function FoodIntakeTable() {
         <MenuItem onClick={handleDeleteRow}> Delete {contextMenu?.foodName}</MenuItem>
       </Menu>
 
-      {createFoodEntry && <CreateFoodEntry closeModalWindow={() => setCreateFoodEntry(false)} />}
+      {createFoodEntry && <AddFoodEntryModal closeModalWindow={() => setCreateFoodEntry(false)} />}
     </Box>
   );
 }
