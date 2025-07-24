@@ -13,6 +13,7 @@ import { CircularProgress } from '@mui/material';
 import ModalForm from 'atoms/design_patterns/ModalForm';
 import { getLocalStorage, setLocalStorage, usePersistenceKey } from 'lib/statePersistence';
 import SelectableButton from 'atoms/SelectableButton';
+import SensitivityController from 'atoms/design_patterns/SensitivityWrapper';
 
 const caloriesinformationText = `
 Calories are calculated automatically from the macronutrients.
@@ -108,28 +109,24 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
           setTotalCarbs(res.carbsPer100g);
           setTotalFats(res.fatPer100g);
         })
-        .catch((err) => {
-          console.error('Error fetching nutrition:', err);
-        })
+        .catch(() => {})
         .finally(() => {
           setQueryingAPI(false);
         });
     }
   }, [foodName, isSearch]);
 
-  const handleSubmit = async () => {
-    const success = await createFoodEntry({
+  const handleSubmit = () => {
+    createFoodEntry({
       foodName,
       totalCalories: totalCalories,
       totalProtein: totalProtein * servingSize,
       totalFats: totalFats * servingSize,
       totalCarbs: totalCarbs * servingSize,
       foodWeight: 0,
-    });
-
-    if (success) {
+    }).then(() => {
       closeModalWindow();
-    }
+    });
   };
 
   return (
@@ -181,66 +178,68 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
           )}
         </Group>
 
-        <Group title="Nutrition">
-          <div className="flex justify-center">
-            <InfoTextField
-              label="Calories"
-              inputText={totalCalories.toFixed(2)}
-              informationText={caloriesinformationText}
-            />
-          </div>
+        <SensitivityController sensitive={!queryingAPI}>
+          <Group title="Nutrition">
+            <div className="flex justify-center">
+              <InfoTextField
+                label="Calories"
+                inputText={totalCalories.toFixed(2)}
+                informationText={caloriesinformationText}
+              />
+            </div>
 
-          <div className="flex flex-col sm:flex-row sm:justify-between">
-            {rows.slice(0, 2).map((row_data, index) => (
-              <div className="m-1 w-56" key={index}>
+            <div className="flex flex-col sm:flex-row sm:justify-between">
+              {rows.slice(0, 2).map((row_data, index) => (
+                <div className="m-1 w-56" key={index}>
+                  <NumberedTextFieldUnitAndInformation
+                    min={row_data.min}
+                    max={row_data.max}
+                    step={row_data.step}
+                    value={row_data.value}
+                    label={row_data.label}
+                    setterCallback={row_data.setterCallback}
+                    units={row_data.units}
+                    disabled={isReadOnly}
+                    informationText={macronutrientInformationText}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row">
+              <div className="m-1 w-56">
                 <NumberedTextFieldUnitAndInformation
-                  min={row_data.min}
-                  max={row_data.max}
-                  step={row_data.step}
-                  value={row_data.value}
-                  label={row_data.label}
-                  setterCallback={row_data.setterCallback}
-                  units={row_data.units}
+                  min={rows[2].min}
+                  max={rows[2].max}
+                  step={rows[2].step}
+                  value={rows[2].value}
+                  label={rows[2].label}
+                  setterCallback={rows[2].setterCallback}
+                  units={rows[2].units}
                   disabled={isReadOnly}
                   informationText={macronutrientInformationText}
                 />
               </div>
-            ))}
-          </div>
 
-          <div className="flex flex-col sm:flex-row">
-            <div className="m-1 w-56">
-              <NumberedTextFieldUnitAndInformation
-                min={rows[2].min}
-                max={rows[2].max}
-                step={rows[2].step}
-                value={rows[2].value}
-                label={rows[2].label}
-                setterCallback={rows[2].setterCallback}
-                units={rows[2].units}
-                disabled={isReadOnly}
-                informationText={macronutrientInformationText}
-              />
+              {/* Serving Size - always editable */}
+              <div className="m-1 w-56">
+                <NumberedTextFieldUnitAndInformation
+                  min={rows[3].min}
+                  max={rows[3].max}
+                  step={rows[3].step}
+                  value={rows[3].value}
+                  label={rows[3].label}
+                  setterCallback={rows[3].setterCallback}
+                  units={rows[3].units}
+                  informationText={
+                    isSearch ? 'Serving size are based on 100g from USDA FoodData Central' : ''
+                  }
+                />
+              </div>
             </div>
-
-            {/* Serving Size - always editable */}
-            <div className="m-1 w-56">
-              <NumberedTextFieldUnitAndInformation
-                min={rows[3].min}
-                max={rows[3].max}
-                step={rows[3].step}
-                value={rows[3].value}
-                label={rows[3].label}
-                setterCallback={rows[3].setterCallback}
-                units={rows[3].units}
-                informationText={
-                  isSearch ? 'Serving size are based on 100g from USDA FoodData Central' : ''
-                }
-              />
-            </div>
-          </div>
-        </Group>
-        <SubmitButton displayLoadingAnimation={isLoading} />
+          </Group>
+          <SubmitButton displayLoadingAnimation={isLoading} />
+        </SensitivityController>
       </GroupContainer>
     </ModalForm>
   );

@@ -5,7 +5,7 @@ export interface AuthProviderContextData {
   loading: boolean;
   user: User | null;
   userIsLoggedIn: boolean;
-  loginUser: (email: string, password: string) => Promise<boolean>;
+  loginUser: (email: string, password: string) => Promise<void>;
   logoutUser: () => Promise<void>;
 }
 

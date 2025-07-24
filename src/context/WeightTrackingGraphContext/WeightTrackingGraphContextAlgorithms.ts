@@ -40,8 +40,8 @@ export const DefaultWeightTrackingGraphContext: WeightTrackingGraphContext = {
     datesWithWeight: [],
   },
   setPartialState: () => {},
-  syncGoalWeight: async () => false,
-  syncWeightEntry: async () => false,
+  syncGoalWeight: async () => {},
+  syncWeightEntry: async () => {},
 };
 
 export function gatherDateInformation(

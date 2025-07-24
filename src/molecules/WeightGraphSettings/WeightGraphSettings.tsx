@@ -29,7 +29,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
       enableWeightPrediction: defaultEnableWeightPrediction,
     },
     userData: { goalDate: defaultGoalDate, goalWeightKg, hasGoalWeight },
-    syncGoalWeight: updateGoalWeight,
+    syncGoalWeight,
     setPartialState,
   } = useWeightTrackingGraphContext();
 
@@ -52,24 +52,24 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
 
     const trendlineEnabled = (form.elements.namedItem('trendlineEnabled') as HTMLInputElement)
       .checked;
-
     const goalDatePicker = form.elements.namedItem('goalDateDatePicker') as HTMLInputElement;
     const goalDate = dayjs(goalDatePicker.value);
 
-    const success = await updateGoalWeight(goalDate, goalWeight);
-    if (success) {
-      setPartialState({
-        ui: {
-          trendlineEnabled,
-          goalWeightEnabled,
-          enableWeightPrediction,
-        },
+    syncGoalWeight(goalDate, goalWeight)
+      .then(() => {
+        setPartialState({
+          ui: {
+            trendlineEnabled,
+            goalWeightEnabled,
+            enableWeightPrediction,
+          },
+        });
+        closeModalWindow();
+      })
+      .catch(() => {
+        setErrorMessage(`Unable to ${hasGoalWeight ? 'update' : 'add'} goal information`);
+        setIsLoading(false);
       });
-      closeModalWindow();
-    } else {
-      setErrorMessage(`Unable to ${hasGoalWeight ? 'update' : 'add'} goal information`);
-      setIsLoading(false);
-    }
   };
 
   return (

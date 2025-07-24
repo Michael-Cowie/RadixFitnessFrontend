@@ -47,20 +47,21 @@ const ProfileSettings = () => {
     formState: { errors },
   } = methods;
 
-  const attemptCreateNewProfile = async (data: z.infer<typeof schema>): Promise<void> => {
+  const attemptCreateNewProfile = (data: z.infer<typeof schema>): void => {
     setIsLoading(true);
     const name = data.name;
     const system = data[measurementSystemField];
 
-    const success = await createAndSaveProfile(name, system);
-
-    if (success) {
-      navigate('/');
-    } else {
-      setErrorMessage('Unable to create profile');
-    }
-
-    setIsLoading(false);
+    createAndSaveProfile(name, system)
+      .then(() => {
+        navigate('/');
+      })
+      .catch(() => {
+        setErrorMessage('Unable to create profile');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (

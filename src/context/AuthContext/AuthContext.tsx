@@ -25,9 +25,9 @@ export const AuthContextComponent: React.FC<Props> = ({ children }) => {
    * will be done using the user and userIsLoggedIn states.
    */
   const logoutUser = async () => {
-    if (await signOutUser()) {
-      setUserIsLoggedIn(false);
-    }
+    signOutUser()
+      .then(() => setUserIsLoggedIn(false))
+      .catch(() => {});
   };
 
   const [loading, setLoading] = useState<boolean>(true);

@@ -104,9 +104,7 @@ Prettier is a code formatter that enforces a uniform appearance by reprinting co
 - Quote style
 - Trailing commas
 
-Unlike ESLint, Prettier has minimal configuration and avoids debates about formatting preferences by enforcing consistent output. Prettier style enforcement is required via GitHub actions.
-
-VS Code has a Prettier extenson which can be installed.
+Unlike ESLint, Prettier has minimal configuration and avoids debates about formatting preferences by enforcing consistent output. Prettier style enforcement is required via GitHub actions. To run Prettier locally through the CLI, run `npx prettier . --write`. Alternatively, VS Code has a Prettier extenson which can be installed.
 
 <div align="center">
   <img src="./images/prettier_code_formatter.png">

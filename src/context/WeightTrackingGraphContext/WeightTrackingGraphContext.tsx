@@ -73,7 +73,7 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children 
     [user_uid],
   );
 
-  const syncGoalWeight = async (goalDate: Dayjs, weightInUserUnit: number): Promise<boolean> => {
+  const syncGoalWeight = async (goalDate: Dayjs, weightInUserUnit: number): Promise<void> => {
     const weightKg = weightFromUserMeasurementSystemtoKg(weightInUserUnit, measurementSystem);
 
     setPartialState({
@@ -82,55 +82,48 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children 
       },
     });
 
-    const success = await saveGoalWeightKgOnDate(goalDate, weightKg);
-    if (success) {
-      setPartialState({
-        userData: {
-          goalDate,
-          goalWeightKg: weightKg,
-          hasGoalWeight: true,
-        },
+    return saveGoalWeightKgOnDate(goalDate, weightKg)
+      .then(() => {
+        setPartialState({
+          userData: {
+            goalDate,
+            goalWeightKg: weightKg,
+            hasGoalWeight: true,
+          },
+        });
+      })
+      .finally(() => {
+        setPartialState({ ui: { isLoading: false } });
       });
-    }
-
-    setPartialState({
-      ui: {
-        isLoading: false,
-      },
-    });
-
-    return success;
   };
 
   const syncWeightEntry = async (
     date: Dayjs,
     weightInUserUnit: number,
     notes: string,
-  ): Promise<boolean> => {
+  ): Promise<void> => {
     const formattedDate = formatDayjsForApi(date);
     const weightKg = weightFromUserMeasurementSystemtoKg(weightInUserUnit, measurementSystem);
 
-    const success = await saveWeightEntry(formattedDate, weightKg, notes);
-    if (success) {
-      const {
-        data: { dateToWeightKg, dateToNotes, datesWithWeight },
-      } = state;
+    await saveWeightEntry(formattedDate, weightKg, notes);
 
-      dateToWeightKg[formattedDate] = weightKg;
-      dateToNotes[formattedDate] = notes;
-      if (!datesWithWeight.includes(formattedDate)) {
-        datesWithWeight.push(formattedDate);
-      }
+    const {
+      data: { dateToWeightKg, dateToNotes, datesWithWeight },
+    } = state;
 
-      setPartialState({
-        data: {
-          dateToWeightKg,
-          dateToNotes,
-          datesWithWeight,
-        },
-      });
+    dateToWeightKg[formattedDate] = weightKg;
+    dateToNotes[formattedDate] = notes;
+    if (!datesWithWeight.includes(formattedDate)) {
+      datesWithWeight.push(formattedDate);
     }
-    return success;
+
+    setPartialState({
+      data: {
+        dateToWeightKg,
+        dateToNotes,
+        datesWithWeight,
+      },
+    });
   };
 
   useEffect(() => {

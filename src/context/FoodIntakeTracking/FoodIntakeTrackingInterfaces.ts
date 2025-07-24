@@ -21,8 +21,8 @@ export interface FoodIntakeTrackingContextParameters {
   setGoalFats: (newGoalFats: number) => void;
 
   foodEntries: FoodEntry[];
-  createFoodEntry: (foodEntry: FoodEntryCreation) => Promise<boolean>;
-  deleteFoodEntryWithID: (entryID: number) => Promise<boolean>;
+  createFoodEntry: (foodEntry: FoodEntryCreation) => Promise<void>;
+  deleteFoodEntryWithID: (entryID: number) => Promise<void>;
 }
 
 export interface FoodEntryCreation {

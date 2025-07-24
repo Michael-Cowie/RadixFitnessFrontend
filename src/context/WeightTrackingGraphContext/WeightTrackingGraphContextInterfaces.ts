@@ -40,6 +40,6 @@ export interface WeightTrackingGraphContext {
   };
 
   setPartialState: (partialState: Partial<WeightTrackingGraphContextPartial>) => void;
-  syncGoalWeight: (goalDate: Dayjs, weightInUserUnit: number) => Promise<boolean>;
-  syncWeightEntry: (date: Dayjs, weightInUserUnit: number, notes: string) => Promise<boolean>;
+  syncGoalWeight: (goalDate: Dayjs, weightInUserUnit: number) => Promise<void>;
+  syncWeightEntry: (date: Dayjs, weightInUserUnit: number, notes: string) => Promise<void>;
 }

@@ -10,7 +10,7 @@ export interface Profile {
     measurementSystem: MeasurementSystem,
     hasProfile: boolean,
   ) => void;
-  createAndSaveProfile: (name: string, system: MeasurementSystem) => Promise<boolean>;
+  createAndSaveProfile: (name: string, system: MeasurementSystem) => Promise<void>;
   name: string;
   measurementSystem: MeasurementSystem;
   hasProfile: boolean;

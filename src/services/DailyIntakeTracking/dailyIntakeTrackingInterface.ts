@@ -13,7 +13,7 @@ export interface MacroNutrientProgress {
 }
 
 export interface GetMacroNutrientProgressOnDateProps {
-  (date: Dayjs): Promise<MacroNutrientProgress | null>;
+  (date: Dayjs): Promise<MacroNutrientProgress>;
 }
 
 export interface createMacroNutrientProgressOnDateProps {
@@ -23,7 +23,7 @@ export interface createMacroNutrientProgressOnDateProps {
     goalProtein: number,
     goalCarbs: number,
     goalFats: number,
-  ): Promise<boolean | null>;
+  ): Promise<void>;
 }
 
 export interface FoodEntry {

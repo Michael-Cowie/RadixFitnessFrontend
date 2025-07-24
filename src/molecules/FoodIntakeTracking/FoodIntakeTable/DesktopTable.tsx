@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead/TableHead';
 import TableRow from '@mui/material/TableRow/TableRow';
 
 import { EmptyCellsProps, pageSize, TableProps } from './interfaces';
+import { formatToDisplayPrecision } from 'lib/display';
 
 const expectedColumnNumber = 5;
 const numberOfFoodColumns = 4;
@@ -73,10 +74,10 @@ const DesktopTable: React.FC<TableProps> = ({ entries, handleContextMenu }) => {
                 sx={{ height: rowHeight }}
               >
                 <TableCell align="left">{row.foodName}</TableCell>
-                <TableCell align="right">{row.totalCalories}</TableCell>
-                <TableCell align="right">{row.totalFats}</TableCell>
-                <TableCell align="right">{row.totalCarbs}</TableCell>
-                <TableCell align="right">{row.totalProtein}</TableCell>
+                <TableCell align="right">{formatToDisplayPrecision(row.totalCalories)}</TableCell>
+                <TableCell align="right">{formatToDisplayPrecision(row.totalFats)}</TableCell>
+                <TableCell align="right">{formatToDisplayPrecision(row.totalCarbs)}</TableCell>
+                <TableCell align="right">{formatToDisplayPrecision(row.totalProtein)}</TableCell>
               </TableRow>
             ))}
 

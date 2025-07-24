@@ -4,16 +4,13 @@ import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import TextField from '@mui/material/TextField';
+import { formatToDisplayPrecision } from 'lib/display';
 
 interface CustomLinearProgressProps {
   value: number;
   initialGoalValue: number;
   onChange: (value: number) => void;
 }
-
-const formatToDisplayPrecision = (number: number): string => {
-  return number.toFixed(2);
-};
 
 const FONT_FAMILY = '"Roboto", "Helvetica", "Arial", sans-serif';
 

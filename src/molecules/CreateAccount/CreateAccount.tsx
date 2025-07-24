@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import CreateAccountModal from './CreateAccountModalForm';
+import { FirebaseError } from 'firebase/app';
 
 const schema = z.object({
   email: z.string().email('Invalid email format'),
@@ -26,15 +27,14 @@ const CreateAccountComponent = () => {
     setIsLoading(true);
     setErrorMessage('');
 
-    const result = await createNewUser(data.email, data.password);
-
-    if (result.success) {
-      setShowModal(false);
-    } else {
-      setErrorMessage(result.message);
-    }
-
-    setIsLoading(false);
+    createNewUser(data.email, data.password)
+      .then(() => setShowModal(false))
+      .catch((err: FirebaseError) => {
+        setErrorMessage(err.code || 'auth/unknown-error');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const methods = useForm<CreateAccountFormData>({

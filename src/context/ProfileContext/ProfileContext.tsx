@@ -8,7 +8,7 @@ import useAuthContext from 'context/AuthContext/hooks';
 export const ProfileContext = createContext<Profile>({
   loading: true,
   updateProfileContext: () => null,
-  createAndSaveProfile: async () => false,
+  createAndSaveProfile: async () => {},
   name: '',
   measurementSystem: defaultMeasurementSystem,
   hasProfile: false,
@@ -56,12 +56,10 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
     setHasProfile(hasProfile);
   }
 
-  async function createAndSaveProfile(name: string, system: MeasurementSystem): Promise<boolean> {
-    const success = await saveProfile(name, system);
-    if (success) {
+  function createAndSaveProfile(name: string, system: MeasurementSystem): Promise<void> {
+    return saveProfile(name, system).then(() => {
       updateProfileContext(name, system, true);
-    }
-    return success;
+    });
   }
 
   return (

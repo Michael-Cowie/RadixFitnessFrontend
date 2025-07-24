@@ -48,8 +48,8 @@ export const FoodIntakeTrackingContext = createContext<FoodIntakeTrackingContext
   setGoalFats: () => {},
 
   foodEntries: [],
-  createFoodEntry: () => Promise.resolve(false),
-  deleteFoodEntryWithID: () => Promise.resolve(false),
+  createFoodEntry: () => Promise.resolve(),
+  deleteFoodEntryWithID: () => Promise.resolve(),
 });
 
 export const FoodIntakeTrackingContextComponent: React.FC<Props> = ({ children }) => {
@@ -66,64 +66,40 @@ export const FoodIntakeTrackingContextComponent: React.FC<Props> = ({ children }
 
   const [foodEntries, setFoodEntries] = useState<FoodEntry[]>([]);
 
-  const createFoodEntry = async (rowEntry: FoodEntryCreation): Promise<boolean> => {
-    try {
-      const result = await createFoodEntryOnDate(selectedDate, rowEntry);
-      if (result) {
-        setFoodEntries([...foodEntries, result]);
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      return false;
-    }
+  const createFoodEntry = async (rowEntry: FoodEntryCreation): Promise<void> => {
+    const newEntry = await createFoodEntryOnDate(selectedDate, rowEntry);
+    setFoodEntries([...foodEntries, newEntry]);
   };
 
-  const deleteFoodEntryWithID = async (entryID: number) => {
-    const success = await deleteFoodEntry(entryID);
-    if (success) {
+  const deleteFoodEntryWithID = (entryID: number): Promise<void> => {
+    return deleteFoodEntry(entryID).then(() => {
       setFoodEntries(foodEntries.filter((foodEntry) => foodEntry.id !== entryID));
-      return true;
-    }
-    return false;
+    });
   };
 
   useEffect(() => {
     setIsLoading(true);
 
-    const initializeStatesFromDate = async () => {
-      try {
-        /**
-         * Each promise can execute independently as it does not rely
-         * on the result of the each.
-         */
-        const [macroNutrientProgressResult, foodEntriesResult] = await Promise.all([
-          getMacroNutrientProgressOnDate(selectedDate),
-          getFoodEntriesOnDate(selectedDate),
-        ]);
+    Promise.all([getMacroNutrientProgressOnDate(selectedDate), getFoodEntriesOnDate(selectedDate)])
+      .then(([goal_macronutrients, food_entries]) => {
+        setGoalCalories(goal_macronutrients.goal_calories);
+        setGoalProtein(goal_macronutrients.goal_protein);
+        setGoalCarbs(goal_macronutrients.goal_carbs);
+        setGoalFats(goal_macronutrients.goal_fats);
 
-        if (macroNutrientProgressResult) {
-          setGoalCalories(macroNutrientProgressResult.goal_calories);
-          setGoalProtein(macroNutrientProgressResult.goal_protein);
-          setGoalCarbs(macroNutrientProgressResult.goal_carbs);
-          setGoalFats(macroNutrientProgressResult.goal_fats);
-        } else {
-          setGoalCalories(defaultNutrientProgressValues.goalCalories);
-          setGoalProtein(defaultNutrientProgressValues.goalProtein);
-          setGoalCarbs(defaultNutrientProgressValues.goalCarbs);
-          setGoalFats(defaultNutrientProgressValues.goalFats);
-        }
+        setFoodEntries(food_entries);
+      })
+      .catch(() => {
+        setGoalCalories(defaultNutrientProgressValues.goalCalories);
+        setGoalProtein(defaultNutrientProgressValues.goalProtein);
+        setGoalCarbs(defaultNutrientProgressValues.goalCarbs);
+        setGoalFats(defaultNutrientProgressValues.goalFats);
 
-        if (foodEntriesResult) {
-          setFoodEntries(foodEntriesResult);
-        }
-      } finally {
+        setFoodEntries([]);
+      })
+      .finally(() => {
         setIsLoading(false);
-      }
-    };
-
-    initializeStatesFromDate();
+      });
   }, [selectedDate]);
 
   useEffect(() => {
@@ -134,7 +110,7 @@ export const FoodIntakeTrackingContextComponent: React.FC<Props> = ({ children }
         goalProtein,
         goalCarbs,
         goalFats,
-      );
+      ).catch(() => {});
     }
   }, [goalCalories, goalProtein, goalCarbs, goalFats, isLoading, selectedDate]);
 

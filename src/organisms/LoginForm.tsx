@@ -28,10 +28,16 @@ export const LoginForm = () => {
 
     setIsLoading(true);
 
-    loginUser(email.value, password.value).then((successful) => {
-      setLoginError(successful === false);
-      setIsLoading(false);
-    });
+    loginUser(email.value, password.value)
+      .then(() => {
+        setLoginError(false);
+      })
+      .catch(() => {
+        setLoginError(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   return (
