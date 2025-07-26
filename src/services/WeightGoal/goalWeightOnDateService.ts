@@ -2,6 +2,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { get, put } from 'services/DataService';
 
 import { WeightGoal } from './goalWeightOnDateInterface';
+import { formatDayjsForApi } from 'services/apiFormatters';
 
 const END_POINT_PATH = '/api/v1/goals/weight/';
 
@@ -36,7 +37,7 @@ export const saveGoalWeightKgOnDate = async (
   goalWeightKg: number,
 ): Promise<void> => {
   const body = {
-    goal_date: goalDate.format('YYYY-MM-DD'),
+    goal_date: formatDayjsForApi(goalDate),
     goal_weight_kg: goalWeightKg,
   };
 

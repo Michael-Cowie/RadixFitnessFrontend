@@ -16,7 +16,3 @@ export interface searchForNutritionalContentResponse {
   fatPer100g: number;
   carbsPer100g: number;
 }
-
-export type SearchForNutritionalContentProps = (
-  foodName: string,
-) => Promise<searchForNutritionalContentResponse>;

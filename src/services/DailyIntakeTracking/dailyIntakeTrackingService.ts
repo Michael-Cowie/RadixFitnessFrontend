@@ -3,13 +3,12 @@ import dayjs, { Dayjs } from 'dayjs';
 import { del, get, patch, post, put } from 'services/DataService';
 
 import {
-  createMacroNutrientProgressOnDateProps,
   FoodEntry,
   FoodEntryAPIResponse,
-  getFoodEntriesOnDateProps,
-  GetMacroNutrientProgressOnDateProps,
+  MacroNutrientProgress,
   PatchBody,
 } from './dailyIntakeTrackingInterface';
+import { formatDayjsForApi } from 'services/apiFormatters';
 
 const GOALS_ENDPOINT = '/api/v1/goals/';
 const MACRONUTRIENT_PROGRESS_ENDPOINT = GOALS_ENDPOINT + 'macronutrient/daily/';
@@ -21,12 +20,14 @@ const FOOD_ENTRIES_ENDPOINT = INTAKE_ENDPOINT + 'foods/';
  * Retrieves the macronutrient progress on the provided date.
  *
  * @param {Dayjs} date - Dayjs object for the desired date.
- * @returns {Promise<MacronutrientProgress>} - Resolves with progress data if successful.
+ * @returns {Promise<MacroNutrientProgress>} - Resolves with progress data if successful.
  * @throws {Error} - Throws if the request fails or response is not 200.
  */
-export const getMacroNutrientProgressOnDate: GetMacroNutrientProgressOnDateProps = async (date) => {
+export const getMacroNutrientProgressOnDate = async (
+  date: Dayjs,
+): Promise<MacroNutrientProgress> => {
   const response = await get(MACRONUTRIENT_PROGRESS_ENDPOINT, {
-    date: date.format('YYYY-MM-DD'),
+    date: formatDayjsForApi(date),
   });
 
   if (response.status !== 200) {
@@ -46,20 +47,25 @@ export const getMacroNutrientProgressOnDate: GetMacroNutrientProgressOnDateProps
  * @param {number} goalFats - The goal fat intake.
  * @returns {Promise<void>} - Resolves if update was successful, otherwise throws.
  */
-export const createUpdateMacroNutrientProgressOnDate: createMacroNutrientProgressOnDateProps =
-  async (date, goalCalories, goalProtein, goalCarbs, goalFats): Promise<void> => {
-    const response = await put(MACRONUTRIENT_PROGRESS_ENDPOINT, {
-      date: date.format('YYYY-MM-DD'),
-      goal_calories: goalCalories,
-      goal_protein: goalProtein,
-      goal_carbs: goalCarbs,
-      goal_fats: goalFats,
-    });
+export const createUpdateMacroNutrientProgressOnDate = async (
+  date: Dayjs,
+  goalCalories: number,
+  goalProtein: number,
+  goalCarbs: number,
+  goalFats: number,
+): Promise<void> => {
+  const response = await put(MACRONUTRIENT_PROGRESS_ENDPOINT, {
+    date: formatDayjsForApi(date),
+    goal_calories: goalCalories,
+    goal_protein: goalProtein,
+    goal_carbs: goalCarbs,
+    goal_fats: goalFats,
+  });
 
-    if (response.status !== 200) {
-      throw new Error(`Failed to update macro progress. Status: ${response.status}`);
-    }
-  };
+  if (response.status !== 200) {
+    throw new Error(`Failed to update macro progress. Status: ${response.status}`);
+  }
+};
 
 const remapEntryCase = (entry: FoodEntryAPIResponse): FoodEntry => {
   return {
@@ -81,10 +87,10 @@ const remapEntryCase = (entry: FoodEntryAPIResponse): FoodEntry => {
  * @returns {Promise<FoodEntry[]>} - Resolves with array of food entries.
  * @throws {Error} - Throws if the request fails or status is not 200.
  */
-export const getFoodEntriesOnDate: getFoodEntriesOnDateProps = async (
-  date: Dayjs,
-): Promise<FoodEntry[]> => {
-  const response = await get(FOOD_ENTRIES_ENDPOINT, { date: date.format('YYYY-MM-DD') });
+export const getFoodEntriesOnDate = async (date: Dayjs): Promise<FoodEntry[]> => {
+  const response = await get(FOOD_ENTRIES_ENDPOINT, {
+    date: formatDayjsForApi(date),
+  });
 
   if (response.status !== 200) {
     throw new Error(`Failed to fetch food entries. Status: ${response.status}`);
@@ -92,7 +98,6 @@ export const getFoodEntriesOnDate: getFoodEntriesOnDateProps = async (
 
   return response.data.map(remapEntryCase);
 };
-
 /**
  * Creates a food entry on the provided date.
  *
@@ -115,7 +120,7 @@ export const createFoodEntryOnDate = async (
   };
 
   const response = await post(FOOD_ENTRIES_ENDPOINT, body, {
-    date: date.format('YYYY-MM-DD'),
+    date: formatDayjsForApi(date),
   });
 
   if (response.status !== 201) {

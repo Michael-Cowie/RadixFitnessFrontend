@@ -1,29 +1,11 @@
 import { Dayjs } from 'dayjs';
 
 export interface MacroNutrientProgress {
-  current_calories: number;
-  current_carbs: number;
-  current_fats: number;
-  current_protein: number;
   date: string;
   goal_calories: number;
   goal_carbs: number;
   goal_fats: number;
   goal_protein: number;
-}
-
-export interface GetMacroNutrientProgressOnDateProps {
-  (date: Dayjs): Promise<MacroNutrientProgress>;
-}
-
-export interface createMacroNutrientProgressOnDateProps {
-  (
-    date: Dayjs,
-    goalCalories: number,
-    goalProtein: number,
-    goalCarbs: number,
-    goalFats: number,
-  ): Promise<void>;
 }
 
 export interface FoodEntry {
@@ -47,10 +29,6 @@ export interface FoodEntryAPIResponse {
   total_fats: number;
   total_carbs: number;
   food_weight: number;
-}
-
-export interface getFoodEntriesOnDateProps {
-  (date: Dayjs): Promise<FoodEntry[]>;
 }
 
 export interface PatchBody {

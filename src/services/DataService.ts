@@ -50,19 +50,20 @@ const request = async (
     /**
      * For GET and DELETE requests, exclude the body parameter.
      *
-     * A REST API can have arguments in several places:
+     * A REST API can have arguments in two places,
      *
      *  1. In the request body, as part of a JSON body or other MIME type.
-     *  2. In the query string - e.g. /api/resource?p1=v1&p2=v2
-     *  3. As part of the URL path - e.g. /api/resource/v1/v2
+     *  2. In the query string as query parameters - e.g. /api/resource?p1=v1&p2=v2
      *
      * Usually, the content body is used for the data that is to be uploaded
-     * or downloaded from the server, and the query parameters are used to
-     * specify the name, MIME type, etc.
+     * or downloaded from the server, and the query parameters when you want to send
+     * optional, filterable, or searchable data in a GET request without changing the
+     * resource path.
      *
-     * In general, the query parameters are properties of the query and not
-     * the data. It's expected that GET and DELETE requests are idempotent.
+     * In general, query parameters describe how data is queried, not the data itself.
+     * GET and DELETE requests are expected to be idempotent according to HTTP semantics.
      */
+
     return await axios[method](addDomain(path), config);
   } else {
     return await axios[method](addDomain(path), body, config);
