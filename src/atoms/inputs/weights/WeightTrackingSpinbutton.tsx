@@ -20,21 +20,11 @@ const WeightTrackingSpinbutton: React.FC<Props> = ({
   label,
   disabled = false,
 }) => {
-  const [inputValue, setInputValue] = useState(value.toString());
+  const [inputValue, setInputValue] = useState(value.toFixed(2));
 
   useEffect(() => {
-    setInputValue(value.toString());
+    setInputValue(value.toFixed(2));
   }, [value]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const str = e.target.value;
-    setInputValue(str);
-
-    const parsed = parseFloat(str);
-    if (!isNaN(parsed)) {
-      onChange(parsed);
-    }
-  };
 
   return (
     <div className={`w-full mt-3 ${styles.weightUnitWrapper} ${styles[displayUnit]}`}>
@@ -47,7 +37,14 @@ const WeightTrackingSpinbutton: React.FC<Props> = ({
         InputLabelProps={{ shrink: true }}
         inputProps={{ step: 0.01, min: 10, max: 1000 }}
         value={inputValue}
-        onChange={handleChange}
+        onChange={(e) => {
+          setInputValue(e.target.value);
+        }}
+        onBlur={() => {
+          const parsed = parseFloat(inputValue);
+          setInputValue(parsed.toFixed(2));
+          onChange(parsed);
+        }}
         onInput={(e: FormEvent<HTMLInputElement>) => validateInput(e)}
       />
     </div>
