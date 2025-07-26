@@ -127,46 +127,63 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children 
   };
 
   useEffect(() => {
-    Promise.all([getAllWeights(), getGoalWeightOnDate()]).then(([allWeights, goalWeight]) => {
-      const [dateToWeightKg, dateToNotes, datesWithWeight] = gatherDateInformation(allWeights);
+    const restoredUserInterfaceState = userInterfaceLocalStorageKeys.reduce(
+      (acc, uiStateKey) => {
+        const uiState = getLocalStorage(uiStateKey, user_uid);
+        if (uiState !== null) {
+          // @ts-expect-error TODO Improve typing for this later on.
+          acc.ui[uiStateKey] = uiState as boolean;
+        }
+        return acc;
+      },
+      { ui: {} } as WeightTrackingUIPartial,
+    );
+    setPartialState(restoredUserInterfaceState);
 
-      setPartialState({
-        ui: {
-          isLoading: false,
-        },
-        data: {
-          dateToWeightKg,
-          dateToNotes,
-          datesWithWeight,
-        },
-      });
+    setPartialState({ ui: { isLoading: true } });
 
-      if (goalWeight) {
+    let allWeightsDone = false;
+    let goalWeightDone = false;
+
+    const tryFinishLoading = () => {
+      if (allWeightsDone && goalWeightDone) {
+        setPartialState({ ui: { isLoading: false } });
+      }
+    };
+
+    getAllWeights()
+      .then((allWeights) => {
+        const [dateToWeightKg, dateToNotes, datesWithWeight] = gatherDateInformation(allWeights);
         setPartialState({
-          userData: {
-            goalDate: goalWeight.goalDate,
-            goalWeightKg: goalWeight.goalWeightKg,
+          data: {
+            dateToWeightKg,
+            dateToNotes,
+            datesWithWeight,
           },
         });
-      }
+      })
+      .catch(() => {})
+      .finally(() => {
+        allWeightsDone = true;
+        tryFinishLoading();
+      });
 
-      const restoredUserInterfaceState = userInterfaceLocalStorageKeys.reduce(
-        (acc, uiStateKey) => {
-          const uiState = getLocalStorage(uiStateKey, user_uid);
-
-          if (uiState !== null) {
-            // @ts-expect-error TODO Improve typing for this later on.
-            acc.ui[uiStateKey] = uiState as boolean;
-          }
-          return acc;
-        },
-        {
-          ui: {},
-        } as WeightTrackingUIPartial,
-      );
-
-      setPartialState(restoredUserInterfaceState);
-    });
+    getGoalWeightOnDate()
+      .then((goalWeight) => {
+        if (goalWeight) {
+          setPartialState({
+            userData: {
+              goalDate: goalWeight.goalDate,
+              goalWeightKg: goalWeight.goalWeightKg,
+            },
+          });
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        goalWeightDone = true;
+        tryFinishLoading();
+      });
   }, [setPartialState, user_uid]);
 
   return (
