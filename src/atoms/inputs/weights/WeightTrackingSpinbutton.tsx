@@ -1,5 +1,5 @@
 import TextField from '@mui/material/TextField';
-import { FormEvent } from 'react';
+import { useEffect, useState, FormEvent } from 'react';
 import styles from './spinbutton.module.css';
 import { validateInput } from './WeightTrackingSpinbuttonAlgorithms';
 
@@ -20,6 +20,22 @@ const WeightTrackingSpinbutton: React.FC<Props> = ({
   label,
   disabled = false,
 }) => {
+  const [inputValue, setInputValue] = useState(value.toString());
+
+  useEffect(() => {
+    setInputValue(value.toString());
+  }, [value]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const str = e.target.value;
+    setInputValue(str);
+
+    const parsed = parseFloat(str);
+    if (!isNaN(parsed)) {
+      onChange(parsed);
+    }
+  };
+
   return (
     <div className={`w-full mt-3 ${styles.weightUnitWrapper} ${styles[displayUnit]}`}>
       <TextField
@@ -30,14 +46,8 @@ const WeightTrackingSpinbutton: React.FC<Props> = ({
         className="w-full"
         InputLabelProps={{ shrink: true }}
         inputProps={{ step: 0.01, min: 10, max: 1000 }}
-        value={Number.isNaN(value) ? '' : value.toFixed(2)}
-        onChange={(e) => {
-          const newValue = parseFloat(e.target.value);
-
-          if (!isNaN(newValue)) {
-            onChange(newValue);
-          }
-        }}
+        value={inputValue}
+        onChange={handleChange}
         onInput={(e: FormEvent<HTMLInputElement>) => validateInput(e)}
       />
     </div>
