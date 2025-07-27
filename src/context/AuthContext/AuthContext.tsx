@@ -5,7 +5,6 @@ import { loginUser, signOutUser } from 'services/FirebaseUtils';
 import { AuthProviderContextData, Props } from './AuthContextInterfaces';
 
 const auth = getAuth(); // getAuth() returns the same object each time, hence, only call it once.
-const isDebug = import.meta.env.VITE_DEBUG === 'true';
 
 export const AuthContext = createContext<AuthProviderContextData>({
   loading: true,
@@ -37,10 +36,6 @@ export const AuthContextComponent: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     onAuthStateChanged(auth, (newUser: User | null) => {
-      if (isDebug) {
-        console.log('Access Token: ', newUser.accessToken);
-      }
-
       /* 
               Retrieve the idToken from Firebase and then finish loading.
 

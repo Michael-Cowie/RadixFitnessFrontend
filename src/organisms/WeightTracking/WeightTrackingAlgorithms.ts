@@ -221,7 +221,7 @@ export function calculatePredictedData(
   const predictedData = new Array(closestDateIndex).fill(null);
   predictedData.push(dateToWeightKg[closestDate]);
 
-  const sortedDataWithoutNull: number[] = userData.filter((v) => v !== null);
+  const sortedDataWithoutNull: number[] = userData.filter((v): v is number => v !== null);
   const weightDeviation = calculateLossOrGain(sortedDataWithoutNull);
 
   const predictionRange = goalDate.diff(closestDate, 'days') + 1;
