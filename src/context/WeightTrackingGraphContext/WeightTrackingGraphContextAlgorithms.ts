@@ -29,7 +29,7 @@ export const DefaultWeightTrackingGraphContext: WeightTrackingGraphContext = {
   },
 
   userData: {
-    goalDate: dayjs().add(14),
+    goalDate: dayjs().add(14, 'days'),
     goalWeightKg: 70,
     hasGoalWeight: false,
   },

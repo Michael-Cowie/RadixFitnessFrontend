@@ -109,7 +109,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
                 name="goalDateDatePicker"
                 disabled={!goalWeightEnabled}
                 label="Goal Date"
-                value={defaultGoalDate}
+                defaultValue={defaultGoalDate}
                 minDate={dayjs(new Date()).add(1, 'days')}
                 slotProps={{
                   textField: {
