@@ -137,7 +137,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
                   debounceTimeout.current = setTimeout(() => {
                     searchForNutritionalContent(userInput)
                       .then((results) => setFoodOptions(results))
-                      .catch(() => setFoodOptions([]))
+                      .catch((error) => console.log(error))
                       .finally(() => setQueryingAPI(false));
                   }, debounce_delay_ms);
                 }
