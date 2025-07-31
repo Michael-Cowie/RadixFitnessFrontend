@@ -1,7 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useState } from 'react';
-
-import EditCalendarTwoToneIcon from '@mui/icons-material/EditCalendarTwoTone';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import { IconButton } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
@@ -23,7 +22,7 @@ const EditCalendarIconDatePicker: React.FC<Props> = ({ onDateSelection }) => {
   return (
     <>
       <IconButton onClick={() => setOpen(true)} id="calendar-icon-button">
-        <EditCalendarTwoToneIcon />
+        <EditCalendarIcon color="primary" />
       </IconButton>
 
       <DatePicker

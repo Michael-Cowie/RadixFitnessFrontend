@@ -12,7 +12,7 @@ const FoodIntakeTrackingPage = () => {
           <DateSelection />
           <DailyMacroNutrientProgress />
         </div>
-        <div className="w-10/12 sm:w-10/12 md:w-8/12 lg:w-7/12 xl:w-6/12">
+        <div className="w-10/12 sm:w-10/12 md:w-8/12 lg:w-7/12 xl:w-6/12 h-[50%]">
           <FoodIntakeTable />
         </div>
       </FoodIntakeTrackingContextComponent>

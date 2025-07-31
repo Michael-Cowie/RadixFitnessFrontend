@@ -9,6 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { measurementSystems } from 'services/Profile/ProfileInterfaces';
 import { useNavigate } from 'react-router-dom';
 import useProfileContext from 'context/ProfileContext/hooks';
+import { ProfileSettingsProp } from './ProfileSettingsInterfaces';
+import SelectableButton from 'atoms/SelectableButton';
 
 const measurementSystemField = 'measurementSystem' as const;
 
@@ -22,7 +24,7 @@ const schema = z.object({
   }),
 });
 
-const ProfileSettings = () => {
+const ProfileSettings: React.FC<ProfileSettingsProp> = ({ showCancelButton }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const {
@@ -54,7 +56,7 @@ const ProfileSettings = () => {
 
     createAndSaveProfile(name, system)
       .then(() => {
-        navigate('/');
+        navigate(-1);
       })
       .catch(() => {
         setErrorMessage('Unable to create profile');
@@ -81,8 +83,16 @@ const ProfileSettings = () => {
               label="Measurement system"
               options={measurementSystems}
             />
-
-            <SubmitButton displayLoadingAnimation={isLoading} />
+            <div className="flex justify-start">
+              {showCancelButton && (
+                <SelectableButton
+                  selected={true}
+                  displayText="Close"
+                  onClick={() => navigate(-1)}
+                />
+              )}
+              <SubmitButton displayLoadingAnimation={isLoading} />
+            </div>
 
             <ErrorMessage errorMessage={errorMessage} />
           </form>

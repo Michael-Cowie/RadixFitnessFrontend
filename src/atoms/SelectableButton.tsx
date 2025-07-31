@@ -15,8 +15,8 @@ const SelectableButton: React.FC<Props> = ({
   return (
     <button
       disabled={isDisabled}
-      type="button" // Prevents it from acting as a submit.
-      className="btn w-24"
+      type="button"
+      className="btn w-24 font-bold"
       style={{ backgroundColor: colour }}
       onClick={onClick}
     >

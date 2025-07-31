@@ -1,68 +1,78 @@
-import CircularBox from 'atoms/circularbox/CircularBox';
+import { useState } from 'react';
+import { Button, Stack, Typography, IconButton } from '@mui/material';
+import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import dayjs, { Dayjs } from 'dayjs';
+
 import EditCalendarIconDatePicker from 'atoms/EditCalenderIconDatePicker';
-import { useEffect, useState } from 'react';
-
-import { Dayjs } from 'dayjs';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
+import SensitivityController from 'atoms/design_patterns/SensitivityWrapper';
 
-const SelectedCircularBox: React.FC<{
-  dayStr: string;
-  dayNameStr: string;
-  onDateSelect: (selectedDate: Dayjs) => void;
-}> = ({ dayStr, dayNameStr, onDateSelect }) => (
-  <div className="flex flex-col items-center justify-center">
-    <EditCalendarIconDatePicker onDateSelection={onDateSelect} />
-    <CircularBox number={dayStr} text={dayNameStr} selected={true} />
-  </div>
-);
+const getStartOfWeek = (date: Dayjs) => date.startOf('week');
+const isSameDay = (a: Dayjs, b: Dayjs) => a.isSame(b, 'day');
 
-const UnselectedCircularBox: React.FC<{ dayStr: string; dayNameStr: string }> = ({
-  dayStr,
-  dayNameStr,
-}) => (
-  <div className="flex items-end">
-    <CircularBox number={dayStr} text={dayNameStr} selected={false} />
-  </div>
-);
+export default function DateSelector() {
+  const today = dayjs();
 
-const DateSelection = () => {
   const { selectedDate, setSelectedDate } = useFoodIntakeTrackingContext();
-  const [numBoxes, setNumBoxes] = useState(5);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setNumBoxes(window.innerWidth < 640 ? 4 : 5);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const [startOfWeek, setStartOfWeek] = useState(getStartOfWeek(today));
 
-  const date_buttons = [];
+  const handlePrevWeek = () => setStartOfWeek(startOfWeek.subtract(7, 'day'));
+  const handleNextWeek = () => setStartOfWeek(startOfWeek.add(7, 'day'));
 
-  for (let offset = 0; offset < numBoxes; offset++) {
-    const dayStr = selectedDate.subtract(offset, 'days').format('DD');
-    const dayNameStr = selectedDate.subtract(offset, 'days').format('ddd');
+  const handleCalendarSelect = (selectedDate: Dayjs) => {
+    setSelectedDate(selectedDate);
+    setStartOfWeek(getStartOfWeek(selectedDate));
+  };
 
-    if (offset === 0) {
-      date_buttons.push(
-        <SelectedCircularBox
-          key={offset}
-          dayStr={dayStr}
-          dayNameStr={dayNameStr}
-          onDateSelect={setSelectedDate}
-        />,
-      );
-    } else {
-      date_buttons.push(
-        <UnselectedCircularBox key={offset} dayStr={dayStr} dayNameStr={dayNameStr} />,
-      );
-    }
-  }
+  const daysOfWeek = [...Array(7)].map((_, i) => startOfWeek.add(i, 'day'));
 
-  date_buttons.reverse();
+  return (
+    <Stack alignItems="center" className="mb-2">
+      <Stack direction="row" alignItems="center">
+        <EditCalendarIconDatePicker onDateSelection={handleCalendarSelect} />
 
-  return <div className="flex flex-row justify-between mb-2">{date_buttons}</div>;
-};
+        <IconButton onClick={handlePrevWeek}>
+          <ChevronLeft color="primary" />
+        </IconButton>
 
-export default DateSelection;
+        <Typography>
+          {startOfWeek.format('MMM D')} – {startOfWeek.add(6, 'day').format('MMM D')}
+        </Typography>
+
+        <IconButton onClick={handleNextWeek}>
+          <ChevronRight color="primary" />
+        </IconButton>
+      </Stack>
+
+      <Stack direction="row" spacing={2}>
+        {daysOfWeek.map((day) => {
+          const isSelected = isSameDay(day, selectedDate);
+
+          return (
+            <SensitivityController sensitive={day.isBefore(today)}>
+              <Stack key={day.toString()} alignItems="center">
+                <Typography variant="caption">{day.format('ddd')}</Typography>
+
+                <Button
+                  variant={isSelected ? 'contained' : 'outlined'}
+                  onClick={() => setSelectedDate(day)}
+                  sx={{
+                    borderRadius: '40px',
+                    width: 40,
+                    height: 40,
+                    minWidth: 0,
+                    p: 0,
+                    color: isSelected ? 'white' : 'text.primary',
+                  }}
+                >
+                  {day.format('D')}
+                </Button>
+              </Stack>
+            </SensitivityController>
+          );
+        })}
+      </Stack>
+    </Stack>
+  );
+}

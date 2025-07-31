@@ -11,8 +11,9 @@ export interface FoodItem {
   carbs: NutrientInfo;
 }
 
-export interface searchForNutritionalContentResponse {
-  proteinPer100g: number;
-  fatPer100g: number;
+export type FoodNutrientSummary = {
+  description: string;
   carbsPer100g: number;
-}
+  fatPer100g: number;
+  proteinPer100g: number;
+};

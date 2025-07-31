@@ -9,7 +9,7 @@ export const ProfileSettingsPage = () => {
   return (
     <PageTemplate>
       <OnboardProfileSettingsPageContainer>
-        <ProfileSettings />
+        <ProfileSettings showCancelButton={true} />
       </OnboardProfileSettingsPageContainer>
     </PageTemplate>
   );
@@ -42,7 +42,7 @@ export const OnboardProfileSettingsPage = () => {
 
       <HorizontalVerticalCenteringContainer>
         <OnboardProfileSettingsPageContainer>
-          <ProfileSettings />
+          <ProfileSettings showCancelButton={false} />
         </OnboardProfileSettingsPageContainer>
       </HorizontalVerticalCenteringContainer>
     </>

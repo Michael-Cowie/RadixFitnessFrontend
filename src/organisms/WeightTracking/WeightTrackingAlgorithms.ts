@@ -263,5 +263,5 @@ export function formatLabels(labels: string[]): string[] {
 
 export function createDisplayText(range: number): string {
   if (range === Infinity) return 'Squeeze';
-  return `${range} days`;
+  return `${range} Days`;
 }

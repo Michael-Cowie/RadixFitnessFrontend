@@ -1,12 +1,18 @@
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
+
 interface Props {
   information: string;
 }
 
 const InformationHover: React.FC<Props> = ({ information }) => {
   return (
-    <>
-      <img className={`h-4 w-4}`} src="/information-icon.svg" title={information} />
-    </>
+    <Tooltip title={<span style={{ whiteSpace: 'pre-line' }}>{information}</span>}>
+      <IconButton size="small" sx={{ padding: 0 }}>
+        <InfoOutlineIcon fontSize="small" />
+      </IconButton>
+    </Tooltip>
   );
 };
 

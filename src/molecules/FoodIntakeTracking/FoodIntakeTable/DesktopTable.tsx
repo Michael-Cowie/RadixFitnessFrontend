@@ -1,5 +1,7 @@
 import React from 'react';
 
+import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
+
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,15 +10,17 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-import { EmptyCellsProps, pageSize, TableProps } from './interfaces';
+import { TableProps } from './interfaces';
 import { formatToDisplayPrecision } from 'lib/display';
+import { IconButton } from '@mui/material';
+import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
 
-const expectedColumnNumber = 5;
 const numberOfFoodColumns = 4;
 
 const rowHeight = '48px';
-const labelWidthPercentage = 25;
-const foodWidthPercentage = (100 - 25) / numberOfFoodColumns;
+const labelWidthPercentage = 35;
+const trashCanWidth = 10;
+const foodWidthPercentage = (100 - labelWidthPercentage - trashCanWidth) / numberOfFoodColumns;
 
 const labelCellStyle = {
   width: `${labelWidthPercentage}%`,
@@ -29,24 +33,12 @@ const foodCellStyle = {
   height: rowHeight,
 };
 
-const EmptyRows: React.FC<EmptyCellsProps> = ({ amount }) => {
-  return (
-    <>
-      {Array.from({ length: amount }).map((_, index) => (
-        <TableRow key={index} sx={{ height: rowHeight }}>
-          {Array.from({ length: expectedColumnNumber }).map((_, index) => (
-            <TableCell key={index} />
-          ))}
-        </TableRow>
-      ))}
-    </>
-  );
-};
+const DesktopTable: React.FC<TableProps> = ({ entries }) => {
+  const { deleteFoodEntryWithID } = useFoodIntakeTrackingContext();
 
-const DesktopTable: React.FC<TableProps> = ({ entries, handleContextMenu }) => {
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} className="h-full">
         <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} size="small">
           <TableHead>
             <TableRow sx={{ height: rowHeight }}>
@@ -63,25 +55,30 @@ const DesktopTable: React.FC<TableProps> = ({ entries, handleContextMenu }) => {
               <TableCell align="right" sx={foodCellStyle}>
                 Protein (g)
               </TableCell>
+              <TableCell align="right" sx={{ width: `${trashCanWidth}%` }}></TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {entries.map((row) => (
-              <TableRow
-                key={row.id}
-                onContextMenu={(e) => handleContextMenu(e, row.id, row.foodName)}
-                sx={{ height: rowHeight }}
-              >
+              <TableRow key={row.id} sx={{ height: rowHeight }}>
                 <TableCell align="left">{row.foodName}</TableCell>
                 <TableCell align="right">{formatToDisplayPrecision(row.totalCalories)}</TableCell>
                 <TableCell align="right">{formatToDisplayPrecision(row.totalFats)}</TableCell>
                 <TableCell align="right">{formatToDisplayPrecision(row.totalCarbs)}</TableCell>
                 <TableCell align="right">{formatToDisplayPrecision(row.totalProtein)}</TableCell>
+
+                <TableCell align="right">
+                  <IconButton
+                    onClick={() => {
+                      deleteFoodEntryWithID(row.id);
+                    }}
+                  >
+                    <DeleteSharpIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             ))}
-
-            <EmptyRows amount={pageSize - entries.length} />
           </TableBody>
         </Table>
       </TableContainer>

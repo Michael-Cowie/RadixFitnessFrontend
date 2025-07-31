@@ -1,19 +1,17 @@
 import InfoTextField from 'atoms/InfoTextField';
 import NumberedTextFieldUnitAndInformation from 'atoms/inputs/NumberedTextFieldWithRange/NumberedTextFieldWithRange';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
 import { Group, GroupContainer, SubmitButton } from 'atoms/design_patterns/Group';
-import { AddFoodEntryMode, AddFoodEntryProps, RowData } from './FoodEntryInterfaces';
-import { useCommonFoods } from './CommonFoods';
+import { AddFoodEntryProps, RowData } from './FoodEntryInterfaces';
 import { searchForNutritionalContent } from 'services/FoodDataCentral/foodDataCentralService';
 import { CircularProgress } from '@mui/material';
 import ModalForm from 'atoms/design_patterns/ModalForm';
-import { getLocalStorage, setLocalStorage, usePersistenceKey } from 'lib/statePersistence';
-import SelectableButton from 'atoms/SelectableButton';
 import SensitivityController from 'atoms/design_patterns/SensitivityWrapper';
+import { FoodNutrientSummary } from 'services/FoodDataCentral/foodDataCentralInterface';
 
 const caloriesinformationText = `
 Calories are calculated automatically from the macronutrients.
@@ -25,28 +23,12 @@ Carbs = 4 Calories per gram
 This is then multiplied by the number of servings.
 `;
 
-const macroNutrientInformationText = `
-  Per 100g serving size.
-`;
+const debounce_delay_ms = 300;
 
 const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) => {
-  const persistenceKey = usePersistenceKey();
-
-  const [selected, setSelected] = useState<AddFoodEntryMode>(() => {
-    const saved = getLocalStorage(persistenceKey, 'selectedSearchButton');
-    return saved === AddFoodEntryMode.Manual ? AddFoodEntryMode.Manual : AddFoodEntryMode.Search;
-  });
-
-  useEffect(() => {
-    setLocalStorage(persistenceKey, 'selectedSearchButton', selected);
-  }, [selected, persistenceKey]);
-
-  const isReadOnly = selected === AddFoodEntryMode.Search;
-  const isSearch = selected === AddFoodEntryMode.Search;
-  const macronutrientInformationText = isSearch ? macroNutrientInformationText : '';
-
   const { isLoading, createFoodEntry } = useFoodIntakeTrackingContext();
-  const foodOptions = useCommonFoods();
+
+  const [foodOptions, setFoodOptions] = useState<FoodNutrientSummary[]>([]);
 
   const [queryingAPI, setQueryingAPI] = useState<boolean>(false);
 
@@ -56,6 +38,14 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
   const [totalFats, setTotalFats] = useState<number>(0);
   const [totalCarbs, setTotalCarbs] = useState<number>(0);
   const [servingSize, setServingSize] = useState<number>(1);
+
+  const NO_MATCH_OPTION: FoodNutrientSummary = {
+    description: `No matches. Continue with: ${foodName}`,
+    proteinPer100g: 0,
+    carbsPer100g: 0,
+    fatPer100g: 0,
+  };
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const rows: RowData[] = [
     {
@@ -86,7 +76,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
       units: 'g',
     },
     {
-      min: 1,
+      min: 0.1,
       max: 50,
       step: 0.1,
       value: servingSize,
@@ -98,23 +88,6 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
   useEffect(() => {
     setTotalCalories((totalProtein * 4 + totalFats * 9 + totalCarbs * 4) * servingSize);
   }, [totalProtein, totalFats, totalCarbs, servingSize]);
-
-  useEffect(() => {
-    if (isSearch && foodName) {
-      setQueryingAPI(true);
-
-      searchForNutritionalContent(foodName)
-        .then((res) => {
-          setTotalProtien(res.proteinPer100g);
-          setTotalCarbs(res.carbsPer100g);
-          setTotalFats(res.fatPer100g);
-        })
-        .catch(() => {})
-        .finally(() => {
-          setQueryingAPI(false);
-        });
-    }
-  }, [foodName, isSearch]);
 
   const handleSubmit = () => {
     createFoodEntry({
@@ -132,55 +105,77 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
   return (
     <ModalForm onSubmit={handleSubmit} closeModalWindow={closeModalWindow}>
       <GroupContainer>
-        <Group title="Mode">
-          <SelectableButton
-            selected={selected === AddFoodEntryMode.Search}
-            displayText="Search"
-            onClick={() => setSelected(AddFoodEntryMode.Search)}
-          />
-          <SelectableButton
-            selected={selected === AddFoodEntryMode.Manual}
-            displayText="Manual"
-            onClick={() => setSelected(AddFoodEntryMode.Manual)}
-          />
-        </Group>
-
         <Group title="Add Food Entry">
-          {selected === AddFoodEntryMode.Search ? (
-            <Autocomplete
-              options={foodOptions}
-              getOptionLabel={(option) => option.label}
-              onChange={(_, value) => setFoodName(value?.label ?? '')}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Search Food"
-                  required
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <>
-                        {queryingAPI && <CircularProgress size={20} sx={{ marginRight: 2 }} />}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
-                  }}
-                />
-              )}
-            />
-          ) : (
-            <TextField
-              required
-              fullWidth
-              label="Name"
-              onChange={(e) => setFoodName(e.target.value)}
-            />
-          )}
+          <Autocomplete
+            freeSolo
+            options={
+              foodOptions.length > 0
+                ? foodOptions
+                : foodName === '' || queryingAPI
+                  ? []
+                  : [NO_MATCH_OPTION]
+            }
+            getOptionLabel={(option: FoodNutrientSummary) => {
+              return option.description;
+            }}
+            isOptionEqualToValue={(a, b) => a.description === b.description}
+            inputValue={foodName}
+            filterOptions={(x) => x} // Disable MUI attempts at filtering from user input.
+            onInputChange={(_, userInput, reason) => {
+              if (reason === 'input') {
+                setFoodName(userInput);
+                setQueryingAPI(false);
+                setFoodOptions([]);
+
+                if (debounceTimeout.current) {
+                  clearTimeout(debounceTimeout.current);
+                }
+
+                if (userInput !== '') {
+                  setQueryingAPI(true);
+
+                  debounceTimeout.current = setTimeout(() => {
+                    searchForNutritionalContent(userInput)
+                      .then((results) => setFoodOptions(results))
+                      .catch(() => setFoodOptions([]))
+                      .finally(() => setQueryingAPI(false));
+                  }, debounce_delay_ms);
+                }
+              }
+            }}
+            onChange={(_, selectedOption: FoodNutrientSummary) => {
+              if (selectedOption.description === NO_MATCH_OPTION.description) {
+                setFoodName(foodName);
+              } else {
+                setFoodName(selectedOption.description);
+              }
+
+              setTotalProtien(selectedOption.proteinPer100g);
+              setTotalCarbs(selectedOption.carbsPer100g);
+              setTotalFats(selectedOption.fatPer100g);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search Food"
+                required
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {queryingAPI && <CircularProgress size={20} sx={{ marginRight: 2 }} />}
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
+            )}
+          />
         </Group>
 
         <SensitivityController sensitive={!queryingAPI}>
           <Group title="Nutrition">
-            <div className="flex justify-center">
+            <div className="flex m-1 sm:m-0 sm:justify-center">
               <InfoTextField
                 label="Calories"
                 inputText={totalCalories.toFixed(2)}
@@ -199,8 +194,6 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
                     label={row_data.label}
                     setterCallback={row_data.setterCallback}
                     units={row_data.units}
-                    disabled={isReadOnly}
-                    informationText={macronutrientInformationText}
                   />
                 </div>
               ))}
@@ -216,8 +209,6 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
                   label={rows[2].label}
                   setterCallback={rows[2].setterCallback}
                   units={rows[2].units}
-                  disabled={isReadOnly}
-                  informationText={macronutrientInformationText}
                 />
               </div>
 
@@ -231,9 +222,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
                   label={rows[3].label}
                   setterCallback={rows[3].setterCallback}
                   units={rows[3].units}
-                  informationText={
-                    isSearch ? 'Serving size are based on 100g from USDA FoodData Central' : ''
-                  }
+                  informationText={'Serving size are based on 100g from USDA FoodData Central'}
                 />
               </div>
             </div>
