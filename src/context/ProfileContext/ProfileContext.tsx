@@ -5,6 +5,8 @@ import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
 import { defaultMeasurementSystem, Profile, Props } from './ProfileContextInterfaces';
 import useAuthContext from 'context/AuthContext/hooks';
 
+import * as Sentry from '@sentry/react';
+
 export const ProfileContext = createContext<Profile>({
   loading: true,
   updateProfileContext: () => null,
@@ -40,7 +42,9 @@ export const ProfileContextComponent: React.FC<Props> = ({ children }) => {
         setMeasurementSystem(data.measurement_system);
         setHasProfile(true);
       })
-      .catch(() => {
+      .catch((error) => {
+        Sentry.captureException(error);
+
         setHasProfile(false);
       })
       .finally(() => setLoading(false));

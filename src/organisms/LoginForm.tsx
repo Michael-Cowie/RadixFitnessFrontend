@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthContext from 'context/AuthContext/hooks';
 
+import * as Sentry from '@sentry/react';
+
 export const LoginForm = () => {
   const navigate = useNavigate();
 
@@ -32,7 +34,9 @@ export const LoginForm = () => {
       .then(() => {
         setLoginError(false);
       })
-      .catch(() => {
+      .catch((error) => {
+        Sentry.captureException(error);
+
         setLoginError(true);
       })
       .finally(() => {

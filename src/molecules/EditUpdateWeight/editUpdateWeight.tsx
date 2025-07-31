@@ -16,6 +16,8 @@ import ModalForm from 'atoms/design_patterns/ModalForm';
 import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/hooks';
 import useProfileContext from 'context/ProfileContext/hooks';
 
+import * as Sentry from '@sentry/react';
+
 const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
   const {
     data: { datesWithWeight, dateToWeightKg, dateToNotes },
@@ -56,7 +58,11 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
 
     syncWeightEntry(date, weight, notes)
       .then(() => closeModalWindow(true))
-      .catch(() => setErrorMessage(`Unable to ${updating ? 'update' : 'add'} weight`))
+      .catch((error) => {
+        Sentry.captureException(error);
+
+        setErrorMessage(`Unable to ${updating ? 'update' : 'add'} weight`);
+      })
       .finally(() => setIsLoading(false));
   };
 

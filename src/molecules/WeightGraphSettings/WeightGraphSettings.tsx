@@ -19,6 +19,8 @@ import ModalForm from 'atoms/design_patterns/ModalForm';
 import useWeightTrackingGraphContext from 'context/WeightTrackingGraphContext/hooks';
 import useProfileContext from 'context/ProfileContext/hooks';
 
+import * as Sentry from '@sentry/react';
+
 const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
   const { measurementSystem } = useProfileContext();
 
@@ -66,7 +68,9 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
         });
         closeModalWindow();
       })
-      .catch(() => {
+      .catch((error) => {
+        Sentry.captureException(error);
+
         setErrorMessage(`Unable to ${hasGoalWeight ? 'update' : 'add'} goal information`);
         setIsLoading(false);
       });

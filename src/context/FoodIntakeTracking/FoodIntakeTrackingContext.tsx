@@ -9,6 +9,8 @@ import {
   getMacroNutrientProgressOnDate,
 } from 'services/DailyIntakeTracking/dailyIntakeTrackingService';
 
+import * as Sentry from '@sentry/react';
+
 import {
   FoodEntryCreation,
   FoodIntakeTrackingContextParameters,
@@ -89,7 +91,9 @@ export const FoodIntakeTrackingContextComponent: React.FC<Props> = ({ children }
 
         setFoodEntries(food_entries);
       })
-      .catch(() => {
+      .catch((error) => {
+        Sentry.captureException(error);
+
         setGoalCalories(defaultNutrientProgressValues.goalCalories);
         setGoalProtein(defaultNutrientProgressValues.goalProtein);
         setGoalCarbs(defaultNutrientProgressValues.goalCarbs);
@@ -110,7 +114,9 @@ export const FoodIntakeTrackingContextComponent: React.FC<Props> = ({ children }
         goalProtein,
         goalCarbs,
         goalFats,
-      ).catch(() => {});
+      ).catch((error) => {
+        Sentry.captureException(error);
+      });
     }
   }, [goalCalories, goalProtein, goalCarbs, goalFats, isLoading, selectedDate]);
 

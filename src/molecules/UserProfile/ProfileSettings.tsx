@@ -12,6 +12,8 @@ import useProfileContext from 'context/ProfileContext/hooks';
 import { ProfileSettingsProp } from './ProfileSettingsInterfaces';
 import SelectableButton from 'atoms/SelectableButton';
 
+import * as Sentry from '@sentry/react';
+
 const measurementSystemField = 'measurementSystem' as const;
 
 const schema = z.object({
@@ -58,7 +60,9 @@ const ProfileSettings: React.FC<ProfileSettingsProp> = ({ showCancelButton }) =>
       .then(() => {
         navigate(-1);
       })
-      .catch(() => {
+      .catch((error) => {
+        Sentry.captureException(error);
+
         setErrorMessage('Unable to create profile');
       })
       .finally(() => {

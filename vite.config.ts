@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import path from 'path';
 import { defineConfig } from 'vite';
 /**
@@ -17,10 +18,18 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [react(), tsconfigPaths(), sentryVitePlugin({
+    org: "michael-6qq",
+    project: "javascript-react"
+  })],
+
   resolve: {
     alias: {
       lib: path.resolve(__dirname, 'src/lib'),
     },
   },
+
+  build: {
+    sourcemap: true
+  }
 });

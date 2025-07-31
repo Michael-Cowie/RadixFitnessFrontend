@@ -25,6 +25,12 @@ import {
   WEIGHT_TRACKING_ROUTE,
 } from 'lib/routing_routes.ts';
 
+import * as Sentry from '@sentry/react';
+
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+});
+
 export const router = createBrowserRouter([
   {
     element: <RootLayout />,

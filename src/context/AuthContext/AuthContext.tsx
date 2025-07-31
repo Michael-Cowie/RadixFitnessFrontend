@@ -1,6 +1,7 @@
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { createContext, useEffect, useState } from 'react';
 import { loginUser, signOutUser } from 'services/FirebaseUtils';
+import * as Sentry from '@sentry/react';
 
 import { AuthProviderContextData, Props } from './AuthContextInterfaces';
 
@@ -26,7 +27,9 @@ export const AuthContextComponent: React.FC<Props> = ({ children }) => {
   const logoutUser = async () => {
     signOutUser()
       .then(() => setUserIsLoggedIn(false))
-      .catch(() => {});
+      .catch((error) => {
+        Sentry.captureException(error);
+      });
   };
 
   const [loading, setLoading] = useState<boolean>(true);

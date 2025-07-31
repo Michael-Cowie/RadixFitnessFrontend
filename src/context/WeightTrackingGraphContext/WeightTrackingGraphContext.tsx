@@ -24,6 +24,8 @@ import { formatDayjsForApi } from 'services/apiFormatters';
 import useProfileContext from 'context/ProfileContext/hooks';
 import useAuthContext from 'context/AuthContext/hooks';
 
+import * as Sentry from '@sentry/react';
+
 export const WeightTrackingGraphContextProvider = createContext<WeightTrackingGraphContext>(
   DefaultWeightTrackingGraphContext,
 );
@@ -162,7 +164,9 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children 
           },
         });
       })
-      .catch(() => {})
+      .catch((error) => {
+        Sentry.captureException(error);
+      })
       .finally(() => {
         allWeightsDone = true;
         tryFinishLoading();
@@ -179,7 +183,9 @@ export const WeightTrackingGraphContextComponent: React.FC<Props> = ({ children 
           });
         }
       })
-      .catch(() => {})
+      .catch((error) => {
+        Sentry.captureException(error);
+      })
       .finally(() => {
         goalWeightDone = true;
         tryFinishLoading();

@@ -13,6 +13,8 @@ import ModalForm from 'atoms/design_patterns/ModalForm';
 import SensitivityController from 'atoms/design_patterns/SensitivityWrapper';
 import { FoodNutrientSummary } from 'services/FoodDataCentral/foodDataCentralInterface';
 
+import * as Sentry from '@sentry/react';
+
 const caloriesinformationText = `
 Calories are calculated automatically from the macronutrients.
 
@@ -137,7 +139,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
                   debounceTimeout.current = setTimeout(() => {
                     searchForNutritionalContent(userInput)
                       .then((results) => setFoodOptions(results))
-                      .catch((error) => console.log(error))
+                      .catch((error) => Sentry.captureException(error))
                       .finally(() => setQueryingAPI(false));
                   }, debounce_delay_ms);
                 }

@@ -8,6 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import CreateAccountModal from './CreateAccountModalForm';
 import { FirebaseError } from 'firebase/app';
 
+import * as Sentry from '@sentry/react';
+
 const schema = z.object({
   email: z.string().email('Invalid email format'),
   password: z
@@ -29,8 +31,10 @@ const CreateAccountComponent = () => {
 
     createNewUser(data.email, data.password)
       .then(() => setShowModal(false))
-      .catch((err: FirebaseError) => {
-        setErrorMessage(err.code || 'auth/unknown-error');
+      .catch((error: FirebaseError) => {
+        Sentry.captureException(error);
+
+        setErrorMessage(error.code || 'auth/unknown-error');
       })
       .finally(() => {
         setIsLoading(false);
