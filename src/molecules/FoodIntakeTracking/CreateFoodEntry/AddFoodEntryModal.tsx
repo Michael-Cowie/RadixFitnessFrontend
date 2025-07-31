@@ -115,8 +115,8 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
                   ? []
                   : [NO_MATCH_OPTION]
             }
-            getOptionLabel={(option: FoodNutrientSummary) => {
-              return option.description;
+            getOptionLabel={(option) => {
+              return (option as FoodNutrientSummary).description;
             }}
             isOptionEqualToValue={(a, b) => a.description === b.description}
             inputValue={foodName}
@@ -143,16 +143,17 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
                 }
               }
             }}
-            onChange={(_, selectedOption: FoodNutrientSummary) => {
-              if (selectedOption.description === NO_MATCH_OPTION.description) {
+            onChange={(_, selectedOption) => {
+              const nutrient = selectedOption as FoodNutrientSummary;
+              if (nutrient.description === NO_MATCH_OPTION.description) {
                 setFoodName(foodName);
               } else {
-                setFoodName(selectedOption.description);
+                setFoodName(nutrient.description);
               }
 
-              setTotalProtien(selectedOption.proteinPer100g);
-              setTotalCarbs(selectedOption.carbsPer100g);
-              setTotalFats(selectedOption.fatPer100g);
+              setTotalProtien(nutrient.proteinPer100g);
+              setTotalCarbs(nutrient.carbsPer100g);
+              setTotalFats(nutrient.fatPer100g);
             }}
             renderInput={(params) => (
               <TextField

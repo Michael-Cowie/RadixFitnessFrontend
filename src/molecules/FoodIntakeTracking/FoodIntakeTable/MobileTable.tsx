@@ -20,7 +20,7 @@ const FoodCell: React.FC<FoodCellProps> = ({ label, amount }) => {
   );
 };
 
-const MobileTable: React.FC<TableProps> = ({ entries, handleContextMenu }) => {
+const MobileTable: React.FC<TableProps> = ({ entries }) => {
   const numberOfColumns = 2;
   const rows = [];
 
@@ -38,7 +38,6 @@ const MobileTable: React.FC<TableProps> = ({ entries, handleContextMenu }) => {
               borderColor: 'var(--darkBlue)',
               width: '80%',
             }}
-            onContextMenu={(e) => handleContextMenu(e, column.id, column.foodName)}
           >
             <CardContent>
               <div className="flex justify-center">
