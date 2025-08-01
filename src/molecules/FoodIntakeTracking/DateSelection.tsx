@@ -50,8 +50,8 @@ export default function DateSelector() {
           const isSelected = isSameDay(day, selectedDate);
 
           return (
-            <SensitivityController sensitive={day.isBefore(today)}>
-              <Stack key={day.toString()} alignItems="center">
+            <SensitivityController key={day.toString()} sensitive={day.isBefore(today)}>
+              <Stack alignItems="center">
                 <Typography variant="caption">{day.format('ddd')}</Typography>
 
                 <Button

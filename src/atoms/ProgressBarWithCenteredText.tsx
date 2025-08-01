@@ -24,7 +24,7 @@ const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({
 
   const progress = value / goalValue >= 1 ? 100 : (value / goalValue) * 100;
 
-  const handleDoubleClick = () => {
+  const handleClick = () => {
     setIsEditing(true);
   };
 
@@ -72,7 +72,7 @@ const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({
       InputProps={{ inputProps: { min: 0, max: 5000 } }}
     />
   ) : (
-    <div className="flex items-center cursor-pointer" onDoubleClick={handleDoubleClick}>
+    <div className="flex items-center cursor-pointer" onClick={handleClick}>
       <span className="flex-1">{formatToDisplayPrecision(goalValue)}</span>
       <CreateRoundedIcon sx={{ fontSize: 16, marginRight: '10px' }} />
     </div>

@@ -28,6 +28,7 @@ export default function FoodIntakeTable() {
         </div>
 
         <TablePagination
+          component="div"
           rowsPerPage={pageSize}
           page={page}
           count={foodEntries.length}

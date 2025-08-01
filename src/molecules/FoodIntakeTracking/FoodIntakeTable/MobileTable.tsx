@@ -39,9 +39,10 @@ const MobileTable: React.FC<TableProps> = ({ entries }) => {
               width: '80%',
             }}
           >
-            <CardContent>
+            <CardContent key={column.id}>
               <div className="flex justify-center">
                 <Typography
+                  key={column.id}
                   sx={{
                     fontWeight: 'bold',
                     overflow: 'hidden',
