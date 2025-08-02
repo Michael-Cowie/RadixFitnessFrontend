@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-import styles from 'lib/colours.module.css';
-
 import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
