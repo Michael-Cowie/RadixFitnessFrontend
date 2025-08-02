@@ -4,6 +4,7 @@ import React from 'react';
 
 import { MacroNutrientRowProps } from './DailyMacroNutrientInterfaces';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
+import { Group, GroupContainer } from 'atoms/design_patterns/Group';
 
 const MacroNutrientRow: React.FC<MacroNutrientRowProps> = ({
   nutrientName,
@@ -12,14 +13,30 @@ const MacroNutrientRow: React.FC<MacroNutrientRowProps> = ({
   goalSetter,
 }) => {
   return (
-    <div className="flex flex-row w-full p-1">
-      <div className="w-20 font-bold">{nutrientName}</div>
-      <ProgressBarWithCenteredText
-        value={currentValue}
-        initialGoalValue={maxValue}
-        onChange={goalSetter}
-      />
-    </div>
+    <>
+      {/* Mobile layout */}
+      <div className="block sm:hidden w-full">
+        <GroupContainer>
+          <Group title={nutrientName}>
+            <ProgressBarWithCenteredText
+              value={currentValue}
+              initialGoalValue={maxValue}
+              onChange={goalSetter}
+            />
+          </Group>
+        </GroupContainer>
+      </div>
+
+      {/* Desktop layout */}
+      <div className="hidden sm:flex flex-row w-full p-1">
+        <div className="w-20 font-bold">{nutrientName}</div>
+        <ProgressBarWithCenteredText
+          value={currentValue}
+          initialGoalValue={maxValue}
+          onChange={goalSetter}
+        />
+      </div>
+    </>
   );
 };
 
@@ -67,7 +84,7 @@ const DailyMacroNutrientProgress = () => {
   ];
 
   return (
-    <div className="flex flex-col h-40">
+    <div className="flex flex-col">
       {isLoading ? (
         <SubmitButtonWithProgress buttonText="Loading" displayLoadingAnimation={true} />
       ) : (

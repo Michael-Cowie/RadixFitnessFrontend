@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import styles from 'lib/colours.module.css';
+
 import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -87,7 +89,14 @@ const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({
       <LinearProgress
         variant="determinate"
         value={progress}
-        style={{ width: '100%', height: '100%', borderRadius: 20 }}
+        sx={{
+          width: '100%',
+          height: '100%',
+          borderRadius: 20,
+          '.MuiLinearProgress-bar': {
+            backgroundColor: 'var(--blue)',
+          },
+        }}
       />
 
       <Box className="absolute inset-0 flex items-center justify-center font-bold">

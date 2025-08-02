@@ -104,6 +104,16 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
     });
   };
 
+  const caloriesField = (
+    <div className="flex mb-2 sm:justify-center">
+      <InfoTextField
+        label="Calories"
+        inputText={totalCalories.toFixed(2)}
+        informationText={caloriesinformationText}
+      />
+    </div>
+  );
+
   return (
     <ModalForm onSubmit={handleSubmit} closeModalWindow={closeModalWindow}>
       <GroupContainer>
@@ -178,58 +188,55 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
 
         <SensitivityController sensitive={!queryingAPI}>
           <Group title="Nutrition">
-            <div className="flex m-1 sm:m-0 sm:justify-center">
-              <InfoTextField
-                label="Calories"
-                inputText={totalCalories.toFixed(2)}
-                informationText={caloriesinformationText}
-              />
-            </div>
+            {/* Desktop layout */}
+            <div className="hidden sm:block">
+              {caloriesField}
 
-            <div className="flex flex-col sm:flex-row sm:justify-between">
-              {rows.slice(0, 2).map((row_data, index) => (
-                <div className="m-1 w-56" key={index}>
-                  <NumberedTextFieldUnitAndInformation
-                    min={row_data.min}
-                    max={row_data.max}
-                    step={row_data.step}
-                    value={row_data.value}
-                    label={row_data.label}
-                    setterCallback={row_data.setterCallback}
-                    units={row_data.units}
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className="flex flex-col sm:flex-row">
-              <div className="m-1 w-56">
-                <NumberedTextFieldUnitAndInformation
-                  min={rows[2].min}
-                  max={rows[2].max}
-                  step={rows[2].step}
-                  value={rows[2].value}
-                  label={rows[2].label}
-                  setterCallback={rows[2].setterCallback}
-                  units={rows[2].units}
-                />
+              <div className="flex flex-row justify-between space-y-0 mt-3">
+                {rows.slice(0, 2).map((row, index) => (
+                  <div className="w-56" key={index}>
+                    <NumberedTextFieldUnitAndInformation {...row} />
+                  </div>
+                ))}
               </div>
 
-              {/* Serving Size - always editable */}
-              <div className="m-1 w-56">
-                <NumberedTextFieldUnitAndInformation
-                  min={rows[3].min}
-                  max={rows[3].max}
-                  step={rows[3].step}
-                  value={rows[3].value}
-                  label={rows[3].label}
-                  setterCallback={rows[3].setterCallback}
-                  units={rows[3].units}
-                  informationText={'Serving size are based on 100g from USDA FoodData Central'}
-                />
+              <div className="flex flex-row justify-between space-y-0 mt-3">
+                {rows.slice(2).map((row, index) => (
+                  <div className="w-56" key={index}>
+                    <NumberedTextFieldUnitAndInformation
+                      {...row}
+                      informationText={
+                        index === 1
+                          ? 'Serving size are based on 100g from USDA FoodData Central'
+                          : ''
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile layout  - Group to a single column to prevent the Group component causing spaces between child */}
+            <div className="block sm:hidden">
+              {caloriesField}
+              <div className="flex flex-col sm:flex-row sm:justify-between space-y-2">
+                {rows.map((row, index) => (
+                  <div className="w-full" key={index}>
+                    <NumberedTextFieldUnitAndInformation
+                      {...row}
+                      informationText={
+                        index === 3
+                          ? 'Serving size are based on 100g from USDA FoodData Central'
+                          : ''
+                      }
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </Group>
+        </SensitivityController>
+        <SensitivityController sensitive={!queryingAPI}>
           <SubmitButton displayLoadingAnimation={isLoading} />
         </SensitivityController>
       </GroupContainer>

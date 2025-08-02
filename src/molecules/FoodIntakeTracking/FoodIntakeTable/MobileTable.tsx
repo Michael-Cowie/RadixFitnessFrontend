@@ -1,8 +1,12 @@
 import React from 'react';
 
-import { Card, CardContent, Typography } from '@mui/material';
+import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
+
+import { Card, CardContent, IconButton, Typography } from '@mui/material';
 
 import { TableProps } from './interfaces';
+import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
+import { formatToDisplayPrecision } from 'lib/display';
 
 interface FoodCellProps {
   label: string;
@@ -21,52 +25,61 @@ const FoodCell: React.FC<FoodCellProps> = ({ label, amount }) => {
 };
 
 const MobileTable: React.FC<TableProps> = ({ entries }) => {
-  const numberOfColumns = 2;
+  const { deleteFoodEntryWithID } = useFoodIntakeTrackingContext();
+
   const rows = [];
 
-  for (let i = 0; i < entries.length; i += numberOfColumns) {
-    const columns = entries.slice(i, i + numberOfColumns);
-
+  for (const entry of entries) {
     rows.push(
-      <div className="flex flex-col justify-between items-center">
-        {columns.map((column) => (
-          <Card
-            key={column.id}
-            sx={{
-              margin: 2,
-              border: '1px solid',
-              borderColor: 'var(--darkBlue)',
-              width: '80%',
-            }}
-          >
-            <CardContent key={column.id}>
-              <div className="flex justify-center">
-                <Typography
-                  key={column.id}
-                  sx={{
-                    fontWeight: 'bold',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                  title={column.foodName}
-                >
-                  {column.foodName}
-                </Typography>
-              </div>
+      <div key={entry.id} className="flex flex-col justify-between items-center">
+        <Card
+          sx={{
+            margin: 2,
+            border: '1px solid',
+            borderColor: 'var(--darkBlue)',
+            width: '80%',
+          }}
+        >
+          <CardContent sx={{ pt: 1, pl: 1, pr: 1, pb: '0 !important' }}>
+            <div className="flex justify-center">
+              <Typography
+                sx={{
+                  fontWeight: 'bold',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+                title={entry.foodName}
+              >
+                {entry.foodName}
+              </Typography>
+            </div>
 
-              <div className="ml-1">
-                <FoodCell label="Calories:" amount={`${column.totalCalories}`} />
-                <FoodCell label="Protein:" amount={`${column.totalProtein} g`} />
-                <FoodCell label="Fats:" amount={`${column.totalFats} g`} />
-                <FoodCell label="Carbs:" amount={`${column.totalCarbs} g`} />
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+            <div className="ml-1">
+              <FoodCell
+                label="Calories:"
+                amount={`${formatToDisplayPrecision(entry.totalCalories)}`}
+              />
+              <FoodCell
+                label="Protein:"
+                amount={`${formatToDisplayPrecision(entry.totalProtein)} g`}
+              />
+              <FoodCell label="Fats:" amount={`${formatToDisplayPrecision(entry.totalFats)} g`} />
+              <FoodCell label="Carbs:" amount={`${formatToDisplayPrecision(entry.totalCarbs)} g`} />
+            </div>
+            <div className="flex justify-end">
+              <IconButton
+                onClick={() => {
+                  deleteFoodEntryWithID(entry.id);
+                }}
+              >
+                <DeleteSharpIcon />
+              </IconButton>
+            </div>
+          </CardContent>
+        </Card>
       </div>,
     );
   }
-
   return <>{rows}</>;
 };
 

@@ -20,7 +20,7 @@ const schema = z.object({
   name: z
     .string()
     .min(1, 'Name is required')
-    .regex(/^[a-zA-Z]+$/, 'Name must only contain letters'),
+    .regex(/^[a-zA-Z ]+$/, 'Name must only contain letters'),
   [measurementSystemField]: z.enum(measurementSystems, {
     required_error: 'Measurement system is required',
   }),
@@ -91,7 +91,7 @@ const ProfileSettings: React.FC<ProfileSettingsProp> = ({ showCancelButton }) =>
               {showCancelButton && (
                 <SelectableButton
                   selected={true}
-                  displayText="Close"
+                  displayText="Cancel"
                   onClick={() => navigate(-1)}
                 />
               )}
