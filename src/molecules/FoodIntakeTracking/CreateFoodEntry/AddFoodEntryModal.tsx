@@ -53,7 +53,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
     {
       min: 0,
       max: 1000,
-      step: 0.1,
+      step: 0.01,
       value: totalProtein,
       label: 'Protein',
       setterCallback: setTotalProtien,
@@ -62,7 +62,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
     {
       min: 0,
       max: 1000,
-      step: 0.1,
+      step: 0.01,
       value: totalFats,
       label: 'Fats',
       setterCallback: setTotalFats,
@@ -71,7 +71,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
     {
       min: 0,
       max: 1000,
-      step: 0.1,
+      step: 0.01,
       value: totalCarbs,
       label: 'Carbs',
       setterCallback: setTotalCarbs,
@@ -80,7 +80,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
     {
       min: 0.1,
       max: 50,
-      step: 0.1,
+      step: 0.01,
       value: servingSize,
       label: 'Serving',
       setterCallback: setServingSize,

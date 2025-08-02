@@ -1,4 +1,4 @@
-import styles from 'atoms/inputs/weights/spinbutton.module.css';
+import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import InformationHover from 'atoms/InformationHover';
 
@@ -20,52 +20,53 @@ const NumberedTextFieldUnitAndInformation: React.FC<NumberedTextFieldWithRangePr
   min,
   max,
   step,
-  value,
+  value: defaultValue,
   label,
   setterCallback,
   units = false,
   disabled = false,
   informationText = '',
 }) => {
+  const [inputValue, setInputValue] = useState(defaultValue.toString());
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = Number(e.target.value);
-    setterCallback(newValue);
+    setInputValue(e.target.value);
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const newValue = Number(e.target.value);
-    if (e.target.value === '') return;
+  const handleBlur = () => {
+    const userInputValue = Number(inputValue);
 
-    const boundedValue = Math.max(min, Math.min(newValue, max));
-    setterCallback(boundedValue);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const textField = document.getElementById(`${label}_textfield`) as HTMLInputElement;
-      textField?.blur(); // trigger blur validation
+    if (isNaN(userInputValue)) {
+      setInputValue(defaultValue.toString());
+    } else {
+      const bounded = Math.max(min, Math.min(userInputValue, max));
+      setterCallback(bounded);
+      setInputValue(bounded.toString());
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
+  };
+
   return (
-    <div className={`w-56 ${styles.weightUnitWrapper} ${units ? styles[units] : ''}`}>
+    <div className={`w-56 ${units ? units : ''}`}>
       <TextField
         id={`${label}_textfield`}
-        value={value}
+        value={inputValue}
         onChange={handleChange}
         onBlur={handleBlur}
-        onKeyDown={handleKeyPress}
+        onKeyDown={handleKeyDown}
         label={
           <div className="flex items-center gap-1">
             {label}
             {informationText && <InformationHover information={informationText} />}
           </div>
         }
-        type="number"
+        type="text"
         InputLabelProps={{ shrink: true }}
         className="w-full"
-        inputProps={{ step, min, max }}
+        inputProps={{ inputMode: 'decimal', step, min, max }}
         disabled={disabled}
       />
     </div>
