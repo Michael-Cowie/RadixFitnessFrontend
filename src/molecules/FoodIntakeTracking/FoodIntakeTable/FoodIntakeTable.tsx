@@ -11,15 +11,23 @@ import AddFoodEntryModal from '../CreateFoodEntry/AddFoodEntryModal';
 
 export default function FoodIntakeTable() {
   const [createFoodEntry, setCreateFoodEntry] = useState<boolean>(false);
-  const [page, setPage] = useState(0);
+  const [currentUserTablePage, setCurrentUserTablePage] = useState(0);
 
   const { foodEntries, selectedDate } = useFoodIntakeTrackingContext();
 
   useEffect(() => {
-    setPage(0);
+    setCurrentUserTablePage(0);
   }, [selectedDate]);
 
-  const paginatedEntries = foodEntries.slice(page * pageSize, page * pageSize + pageSize);
+  useEffect(() => {
+    const maxPage = Math.max(0, Math.ceil(foodEntries.length / pageSize) - 1);
+    setCurrentUserTablePage(Math.min(currentUserTablePage, maxPage));
+  }, [foodEntries.length, currentUserTablePage]);
+
+  const paginatedEntries = foodEntries.slice(
+    currentUserTablePage * pageSize,
+    currentUserTablePage * pageSize + pageSize,
+  );
   return (
     <Box sx={{ width: '100%', overflowX: 'auto' }}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -30,9 +38,9 @@ export default function FoodIntakeTable() {
         <TablePagination
           component="div"
           rowsPerPage={pageSize}
-          page={page}
+          page={currentUserTablePage}
           count={foodEntries.length}
-          onPageChange={(_, newPage: number) => setPage(newPage)}
+          onPageChange={(_, newPage: number) => setCurrentUserTablePage(newPage)}
           rowsPerPageOptions={[]}
           sx={{
             borderBottom: 0,
