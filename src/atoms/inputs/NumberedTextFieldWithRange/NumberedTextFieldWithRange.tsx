@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import InformationHover from 'atoms/InformationHover';
+import { InputAdornment } from '@mui/material';
 
-export type AvailableUnits = 'g' | 'kg' | 'lbs' | false;
+export type AvailableUnits = 'g' | 'kg' | 'lbs';
 
 interface NumberedTextFieldWithRangeProps {
   min: number;
@@ -23,7 +24,7 @@ const NumberedTextFieldUnitAndInformation: React.FC<NumberedTextFieldWithRangePr
   value: defaultValue,
   label,
   setterCallback,
-  units = false,
+  units = '',
   disabled = false,
   informationText = '',
 }) => {
@@ -53,6 +54,7 @@ const NumberedTextFieldUnitAndInformation: React.FC<NumberedTextFieldWithRangePr
     <div className={`w-56 ${units ? units : ''}`}>
       <TextField
         id={`${label}_textfield`}
+        type="number"
         value={inputValue}
         onChange={handleChange}
         onBlur={handleBlur}
@@ -63,10 +65,12 @@ const NumberedTextFieldUnitAndInformation: React.FC<NumberedTextFieldWithRangePr
             {informationText && <InformationHover information={informationText} />}
           </div>
         }
-        type="text"
         InputLabelProps={{ shrink: true }}
         className="w-full"
         inputProps={{ inputMode: 'decimal', step, min, max }}
+        InputProps={{
+          endAdornment: <InputAdornment position="end">{units}</InputAdornment>,
+        }}
         disabled={disabled}
       />
     </div>
