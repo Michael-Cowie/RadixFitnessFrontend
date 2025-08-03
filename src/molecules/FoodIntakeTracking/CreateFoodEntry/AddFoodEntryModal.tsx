@@ -191,6 +191,21 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
 
         <SensitivityController sensitive={!queryingAPI}>
           <Group title="Nutrition">
+            {/* Mobile layout  - Group to a single column to prevent the Group component causing spaces between child */}
+            <div className="block sm:hidden">
+              {caloriesField}
+              <div className="flex flex-col sm:flex-row sm:justify-between space-y-2">
+                {rows.map((row, index) => (
+                  <div className="w-full" key={index}>
+                    <NumberedTextFieldUnitAndInformation
+                      {...row}
+                      informationText={index === 3 ? usdaServingSizeInformationText : ''}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Desktop layout */}
             <div className="hidden sm:block">
               {caloriesField}
@@ -209,21 +224,6 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
                     <NumberedTextFieldUnitAndInformation
                       {...row}
                       informationText={index === 1 ? usdaServingSizeInformationText : ''}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile layout  - Group to a single column to prevent the Group component causing spaces between child */}
-            <div className="block sm:hidden">
-              {caloriesField}
-              <div className="flex flex-col sm:flex-row sm:justify-between space-y-2">
-                {rows.map((row, index) => (
-                  <div className="w-full" key={index}>
-                    <NumberedTextFieldUnitAndInformation
-                      {...row}
-                      informationText={index === 3 ? usdaServingSizeInformationText : ''}
                     />
                   </div>
                 ))}
