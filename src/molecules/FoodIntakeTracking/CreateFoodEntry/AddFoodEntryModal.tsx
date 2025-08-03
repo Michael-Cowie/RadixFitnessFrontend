@@ -25,6 +25,8 @@ Carbs = 4 Calories per gram
 This is then multiplied by the number of servings.
 `;
 
+const usdaServingSizeInformationText = 'Serving size are based on 100g from USDA FoodData Central';
+
 const debounce_delay_ms = 300;
 
 const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) => {
@@ -82,7 +84,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
       max: 50,
       step: 0.01,
       value: servingSize,
-      label: 'Serving',
+      label: 'Servings',
       setterCallback: setServingSize,
     },
   ];
@@ -110,6 +112,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
         label="Calories"
         inputText={totalCalories.toFixed(2)}
         informationText={caloriesinformationText}
+        endAdornmentText="kcal"
       />
     </div>
   );
@@ -205,11 +208,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
                   <div className="w-56" key={index}>
                     <NumberedTextFieldUnitAndInformation
                       {...row}
-                      informationText={
-                        index === 1
-                          ? 'Serving size are based on 100g from USDA FoodData Central'
-                          : ''
-                      }
+                      informationText={index === 1 ? usdaServingSizeInformationText : ''}
                     />
                   </div>
                 ))}
@@ -224,11 +223,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
                   <div className="w-full" key={index}>
                     <NumberedTextFieldUnitAndInformation
                       {...row}
-                      informationText={
-                        index === 3
-                          ? 'Serving size are based on 100g from USDA FoodData Central'
-                          : ''
-                      }
+                      informationText={index === 3 ? usdaServingSizeInformationText : ''}
                     />
                   </div>
                 ))}

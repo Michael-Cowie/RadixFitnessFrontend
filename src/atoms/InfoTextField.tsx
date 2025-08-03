@@ -2,14 +2,21 @@ import InformationHover from 'atoms/InformationHover';
 
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
+import { InputAdornment } from '@mui/material';
 
 interface Props {
   label: string;
   inputText: string | number;
   informationText?: string;
+  endAdornmentText?: string;
 }
 
-const InfoTextField: React.FC<Props> = ({ label, inputText, informationText }) => {
+const InfoTextField: React.FC<Props> = ({
+  label,
+  inputText,
+  informationText = '',
+  endAdornmentText = '',
+}) => {
   return (
     <FormControl className="w-56">
       <TextField
@@ -27,6 +34,7 @@ const InfoTextField: React.FC<Props> = ({ label, inputText, informationText }) =
           readOnly: true,
           tabIndex: -1,
           style: { pointerEvents: 'none' },
+          endAdornment: <InputAdornment position="end">{endAdornmentText}</InputAdornment>,
         }}
       />
     </FormControl>
