@@ -9,18 +9,41 @@ import { weightFromKgToUserMeasurementSystem } from 'lib/weightTranslations';
 import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
 
-function splitStringIntoArray(inputString: string, maxLength: number): string[] {
-  const resultArray = [];
-  let startIndex = 0;
+/**
+ * The purpose of this function is to take a single string value repsenting the users
+ * notes. React-chartjs-2 does not by default accept new line character behaviour for tooltips,
+ * instead it accepts an array of string values where each index is a single line. This
+ * function breaks down the users notes into a string adding breaks (new line behaviour) at
+ * the specified maxLength.
+ *
+ * This function does not immediately cut off words at the maxLength. If a word were to go over
+ * the maxLength specified, it is still appended on the same line and the end of line now occurs
+ * at the end of the appended word.
+ *
+ * @param notes A single string representing the user notes.
+ * @param maxLength
+ * @returns string[] where each index represents a single line.
+ */
+function splitStringIntoArray(notes: string, maxLength: number): string[] {
+  const words = notes.split(' ');
+  const result: string[] = [];
 
-  while (startIndex < inputString.length) {
-    const endIndex = startIndex + maxLength;
-    const substring = inputString.substring(startIndex, endIndex).trim();
-    resultArray.push(substring);
-    startIndex = endIndex;
+  let currentLine = '';
+
+  for (const word of words) {
+    if ((currentLine + word).length <= maxLength) {
+      currentLine += (currentLine.length === 0 ? '' : ' ') + word;
+    } else {
+      result.push(currentLine);
+      currentLine = '';
+    }
   }
 
-  return resultArray;
+  if (currentLine.length > 0) {
+    result.push(currentLine);
+  }
+
+  return result;
 }
 
 export function determine_tooltip(
@@ -29,6 +52,7 @@ export function determine_tooltip(
   displayUnit: AvailableWeightUnits,
 ) {
   function inner(tooltipItem: TooltipItem<'line'>) {
+    const maxToolTipLength = 100;
     const label: string = tooltipItem.label;
     const weight: string = tooltipItem.parsed['y'].toFixed(2);
 
@@ -48,7 +72,7 @@ export function determine_tooltip(
       let tooltip: string[] = [`On ${label}, you weighed ${weight}${displayUnit}`];
       if (notes.length) {
         tooltip.push('');
-        tooltip = tooltip.concat(splitStringIntoArray(notes, tooltip[0].length));
+        tooltip = tooltip.concat(splitStringIntoArray(notes, maxToolTipLength));
       }
 
       return tooltip;

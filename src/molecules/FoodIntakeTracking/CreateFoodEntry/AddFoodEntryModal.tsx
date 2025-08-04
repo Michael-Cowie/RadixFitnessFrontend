@@ -15,15 +15,13 @@ import { FoodNutrientSummary } from 'services/FoodDataCentral/foodDataCentralInt
 
 import * as Sentry from '@sentry/react';
 
-const caloriesinformationText = `
-Calories are calculated automatically from the macronutrients.
+const caloriesInformationText = `Calories are calculated automatically based on macronutrient values.
 
-Protein = 4 Calories per gram
-Fats = 9 Calories per gram
-Carbs = 4 Calories per gram
+• Protein: 4 calories per gram  
+• Fat: 9 calories per gram  
+• Carbohydrates: 4 calories per gram
 
-This is then multiplied by the number of servings.
-`;
+The total is then multiplied by the number of servings.`;
 
 const usdaServingSizeInformationText = 'Serving size are based on 100g from USDA FoodData Central';
 
@@ -111,7 +109,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
       <InfoTextField
         label="Calories"
         inputText={totalCalories.toFixed(2)}
-        informationText={caloriesinformationText}
+        informationText={caloriesInformationText}
         endAdornmentText="kcal"
       />
     </div>
@@ -196,7 +194,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
               {caloriesField}
               <div className="flex flex-col sm:flex-row sm:justify-between space-y-2">
                 {rows.map((row, index) => (
-                  <div className="w-full" key={index}>
+                  <div className="w-full" key={row.label + row.value}>
                     <NumberedTextFieldUnitAndInformation
                       {...row}
                       informationText={index === 3 ? usdaServingSizeInformationText : ''}
@@ -211,8 +209,8 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
               {caloriesField}
 
               <div className="flex flex-row justify-between space-y-0 mt-3">
-                {rows.slice(0, 2).map((row, index) => (
-                  <div className="w-56" key={index}>
+                {rows.slice(0, 2).map((row) => (
+                  <div className="w-56" key={row.label + row.value}>
                     <NumberedTextFieldUnitAndInformation {...row} />
                   </div>
                 ))}
@@ -220,7 +218,7 @@ const AddFoodEntryModal: React.FC<AddFoodEntryProps> = ({ closeModalWindow }) =>
 
               <div className="flex flex-row justify-between space-y-0 mt-3">
                 {rows.slice(2).map((row, index) => (
-                  <div className="w-56" key={index}>
+                  <div className="w-56" key={row.label + row.value}>
                     <NumberedTextFieldUnitAndInformation
                       {...row}
                       informationText={index === 1 ? usdaServingSizeInformationText : ''}
