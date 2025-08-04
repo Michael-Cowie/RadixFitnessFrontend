@@ -26,3 +26,6 @@ dist-ssr
 
 # Sentry Config File
 .env.sentry-build-plugin
+
+# Environment Variable Files
+.env.development

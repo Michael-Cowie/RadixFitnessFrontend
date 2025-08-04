@@ -11,12 +11,10 @@ const HomePage = () => {
           <RouterButton button_text="Track My Weight" route={WEIGHT_TRACKING_ROUTE} />
           <RouterButton button_text="Nutrient Intake" route={FOOD_INTAKE_TRACKING_ROUTE} />
           <button className="btn mt-4 mb-4 w-full" disabled>
-            {' '}
-            Exercise Finder{' '}
+            Exercise Finder
           </button>
           <button className="btn mt-4 mb-4 w-full" disabled>
-            {' '}
-            Education{' '}
+            Education
           </button>
         </div>
       </CenterContainer>

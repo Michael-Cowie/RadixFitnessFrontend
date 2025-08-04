@@ -48,6 +48,53 @@ Using TypeScript provides several key advantages:
 
 This decision aligns with modern frontend development practices and contributes to a more robust and maintainable codebase over time.
 
+## Sentry
+
+Sentry is an open-source error monitoring and performance tracing tool used to track runtime exceptions and performance bottlenecks in web applications. In this project, Sentry is integrated for production debugging, allowing developers to identify, capture, and diagnose issues that occur in real user sessions.
+
+By logging both handled and unhandled errors, Sentry helps maintain application stability and speeds up the debugging process by providing detailed stack traces, context, and user/environment metadata.
+
+Sentry relies on two environment variables to be configured correctly,
+
+1. `VITE_SENTRY_DSN` - This environment variables determines where to send events so they're assoicated with the correct project.
+2. `SENTRY_AUTH_TOKEN` - This environment variables acts as authentication for sending the events.
+
+Sentry configuration occurs on application startup,
+
+```TS
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  environment: import.meta.env.MODE,
+});
+```
+
+The Vite environment variable `MODE` is used to determine grouping tags for Sentry. `MODE` will have the value `development` during local development and `production` in a production environment.
+
+<div align="center">
+  <img src="./images/sentry.png">
+</div>
+
+Sentry is imported and used globally across the application to capture exceptions and report errors.
+
+```TS
+import * as Sentry from '@sentry/react';
+```
+
+Sentry is commonly used within `.catch()` blocks to record failed asynchronous operation failures. This is especially important to understand and log why certain API requests failed. Albeit their are many instances throughout the application there `.catch()` is expected to occur if the user does not have data and initializes the component to a default state. In these instances, it's still logged as other situations can case it to be raised. Sentry groups the identical exceptions in these occurences so it does not float the exceptions with the same occurrence.
+
+```TS
+someApiCall()
+  .then((response) => {
+    ...
+  })
+  .catch((error) => {
+    Sentry.captureException(error);
+    ...
+  });
+```
+
+By default, Sentry will also log top level uncaught exceptions too.
+
 ## CSS
 
 This project uses a combination of **Tailwind CSS, DaisyUI** and **styled-components** to handle styling and UI design.
