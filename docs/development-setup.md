@@ -128,11 +128,9 @@ While the above configuration in step 3 is very useful for on-demand and quick f
 
 `husky` is used to manage Git hooks. Git has built-in "hooks" like `pre-commit` and `pre-push`. These are not easy to get setup or share in a project, `husky` makes it very easy to create Git hooks using simple files in `.husky/`.
 
-`lint-staged` will run tools like `eslint` and `prettier` on only the changed files. You don't need to run ESLint on the entire project every time, it's unnecessary and slow. The current state of the remote should be formatted correctly.
+`lint-staged` will run tools like `eslint` and `prettier` on only the changed files. You don't need to run ESLint on the entire project every time, it's unnecessary and slow. The current state of the remote should be formatted correctly and thus only the staged files require inspection.
 
-The `pre-commit` file that is ran will be located inside of `./husky/pre-commit`. This contains the command `npx lint-staged` which is run during the pre-commit stage of Git. The command inside of the `pre-commit` file is called before `git commit -m "..."` is finalized.
-
-The `package.json` contains the configuration for `lint-staged` that is ran by `husky` within the `pre-commit` file. The configuration below tells `lint-staged` to filter based on the file types and then for each file run the command. As of now, this is `eslint` and `prettier`.
+The `pre-commit` file that is ran will be located inside of `./husky/pre-commit`. This contains the command `npx lint-staged` which is run during the pre-commit stage of Git. The command inside of the `pre-commit` file is called before `git commit -m "..."` is finalized. The `package.json` contains the configuration for `lint-staged` that is ran by `husky` within the `pre-commit` file. The configuration below tells `lint-staged` to filter based on the file types and then for each file run the command. As of now, this is `eslint` and `prettier`.
 
 ```JSON
 "lint-staged": {
@@ -155,7 +153,7 @@ Additionally, husky was configured from `npx husky init` which modified the `pac
 },
 ```
 
-In npm, the `prepare` script is a special lifecycle script that runs after `npm install` is executed. This ensures that after every `npm install` husky will set up the Git hooks again by calling `husky install`. This creates the `.git/hooks` symlinks to point to `.husky/*` files.
+In npm, the `prepare` script is a special lifecycle script that runs after `npm install` is executed. This ensures that after every `npm install` husky will set up the Git hooks again by calling `husky install`. **This creates the `.git/hooks` symlinks to point to `.husky/*` files**.
 
 ## 5. Debugging in Visual Studio Code
 
