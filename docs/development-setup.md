@@ -47,7 +47,7 @@ console.log(import.meta.env.VITE_API_END_POINT); // accessible
 console.log(import.meta.env.SECRET_KEY);         // undefined
 ```
 
-## 3. Code Linters
+## 3. Code Linters and Formatters
 
 Maintaining consistent and high-quality code is essential in modern development. ESLint and Prettier are two widely adopted tools that address this need and are used throughout this project. Each have distinct roles. ESLint focuses on code correctness and style enforcement, Prettier ensures consistent formatting.
 
@@ -104,7 +104,7 @@ Prettier is a code formatter that enforces a uniform appearance by reprinting co
 - Quote style
 - Trailing commas
 
-Unlike ESLint, Prettier has minimal configuration and avoids debates about formatting preferences by enforcing consistent output. Prettier style enforcement is required via GitHub actions. To run Prettier locally through the CLI, run `npx prettier . --write`. Alternatively, VS Code has a Prettier extenson which can be installed.
+Unlike ESLint, Prettier has minimal configuration and avoids debates about formatting preferences by enforcing consistent output. Prettier style enforcement is required via GitHub actions. To run Prettier locally through the CLI, run `npx prettier . --write` or `npm run format` from the command located inside of `package.json`. Alternatively, VS Code has a Prettier extenson which can be installed.
 
 <div align="center">
   <img src="./images/prettier_code_formatter.png">
@@ -122,7 +122,31 @@ Finally, configure this to be ran when saving.
   <img src="./images/format_on_save.png">
 </div>
 
-## 4. Debugging in Visual Studio Code
+## 4. Git Hooks Configuration
+
+While the above configuration in step 3 is very useful for on-demand and quick formatting, it's still very useful to make sure ESLint and Prettier are working correctly before pushing to the remote. This is useful to validate the state of the commit before pushing to the remote, despite GitHub actions being configured to run the tests if the formatting was not correct. The two tools we need to set this up is `husky` and `lint-taged`.
+
+`husky` is used to manage Git hooks. Git has built-in "hooks" like `pre-commit` and `pre-push`. These are not easy to get setup or share in a project, `husky` makes it very easy to create Git hooks using simple files in `.husky/`.
+
+`lint-staged` will run tools like `eslint` and `prettier` on only the changed files. You don't need to run ESLint on the entire project every time, it's unnecessary and slow. The current state of the remote should be formatted correctly.
+
+The `pre-commit` file that is ran will be located inside of `./husky/pre-commit`. This contains the command `npx lint-staged` which is run during the pre-commit stage of Git. The command inside of the `pre-commit` file is called before `git commit -m "..."` is finalized.
+
+The `package.json` contains the configuration for `lint-staged` that is ran by `husky` within the `pre-commit` file. The configuration below tells `lint-staged` to filter based on the file types and then for each file run the command. As of now, this is `eslint` and `prettier`.
+
+```JSON
+"lint-staged": {
+  "**/*.{js,jsx,ts,tsx}": [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "**/*.{json,css,md}": [
+    "prettier --write"
+  ]
+},
+```
+
+## 5. Debugging in Visual Studio Code
 
 ##### Create a `launch.json` File
 
@@ -150,7 +174,7 @@ The `launch.json` file will be created under `.vscode`. The default port in the 
     <img src="./images/launch_debugger.png"/>
 </div>
 
-## 5. Starting the Development Server
+## 6. Starting the Development Server
 
 To start the server, run the command `npm run dev`. This will run the `dev` command configured inside of `package.json` under the `"scripts"` sections.
 

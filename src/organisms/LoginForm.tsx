@@ -19,7 +19,7 @@ export const LoginForm = () => {
     if (userIsLoggedIn) {
       navigate('/');
     }
-  }, [userIsLoggedIn, navigate]);
+  }, [userIsLoggedIn]);
 
   const onLogin = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
