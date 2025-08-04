@@ -146,6 +146,17 @@ The `package.json` contains the configuration for `lint-staged` that is ran by `
 },
 ```
 
+Additionally, husky was configured from `npx husky init` which modified the `package.json` to perform the following,
+
+```JSON
+"scripts": {
+  "prepare": "husky"
+  ...
+},
+```
+
+In npm, the `prepare` script is a special lifecycle script that runs after `npm install` is executed. This ensures that after every `npm install` husky will set up the Git hooks again by calling `husky install`. This creates the `.git/hooks` symlinks to point to `.husky/*` files.
+
 ## 5. Debugging in Visual Studio Code
 
 ##### Create a `launch.json` File
