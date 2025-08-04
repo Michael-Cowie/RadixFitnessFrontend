@@ -15,6 +15,8 @@ export const LoginForm = () => {
   const [loginError, setLoginError] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const test = 5;
+
   useEffect(() => {
     if (userIsLoggedIn) {
       navigate('/');
