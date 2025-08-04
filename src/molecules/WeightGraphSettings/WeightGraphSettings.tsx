@@ -22,6 +22,12 @@ import useProfileContext from 'context/ProfileContext/hooks';
 import * as Sentry from '@sentry/react';
 
 const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
+  const goalWeightInformationText =
+    `Goal predictions are calculated using your recent weight trend.
+
+    We measure your average daily change (gain or loss) from the visible data points and project it forward to your goal date. ` +
+    'Meaning, the more graph entries you have, the smoother the weight prediction will become.';
+
   const { measurementSystem } = useProfileContext();
 
   const {
@@ -95,7 +101,7 @@ const WeightGraphSettings: React.FC<Props> = ({ closeModalWindow }) => {
                   checked={enableWeightPrediction && goalWeightEnabled}
                   onChange={() => setEnableWeightPrediction(!enableWeightPrediction)}
                 />
-                <InformationHover information="Predictions are calculated from the visible weights on the graph." />
+                <InformationHover information={goalWeightInformationText} />
               </div>
             </SensitivityController>
             <CheckBoxWithLabel
