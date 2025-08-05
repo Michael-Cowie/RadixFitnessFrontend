@@ -1,8 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { findClosestDateFromToday } from 'lib/dateUtils';
+import { findClosestPreviousDateFrom } from 'lib/dateUtils';
 import { SyntheticEvent } from 'react';
 import {
-  convertKgTo,
   formatToTwoPrecision,
   measurementSystemToUnit,
   weightFromKgToUserMeasurementSystem,
@@ -21,33 +20,32 @@ export function getNotesFromDate(date: string, dateToNotes: Record<string, strin
   return date in dateToNotes ? dateToNotes[date] : '';
 }
 
-export function getDefaultValue(
+export function getDefaultWeight(
   formattedDate: string,
   userMeasurementSystem: MeasurementSystem,
   datesWithWeight: string[],
   dateToWeightKg: Record<string, number>,
 ): number {
   const averagePersonWeightKg = 70;
-  const weightUnit = measurementSystemToUnit(userMeasurementSystem);
-  const today = dayjs().format('YYYY-MM-DD');
 
   if (datesWithWeight.length === 0) {
-    switch (weightUnit) {
-      case 'kg':
-        return averagePersonWeightKg;
-      case 'lbs':
-        return convertKgTo('lbs', averagePersonWeightKg);
-      default:
-        throw new Error('Invalid unit provided');
-    }
-  } else if (formattedDate in dateToWeightKg) {
-    return getWeightFromDate(formattedDate, userMeasurementSystem, dateToWeightKg);
-  } else if (today in dateToWeightKg) {
-    return getWeightFromDate(today, userMeasurementSystem, dateToWeightKg);
-  } else {
-    const latestEntry = findClosestDateFromToday(datesWithWeight);
-    return getWeightFromDate(latestEntry, userMeasurementSystem, dateToWeightKg);
+    return weightFromKgToUserMeasurementSystem(averagePersonWeightKg, userMeasurementSystem);
   }
+
+  if (formattedDate in dateToWeightKg) {
+    return weightFromKgToUserMeasurementSystem(
+      dateToWeightKg[formattedDate],
+      userMeasurementSystem,
+    );
+  }
+
+  const closest = findClosestPreviousDateFrom(datesWithWeight, formattedDate);
+
+  if (closest && closest in dateToWeightKg) {
+    return weightFromKgToUserMeasurementSystem(dateToWeightKg[closest], userMeasurementSystem);
+  }
+
+  return weightFromKgToUserMeasurementSystem(averagePersonWeightKg, userMeasurementSystem);
 }
 
 export function getWeightText(

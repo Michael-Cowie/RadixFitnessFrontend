@@ -86,22 +86,40 @@ export function weightOnClosestDateTo(dateToWeight: DateToWeight, targetDate: st
 }
 
 /**
+ * Returns the closest previous date from the provided currentDate parameter given
+ * the array of dates, null otherwise.
+ *
+ * @param dateStrings An array of "YYYY-MM-DD" formatted dates.
+ * @param currentDate A single date represented in the "YYYY-MM-DD" format.
+ * @returns
+ */
+export function findClosestPreviousDateFrom(
+  dateStrings: string[],
+  currentDate: string,
+): string | null {
+  const dayjsCurrent = dayjs(currentDate);
+
+  const pastDates = dateStrings
+    .map((d) => dayjs(d))
+    .filter((d) => d.isBefore(dayjsCurrent) || d.isSame(dayjsCurrent, 'day'));
+
+  if (pastDates.length === 0) return null;
+
+  const closest = pastDates.reduce((prev, curr) =>
+    curr.diff(dayjsCurrent) > prev.diff(dayjsCurrent) ? curr : prev,
+  );
+
+  return closest.format('YYYY-MM-DD');
+}
+
+/**
  *
  * @param dateStrings An array of "YYYY-MM-DD" formatted dates.
  * @returns A single date, which is closet to today in "YYYY-MM-DD" format.
  */
 export function findClosestDateFromToday(dateStrings: string[]) {
-  const dateObjects = dateStrings.map((dateString) => dayjs(dateString));
-
-  // Find the closest date to today
-  const closestDate = dateObjects.reduce((closest, current) => {
-    const closestDiff = Math.abs(closest.diff(dayjs(), 'days'));
-    const currentDiff = Math.abs(current.diff(dayjs(), 'days'));
-
-    return currentDiff < closestDiff ? current : closest;
-  });
-
-  return closestDate.format('YYYY-MM-DD');
+  const today = dayjs().format('YYYY-MM-DD');
+  return findClosestPreviousDateFrom(dateStrings, today);
 }
 
 /**

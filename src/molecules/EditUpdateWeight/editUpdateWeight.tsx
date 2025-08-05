@@ -7,7 +7,7 @@ import { useEffect, useState, SyntheticEvent } from 'react';
 import { TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import { getDefaultValue, getNotesFromDate, getWeightText } from './editUpdateAlgorithms';
+import { getDefaultWeight, getNotesFromDate, getWeightText } from './editUpdateAlgorithms';
 
 import { Props } from './editUpdateInterfaces';
 import { measurementSystemToUnit } from 'lib/weightTranslations';
@@ -29,7 +29,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
 
   const [date, setDate] = useState<Dayjs>(today);
   const [weight, setWeight] = useState<number>(
-    getDefaultValue(
+    getDefaultWeight(
       dateObjectToFormattedDate(date),
       measurementSystem,
       datesWithWeight,
@@ -48,7 +48,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
 
   useEffect(() => {
     const formattedDate = dateObjectToFormattedDate(date);
-    setWeight(getDefaultValue(formattedDate, measurementSystem, datesWithWeight, dateToWeightKg));
+    setWeight(getDefaultWeight(formattedDate, measurementSystem, datesWithWeight, dateToWeightKg));
     setNotes(getNotesFromDate(formattedDate, dateToNotes));
   }, [date, dateToNotes, dateToWeightKg, datesWithWeight, measurementSystem]);
 
