@@ -237,9 +237,13 @@ export function calculatePredictedData(
    *  2. Have it disabled
    *  3. Have gone beyond the goal date.
    */
-  if (datesWithWeight.length < 1 || !enableWeightPrediction || pastPredictedDate) return [];
+  if (!enableWeightPrediction || pastPredictedDate) return [];
 
   const closestDate = findClosestDateFromToday(datesWithWeight);
+  if (!closestDate) {
+    return [];
+  }
+
   const closestDateIndex = labels.indexOf(closestDate);
 
   const predictedData = new Array(closestDateIndex).fill(null);
