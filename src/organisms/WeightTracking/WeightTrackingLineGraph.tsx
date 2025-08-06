@@ -36,31 +36,6 @@ Chart.register(
   Legend,
 );
 
-const options = {
-  type: 'line',
-  responsive: true,
-  maintainAspectRatio: false,
-  animation: {
-    duration: 0,
-  },
-  plugins: {
-    title: {
-      display: false,
-      text: 'Current progress!',
-    },
-    legend: {
-      display: true,
-      onClick: () => null,
-    },
-    tooltip: {
-      callbacks: {
-        title: () => null,
-      },
-      displayColors: false,
-    },
-  },
-};
-
 const WeightTrackingLineGraph = () => {
   const {
     ui: { trendlineEnabled, goalWeightEnabled, enableWeightPrediction, dateRange },
@@ -98,9 +73,6 @@ const WeightTrackingLineGraph = () => {
   const convertedUserData = convertDataToDisplayUnit(userData, measurementSystem);
   const convertedPredictedData = convertDataToDisplayUnit(predictedData, measurementSystem);
   const convertedGoalWeightData = convertDataToDisplayUnit(goalWeightData, measurementSystem);
-
-  // @ts-expect-error Third party TypeScript errors
-  options.plugins.tooltip.callbacks.label = determine_tooltip(labels, dateToNotes, displayUnit);
 
   window.addEventListener('resize', function () {
     for (const chart of Object.values(Chart.instances)) {
@@ -165,6 +137,47 @@ const WeightTrackingLineGraph = () => {
   const data = {
     labels: formatLabels(labels),
     datasets,
+  };
+
+  const options = {
+    type: 'line',
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 0 },
+    plugins: {
+      legend: {
+        display: true,
+        onClick: () => null,
+      },
+      tooltip: {
+        callbacks: {
+          title: () => null,
+          label: determine_tooltip(labels, dateToNotes, displayUnit),
+        },
+        displayColors: false,
+      },
+    },
+    scales: {
+      x: {
+        title: {
+          display: false,
+          text: 'Month',
+          font: { size: 16, weight: 'bold' },
+          padding: { top: 20 },
+        },
+        ticks: {
+          maxRotation: 45,
+          minRotation: 0,
+        },
+      },
+      y: {
+        title: { display: false }, // hide axis title
+        ticks: {
+          callback: (value: number | string) => `${value} ${displayUnit}`,
+          padding: 8,
+        },
+      },
+    },
   };
 
   return (

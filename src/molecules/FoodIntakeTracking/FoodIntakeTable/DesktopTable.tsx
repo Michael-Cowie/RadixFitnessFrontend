@@ -12,7 +12,7 @@ import TableRow from '@mui/material/TableRow';
 
 import { TableProps } from './interfaces';
 import { formatToDisplayPrecision } from 'lib/display';
-import { IconButton } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
 
 const numberOfFoodColumns = 4;
@@ -62,7 +62,16 @@ const DesktopTable: React.FC<TableProps> = ({ entries }) => {
           <TableBody>
             {entries.map((row) => (
               <TableRow key={row.id} sx={{ height: rowHeight }}>
-                <TableCell align="left">{row.foodName}</TableCell>
+                <TableCell align="left">
+                  <Typography
+                    sx={{
+                      whiteSpace: 'normal',
+                      wordBreak: 'break-word',
+                    }}
+                  >
+                    {row.foodName}
+                  </Typography>
+                </TableCell>
                 <TableCell align="right">{formatToDisplayPrecision(row.totalCalories)}</TableCell>
                 <TableCell align="right">{formatToDisplayPrecision(row.totalFats)}</TableCell>
                 <TableCell align="right">{formatToDisplayPrecision(row.totalCarbs)}</TableCell>

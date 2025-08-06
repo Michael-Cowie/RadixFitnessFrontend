@@ -44,11 +44,9 @@ const MobileTable: React.FC<TableProps> = ({ entries }) => {
             <div className="flex justify-center">
               <Typography
                 sx={{
-                  fontWeight: 'bold',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
+                  whiteSpace: 'normal',
+                  wordBreak: 'break-word',
                 }}
-                title={entry.foodName}
               >
                 {entry.foodName}
               </Typography>

@@ -286,7 +286,7 @@ export function calculateGoalWeightData(
  * to be displayed nicely on the graph labels.
  */
 export function formatLabels(labels: string[]): string[] {
-  return labels.map((label) => dayjs(label).format('MM - DD'));
+  return labels.map((label) => dayjs(label).format('MM / DD'));
 }
 
 export function createDisplayText(range: number): string {
