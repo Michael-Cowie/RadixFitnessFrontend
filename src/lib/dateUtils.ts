@@ -2,6 +2,13 @@ import { DateToWeight } from 'context/WeightTrackingGraphContext/WeightTrackingG
 import dayjs, { Dayjs } from 'dayjs';
 
 /**
+ * @returns A Dayjs object representing the current day.
+ */
+export const getTodayDayjs = (): Dayjs => {
+  return dayjs();
+};
+
+/**
  * Do not use `toISOString`. When using date.toISOString().split('T')[0] I ran into an issue
  * due to the time zone offset in the original date string. When you use `toISOString()`, it
  * returns the date in UTC + 0. I live in New Zealand and we use GMT +12, so there is a

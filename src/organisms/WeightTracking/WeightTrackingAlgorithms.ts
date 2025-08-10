@@ -4,7 +4,11 @@ import {
   DateToWeight,
 } from 'context/WeightTrackingGraphContext/WeightTrackingGraphContextInterfaces';
 import dayjs, { Dayjs } from 'dayjs';
-import { findClosestDateFromToday, findFurtherestDateFromToday } from 'lib/dateUtils';
+import {
+  findClosestDateFromToday,
+  findFurtherestDateFromToday,
+  getTodayDayjs,
+} from 'lib/dateUtils';
 import { weightFromKgToUserMeasurementSystem } from 'lib/weightTranslations';
 import { MeasurementSystem } from 'services/Profile/ProfileInterfaces';
 import { AvailableWeightUnits } from 'services/WeightTracking/WeightTrackingInterfaces';
@@ -120,7 +124,7 @@ export function getMaximumDateFromGoalInformation(
   goalWeightEnabled: boolean,
   goalDate: Dayjs,
 ): Dayjs {
-  const today = dayjs();
+  const today = getTodayDayjs();
 
   if (!goalWeightEnabled || goalDate.isBefore(today)) {
     return today;

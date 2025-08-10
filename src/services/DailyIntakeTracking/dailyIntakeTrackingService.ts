@@ -142,6 +142,7 @@ export const updateExistingFoodEntry = async (
   foodEntryId: number,
   updateData: PatchBody,
 ): Promise<void> => {
+  console.log('test');
   const response = await patch(INTAKE_ENDPOINT, updateData, { id: foodEntryId });
 
   if (response.status !== 200) {

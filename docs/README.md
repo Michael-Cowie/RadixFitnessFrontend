@@ -69,3 +69,9 @@ Users often want to track daily macronutrients and food intake through the day. 
 <div align="center">
     <img src="./images/food_intake_progress_tracking.png">
 </div>
+
+8. **Weekly Summary** - It's important for users and is extremely common to consider weekly averages. One day a user may want to go over and the another day go under, but in the long term weekly averages are important to determine if they went over or under they goal. This is the important of a weekly summary and can be can be easily visile by selecting the "Weekly Summary" button. This will display the number of days in the week have entries and their statistics.
+
+<div align="center">
+    <img src="./images/weekly_summary_example.png">
+</div>

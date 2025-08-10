@@ -8,16 +8,19 @@ import { pageSize } from './interfaces';
 import MobileTable from './MobileTable';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
 import AddFoodEntryModal from '../CreateFoodEntry/AddFoodEntryModal';
+import { assertDayView } from 'context/FoodIntakeTracking/FoodIntakeTrackingUtils';
 
 export default function FoodIntakeTable() {
   const [createFoodEntry, setCreateFoodEntry] = useState<boolean>(false);
   const [currentUserTablePage, setCurrentUserTablePage] = useState(0);
 
-  const { foodEntries, selectedDate } = useFoodIntakeTrackingContext();
+  const { foodEntries, selectedView } = useFoodIntakeTrackingContext();
+
+  assertDayView(selectedView);
 
   useEffect(() => {
     setCurrentUserTablePage(0);
-  }, [selectedDate]);
+  }, [selectedView.day]);
 
   useEffect(() => {
     const maxPage = Math.max(0, Math.ceil(foodEntries.length / pageSize) - 1);
@@ -45,12 +48,10 @@ export default function FoodIntakeTable() {
           sx={{
             borderBottom: 0,
 
-            // All arrow icons (left and right)
             '.MuiTablePagination-actions': {
               color: 'primary.main',
             },
 
-            // Handle disabled arrow buttons (so they don't look greyed out)
             '.MuiTablePagination-actions .MuiIconButton-root:disabled': {
               color: 'primary.main',
               opacity: 0.5, // Optional: make it semi-transparent

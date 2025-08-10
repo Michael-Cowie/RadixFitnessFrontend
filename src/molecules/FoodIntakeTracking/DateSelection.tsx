@@ -1,31 +1,45 @@
-import { useState } from 'react';
 import { Button, Stack, Typography, IconButton } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 
 import EditCalendarIconDatePicker from 'atoms/EditCalenderIconDatePicker';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
 import SensitivityController from 'atoms/design_patterns/SensitivityWrapper';
+import SelectableButton from 'atoms/SelectableButton';
+import {
+  DayView,
+  WeeklySummaryView,
+} from 'context/FoodIntakeTracking/FoodIntakeTrackingInterfaces';
+import { isDayView, isWeeklySummaryView } from 'context/FoodIntakeTracking/FoodIntakeTrackingUtils';
+import { getTodayDayjs } from 'lib/dateUtils';
 
 const getStartOfWeek = (date: Dayjs) => date.startOf('week');
 const isSameDay = (a: Dayjs, b: Dayjs) => a.isSame(b, 'day');
 
 export default function DateSelector() {
-  const today = dayjs();
+  const today = getTodayDayjs();
 
-  const { selectedDate, setSelectedDate } = useFoodIntakeTrackingContext();
+  const { selectedView, setSelectedView, weekStart, setWeekStart } = useFoodIntakeTrackingContext();
 
-  const [startOfWeek, setStartOfWeek] = useState(getStartOfWeek(today));
-
-  const handlePrevWeek = () => setStartOfWeek(startOfWeek.subtract(7, 'day'));
-  const handleNextWeek = () => setStartOfWeek(startOfWeek.add(7, 'day'));
-
-  const handleCalendarSelect = (selectedDate: Dayjs) => {
-    setSelectedDate(selectedDate);
-    setStartOfWeek(getStartOfWeek(selectedDate));
+  const handlePrevWeek = () => {
+    setWeekStart(weekStart.subtract(7, 'day'));
+    if (isDayView(selectedView)) {
+      setSelectedView({ type: 'day', day: selectedView.day.subtract(7, 'day') } as DayView);
+    }
+  };
+  const handleNextWeek = () => {
+    setWeekStart(weekStart.add(7, 'day'));
+    if (isDayView(selectedView)) {
+      setSelectedView({ type: 'day', day: selectedView.day.add(7, 'day') } as DayView);
+    }
   };
 
-  const daysOfWeek = [...Array(7)].map((_, i) => startOfWeek.add(i, 'day'));
+  const handleCalendarSelect = (selectedDate: Dayjs) => {
+    setSelectedView({ type: 'day', day: selectedDate } as DayView);
+    setWeekStart(getStartOfWeek(selectedDate));
+  };
+
+  const daysOfWeek = [...Array(7)].map((_, i) => weekStart.add(i, 'day'));
 
   return (
     <Stack alignItems="center" className="mb-2">
@@ -37,7 +51,7 @@ export default function DateSelector() {
         </IconButton>
 
         <Typography>
-          {startOfWeek.format('MMM D')} – {startOfWeek.add(6, 'day').format('MMM D')}
+          {weekStart.format('MMM D')} – {weekStart.add(6, 'day').format('MMM D')}
         </Typography>
 
         <IconButton onClick={handleNextWeek}>
@@ -46,19 +60,22 @@ export default function DateSelector() {
       </Stack>
 
       <Stack direction="row" spacing={{ xs: 1, sm: 2 }}>
-        {daysOfWeek.map((day) => {
-          const isSelected = isSameDay(day, selectedDate);
+        {daysOfWeek.map((dayOfWeek) => {
+          const isSelected = isDayView(selectedView) && isSameDay(dayOfWeek, selectedView.day);
 
           return (
-            <SensitivityController key={day.toString()} sensitive={day.isBefore(today)}>
+            <SensitivityController key={dayOfWeek.toString()} sensitive={dayOfWeek.isBefore(today)}>
               <Stack alignItems="center">
-                <Typography variant="caption">{day.format('ddd')}</Typography>
+                <Typography variant="caption">{dayOfWeek.format('ddd')}</Typography>
 
                 <Button
                   variant={isSelected ? 'contained' : 'outlined'}
-                  onClick={() => setSelectedDate(day)}
+                  onClick={() => {
+                    setSelectedView({ type: 'day', day: dayOfWeek } as DayView);
+                  }}
                   sx={{
                     borderRadius: '40px',
+                    borderWidth: '2px',
                     width: 40,
                     height: 40,
                     minWidth: 0,
@@ -66,13 +83,23 @@ export default function DateSelector() {
                     color: isSelected ? 'white' : 'text.primary',
                   }}
                 >
-                  {day.format('D')}
+                  {dayOfWeek.format('D')}
                 </Button>
               </Stack>
             </SensitivityController>
           );
         })}
       </Stack>
+
+      <div className="flex justify-center items-center m-2">
+        <SelectableButton
+          selected={isWeeklySummaryView(selectedView)}
+          displayText="Weekly Summary"
+          onClick={() => {
+            setSelectedView({ type: 'weeklySummary' } as WeeklySummaryView);
+          }}
+        />
+      </div>
     </Stack>
   );
 }

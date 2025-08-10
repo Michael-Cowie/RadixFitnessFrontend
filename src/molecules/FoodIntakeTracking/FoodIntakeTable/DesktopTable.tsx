@@ -2,7 +2,6 @@ import React from 'react';
 
 import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
 
-import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -38,7 +37,7 @@ const DesktopTable: React.FC<TableProps> = ({ entries }) => {
 
   return (
     <>
-      <TableContainer component={Paper} className="h-full">
+      <TableContainer className="h-full">
         <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} size="small">
           <TableHead>
             <TableRow sx={{ height: rowHeight }}>

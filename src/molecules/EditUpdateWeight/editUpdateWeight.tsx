@@ -1,7 +1,7 @@
 import ErrorMessage from 'atoms/ErrorMessage';
 import WeightTrackingSpinbutton from 'atoms/inputs/weights/WeightTrackingSpinbutton';
-import dayjs, { Dayjs } from 'dayjs';
-import { dateObjectToFormattedDate } from 'lib/dateUtils';
+import { Dayjs } from 'dayjs';
+import { dateObjectToFormattedDate, getTodayDayjs } from 'lib/dateUtils';
 import { useEffect, useState, SyntheticEvent } from 'react';
 
 import { TextField } from '@mui/material';
@@ -25,7 +25,7 @@ const EditUpdateWeight: React.FC<Props> = ({ closeModalWindow }) => {
   } = useWeightTrackingGraphContext();
 
   const { measurementSystem } = useProfileContext();
-  const today = dayjs();
+  const today = getTodayDayjs();
 
   const [date, setDate] = useState<Dayjs>(today);
   const [weight, setWeight] = useState<number>(
