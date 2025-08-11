@@ -14,16 +14,10 @@ import {
   FoodIntakeTrackingContextParameters,
   Props,
   SelectedDateView,
-  WeeklySummary,
 } from './FoodIntakeTrackingInterfaces';
-import {
-  assertDayView,
-  buildWeeklySummary,
-  getProgressAndEntryForDate,
-  isDayView,
-  setCachedProgressAndEntries,
-} from './FoodIntakeTrackingUtils';
+import { assertDayView, getProgressAndEntryForDate, isDayView } from './FoodIntakeTrackingUtils';
 import { getTodayDayjs } from 'lib/dateUtils';
+import { getWeekLongMacronutrientSummary } from 'services/Analytics/analyticsService';
 
 const dailyRecommendedIntake: Record<string, number> = {
   Calories: 2000,
@@ -48,34 +42,34 @@ export const FoodIntakeTrackingContext = createContext<FoodIntakeTrackingContext
   weekStart: today.startOf('week'),
   setWeekStart: () => {},
 
-  getWeeklySummary: async () =>
+  getMacronutrientWeeklySummary: async () =>
     Promise.resolve({
       startDate: today,
       endDate: today.add(7, 'day'),
       daysWithLogs: 0,
       summary: {
-        Calories: {
+        calories: {
           totalConsumed: 0,
           totalGoal: 0,
           averageConsumed: 0,
           averageGoal: 0,
           percentageOfGoal: 0,
         },
-        Protein: {
+        protein: {
           totalConsumed: 0,
           totalGoal: 0,
           averageConsumed: 0,
           averageGoal: 0,
           percentageOfGoal: 0,
         },
-        Carbs: {
+        carbs: {
           totalConsumed: 0,
           totalGoal: 0,
           averageConsumed: 0,
           averageGoal: 0,
           percentageOfGoal: 0,
         },
-        Fats: {
+        fats: {
           totalConsumed: 0,
           totalGoal: 0,
           averageConsumed: 0,
@@ -139,16 +133,6 @@ export const FoodIntakeTrackingContextComponent: React.FC<Props> = ({ children }
       .finally(() => setIsLoading(false));
   }, []);
 
-  const getWeeklySummary = useCallback(async (start: Dayjs): Promise<WeeklySummary> => {
-    setIsLoading(true);
-
-    try {
-      return await buildWeeklySummary(start);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
   useEffect(() => {
     if (isDayView(selectedView)) {
       loadDayData(selectedView.day);
@@ -177,18 +161,10 @@ export const FoodIntakeTrackingContextComponent: React.FC<Props> = ({ children }
   const createFoodEntry = async (rowEntry: FoodEntryCreation): Promise<void> => {
     assertDayView(selectedView);
 
-    const date = selectedView.day;
-
-    await createFoodEntryOnDate(date, rowEntry)
+    await createFoodEntryOnDate(selectedView.day, rowEntry)
       .then((newEntry) => {
         const updatedEntries = [...foodEntries, newEntry];
         setFoodEntries(updatedEntries);
-
-        setCachedProgressAndEntries(
-          date,
-          { goalCalories, goalProtein, goalCarbs, goalFats },
-          updatedEntries,
-        );
       })
       .catch(Sentry.captureException);
   };
@@ -196,21 +172,18 @@ export const FoodIntakeTrackingContextComponent: React.FC<Props> = ({ children }
   const deleteFoodEntryWithID = async (entryID: number): Promise<void> => {
     assertDayView(selectedView);
 
-    const date = selectedView.day;
-
     await deleteFoodEntry(entryID)
       .then(() => {
         const updatedEntries = foodEntries.filter((e) => e.id !== entryID);
         setFoodEntries(updatedEntries);
-
-        setCachedProgressAndEntries(
-          date,
-          { goalCalories, goalProtein, goalCarbs, goalFats },
-          updatedEntries,
-        );
       })
       .catch(Sentry.captureException);
   };
+
+  const getMacronutrientWeeklySummaryWrapper = useCallback(async (startDate: Dayjs) => {
+    setIsLoading(true);
+    return await getWeekLongMacronutrientSummary(startDate).finally(() => setIsLoading(false));
+  }, []);
 
   return (
     <FoodIntakeTrackingContext.Provider
@@ -221,7 +194,7 @@ export const FoodIntakeTrackingContextComponent: React.FC<Props> = ({ children }
         weekStart,
         setWeekStart,
 
-        getWeeklySummary,
+        getMacronutrientWeeklySummary: getMacronutrientWeeklySummaryWrapper,
 
         isLoading,
 

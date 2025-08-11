@@ -7,12 +7,12 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { WeeklySummary } from 'context/FoodIntakeTracking/FoodIntakeTrackingInterfaces';
 import { AvailableFoodWeightUnits } from 'lib/foodTranslations';
 import React from 'react';
+import { MacronutrientAnalyticsSummary } from 'services/Analytics/analyticsServiceInterfaces';
 
 type Props = {
-  summary: WeeklySummary;
+  summary: MacronutrientAnalyticsSummary;
   foodMassUnit: AvailableFoodWeightUnits;
 };
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
-import { WeeklySummary } from 'context/FoodIntakeTracking/FoodIntakeTrackingInterfaces';
 import { AvailableFoodWeightUnits } from 'lib/foodTranslations';
+import { MacronutrientAnalyticsSummary } from 'services/Analytics/analyticsServiceInterfaces';
 
 interface Props {
-  summary: WeeklySummary;
+  summary: MacronutrientAnalyticsSummary;
   foodMassUnit: AvailableFoodWeightUnits;
 }
 

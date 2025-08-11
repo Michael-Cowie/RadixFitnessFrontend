@@ -9,24 +9,26 @@ import { isWeeklySummaryView } from 'context/FoodIntakeTracking/FoodIntakeTracki
 import WeeklyMacroNutrientSummaryMobile from 'molecules/FoodIntakeTracking/WeeklyMacronutrientSummary/WeeklyMacronutrientSummaryMobile';
 import useProfileContext from 'context/ProfileContext/hooks';
 import { useEffect, useState } from 'react';
-import { WeeklySummary } from 'context/FoodIntakeTracking/FoodIntakeTrackingInterfaces';
 import { userMeasureSystemToFoodUnit } from 'lib/foodTranslations';
 import SubmitButtonWithProgress from 'atoms/design_patterns/SubmitButtonWithProgress';
 
 import * as Sentry from '@sentry/react';
+import { MacronutrientAnalyticsSummary } from 'services/Analytics/analyticsServiceInterfaces';
+import { Typography } from '@mui/material';
 
 const mainContentWidth = 'w-10/12 sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-7/12 2xl:w-5/12';
 const tableContentWidth = 'w-10/12 sm:w-10/12 md:w-8/12 lg:w-8/12 xl:w-7/12 h-[50%]';
 
 const PageContent = () => {
-  const { selectedView, weekStart, getWeeklySummary, isLoading } = useFoodIntakeTrackingContext();
+  const { selectedView, weekStart, getMacronutrientWeeklySummary, isLoading } =
+    useFoodIntakeTrackingContext();
   const { measurementSystem } = useProfileContext();
-  const [summary, setSummary] = useState<WeeklySummary | null>(null);
+  const [summary, setSummary] = useState<MacronutrientAnalyticsSummary | null>(null);
   const foodMassUnit = userMeasureSystemToFoodUnit(measurementSystem);
 
   useEffect(() => {
-    getWeeklySummary(weekStart).then(setSummary).catch(Sentry.captureException);
-  }, [weekStart, getWeeklySummary]);
+    getMacronutrientWeeklySummary(weekStart).then(setSummary).catch(Sentry.captureException);
+  }, [weekStart, getMacronutrientWeeklySummary]);
 
   if (isLoading || !summary) {
     return (
@@ -37,6 +39,22 @@ const PageContent = () => {
   }
 
   if (isWeeklySummaryView(selectedView)) {
+    if (summary.daysWithLogs === 0) {
+      return (
+        <div className={`${mainContentWidth} mt-3 sm:mt-0 flex flex-col items-center`}>
+          <DateSelection />
+          <div className="flex flex-col items-center justify-center mt-8 p-6 border-2 border-dashed rounded-lg border-gray-300 w-full text-center">
+            <Typography variant="h6" sx={{ fontWeight: 'bold', color: 'text.secondary' }}>
+              No entries found for this period
+            </Typography>
+            <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary' }}>
+              Start logging your meals to see your macronutrient summary here.
+            </Typography>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className={`${mainContentWidth} mt-3 sm:mt-0`}>
         <DateSelection />

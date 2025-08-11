@@ -1,5 +1,6 @@
 import { Dayjs } from 'dayjs';
 import { ReactNode } from 'react';
+import { MacronutrientAnalyticsSummary } from 'services/Analytics/analyticsServiceInterfaces';
 import { FoodEntry } from 'services/DailyIntakeTracking/dailyIntakeTrackingInterface';
 
 export type DayView = Extract<SelectedDateView, { type: 'day' }>;
@@ -14,7 +15,7 @@ export interface FoodIntakeTrackingContextParameters {
   weekStart: Dayjs;
   setWeekStart: (d: Dayjs) => void;
 
-  getWeeklySummary: (weekStart: Dayjs) => Promise<WeeklySummary>;
+  getMacronutrientWeeklySummary: (d: Dayjs) => Promise<MacronutrientAnalyticsSummary>;
 
   isLoading: boolean;
 
@@ -53,24 +54,4 @@ export interface FoodEntryCreation {
 
 export interface Props {
   children: ReactNode;
-}
-
-export interface MacronutrientSummary {
-  totalConsumed: number;
-  totalGoal: number;
-  averageConsumed: number;
-  averageGoal: number;
-  percentageOfGoal: number;
-}
-
-export interface WeeklySummary {
-  startDate: Dayjs;
-  endDate: Dayjs;
-  daysWithLogs: number;
-  summary: {
-    Calories: MacronutrientSummary;
-    Protein: MacronutrientSummary;
-    Carbs: MacronutrientSummary;
-    Fats: MacronutrientSummary;
-  };
 }
