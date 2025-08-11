@@ -87,7 +87,7 @@ export function determine_tooltip(
   return inner;
 }
 
-export function calculateLossOrGain(weightList: number[]) {
+export function calculateWeightDeviation(weightList: number[]) {
   if (weightList.length == 1) return 0;
 
   const differences = weightList.map((weight, index) =>
@@ -234,32 +234,31 @@ export function calculatePredictedData(
   datesWithWeight: string[],
   dateToWeightKg: DateToWeight,
 ): (number | null)[] {
-  const pastPredictedDate = goalDate.diff(dayjs(), 'days') <= 0;
+  const pastPredictedDate = goalDate.diff(getTodayDayjs(), 'days') <= 0;
   /**
    * Do not allow prediction if we either,
    *  1. Contain no dates with a weight entry
    *  2. Have it disabled
    *  3. Have gone beyond the goal date.
    */
-  if (!enableWeightPrediction || pastPredictedDate) return [];
+  if (datesWithWeight.length === 0 || !enableWeightPrediction || pastPredictedDate) return [];
 
   const closestDate = findClosestDateFromToday(datesWithWeight);
-  if (!closestDate) {
-    return [];
-  }
+  if (closestDate === null) return []; /* No Entries */
 
   const closestDateIndex = labels.indexOf(closestDate);
-
-  const predictedData = new Array(closestDateIndex).fill(null);
-  predictedData.push(dateToWeightKg[closestDate]);
-
-  const sortedDataWithoutNull: number[] = userData.filter((v): v is number => v !== null);
-  const weightDeviation = calculateLossOrGain(sortedDataWithoutNull);
-
-  const predictionRange = goalDate.diff(closestDate, 'days') + 1;
+  if (closestDateIndex < 0) return []; /* User has date entries, but are out of axis range */
 
   const closestDateWeight = dateToWeightKg[closestDate];
-  for (let offset = 1; offset < predictionRange; offset++) {
+  const predictedData = new Array(closestDateIndex).fill(null);
+  predictedData.push(closestDateWeight);
+
+  const userDataWithoutNull: number[] = userData.filter((v): v is number => v !== null);
+  const weightDeviation = calculateWeightDeviation(userDataWithoutNull);
+
+  const predictionRange = goalDate.diff(closestDate, 'days');
+
+  for (let offset = 1; offset <= predictionRange; offset++) {
     predictedData.push(closestDateWeight + weightDeviation * offset);
   }
   return predictedData;

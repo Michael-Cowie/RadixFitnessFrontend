@@ -171,7 +171,7 @@ const WeightTrackingLineGraph = () => {
         },
       },
       y: {
-        title: { display: false }, // hide axis title
+        title: { display: false },
         ticks: {
           callback: (value: number | string) => `${value} ${displayUnit}`,
           padding: 8,
