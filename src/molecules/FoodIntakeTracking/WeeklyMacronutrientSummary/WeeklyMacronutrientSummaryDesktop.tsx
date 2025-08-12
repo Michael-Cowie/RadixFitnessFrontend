@@ -1,15 +1,17 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { AvailableFoodWeightUnits } from 'lib/foodTranslations';
 import React from 'react';
 import { MacronutrientAnalyticsSummary } from 'services/Analytics/analyticsServiceInterfaces';
+import {
+  formatNumberForDisplay,
+  formatNutrientNameForDisplay,
+  formatUnit,
+  getAverageHeaderTitle,
+  getGoalTotalHeaderTitle,
+  getProgressHeaderTitle,
+  getTotalLoggedHeaderTitle,
+} from './WeeklyMacronutrientSummaryUtils';
+import { SummaryTitle } from './WeeklyMacronutrientSummarySharedComponents';
 
 type Props = {
   summary: MacronutrientAnalyticsSummary;
@@ -23,53 +25,55 @@ const CellStyle = {
 
 const WeeklyMacroNutrientSummaryDesktop: React.FC<Props> = ({ summary, foodMassUnit }) => {
   return (
-    <TableContainer sx={{ boxShadow: 'none' }} className="w-full">
-      <Typography className="text-center" sx={{ fontWeight: 'bold' }}>
-        {`Weekly Summary - ${summary.daysWithLogs} Day${summary.daysWithLogs > 1 ? 's' : ''} Logged`}
-      </Typography>
+    <>
+      <SummaryTitle numberOfDaysWithLogs={summary.daysWithLogs} />
 
-      <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell sx={CellStyle}></TableCell>
-            <TableCell sx={CellStyle} align="right">
-              Total Logged
-            </TableCell>
-            <TableCell sx={CellStyle} align="right">
-              Goal Total
-            </TableCell>
-            <TableCell sx={CellStyle} align="right">
-              Progress
-            </TableCell>
-            <TableCell sx={CellStyle} align="right">
-              Average
-            </TableCell>
-          </TableRow>
-        </TableHead>
+      <TableContainer sx={{ boxShadow: 'none' }} className="w-full">
+        <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell sx={CellStyle}></TableCell>
+              <TableCell sx={CellStyle} align="right">
+                {getTotalLoggedHeaderTitle()}
+              </TableCell>
+              <TableCell sx={CellStyle} align="right">
+                {getGoalTotalHeaderTitle()}
+              </TableCell>
+              <TableCell sx={CellStyle} align="right">
+                {getProgressHeaderTitle()}
+              </TableCell>
+              <TableCell sx={CellStyle} align="right">
+                {getAverageHeaderTitle()}
+              </TableCell>
+            </TableRow>
+          </TableHead>
 
-        <TableBody>
-          {Object.entries(summary.summary).map(([nutrient, data]) => {
-            const unit = nutrient === 'Calories' ? 'kcal' : foodMassUnit;
-
-            return (
-              <TableRow key={nutrient} sx={CellStyle}>
-                <TableCell>{nutrient}</TableCell>
-                <TableCell align="right">
-                  {data.totalConsumed.toFixed(0)} {unit}
-                </TableCell>
-                <TableCell align="right">
-                  {data.totalGoal.toFixed(0)} {unit}
-                </TableCell>
-                <TableCell align="right">{data.percentageOfGoal.toFixed(0)}%</TableCell>
-                <TableCell align="right">
-                  {data.averageConsumed.toFixed(0)} {unit}
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          <TableBody>
+            {Object.entries(summary.summary).map(([nutrient, data]) => {
+              return (
+                <TableRow key={nutrient} sx={CellStyle}>
+                  <TableCell>{formatNutrientNameForDisplay(nutrient)}</TableCell>
+                  <TableCell align="right">
+                    {formatNumberForDisplay(data.totalConsumed)}{' '}
+                    {formatUnit(nutrient, foodMassUnit)}
+                  </TableCell>
+                  <TableCell align="right">
+                    {formatNumberForDisplay(data.totalGoal)} {formatUnit(nutrient, foodMassUnit)}
+                  </TableCell>
+                  <TableCell align="right">
+                    {formatNumberForDisplay(data.percentageOfGoal)}%
+                  </TableCell>
+                  <TableCell align="right">
+                    {formatNumberForDisplay(data.averageConsumed)}{' '}
+                    {formatUnit(nutrient, foodMassUnit)}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 

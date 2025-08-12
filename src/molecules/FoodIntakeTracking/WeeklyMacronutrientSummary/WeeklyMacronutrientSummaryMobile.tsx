@@ -2,6 +2,16 @@ import React from 'react';
 import { Card, CardContent, Typography } from '@mui/material';
 import { AvailableFoodWeightUnits } from 'lib/foodTranslations';
 import { MacronutrientAnalyticsSummary } from 'services/Analytics/analyticsServiceInterfaces';
+import {
+  formatNumberForDisplay,
+  formatNutrientNameForDisplay,
+  formatUnit,
+  getAverageHeaderTitle,
+  getGoalTotalHeaderTitle,
+  getProgressHeaderTitle,
+  getTotalLoggedHeaderTitle,
+} from './WeeklyMacronutrientSummaryUtils';
+import { SummaryTitle } from './WeeklyMacronutrientSummarySharedComponents';
 
 interface Props {
   summary: MacronutrientAnalyticsSummary;
@@ -18,52 +28,57 @@ function StatRow({ label, value }: { label: string; value: string }) {
 }
 
 const WeeklyMacroNutrientSummaryMobile: React.FC<Props> = ({ summary, foodMassUnit }) => {
-  const cards = Object.entries(summary.summary).map(([nutrient, data]) => {
-    const unit = nutrient === 'Calories' ? 'kcal' : foodMassUnit;
-
-    return (
-      <div key={nutrient} className="flex flex-col justify-between items-center">
-        <Card
-          sx={{
-            margin: 1,
-            border: '2px solid',
-            borderColor: 'var(--darkBlue)',
-            width: '80%',
-          }}
-        >
-          <CardContent sx={{ p: 1 }}>
-            <div className="flex justify-center">
-              <Typography
-                sx={{
-                  whiteSpace: 'normal',
-                  wordBreak: 'break-word',
-                  fontWeight: 'bold',
-                }}
-              >
-                {nutrient}
-              </Typography>
-            </div>
-
-            <div className="ml-1">
-              <StatRow label="Total Logged:" value={`${data.totalConsumed.toFixed(0)} ${unit}`} />
-              <StatRow label="Goal Total:" value={`${data.totalGoal.toFixed(0)} ${unit}`} />
-              <StatRow label="Progress:" value={`${data.percentageOfGoal.toFixed(0)}%`} />
-              <StatRow label="Average:" value={`${data.averageConsumed.toFixed(0)} ${unit}`} />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  });
-
   return (
     <>
-      <div className="flex justify-center">
-        <Typography sx={{ fontWeight: 'bold', mt: 1 }}>
-          {`Weekly Summary - ${summary.daysWithLogs} Day${summary.daysWithLogs > 1 ? 's' : ''} Logged`}
-        </Typography>
-      </div>
-      {cards}
+      <SummaryTitle numberOfDaysWithLogs={summary.daysWithLogs} />
+
+      {Object.entries(summary.summary).map(([nutrient, data]) => {
+        return (
+          <div key={nutrient} className="flex flex-col justify-between items-center">
+            <Card
+              sx={{
+                margin: 1,
+                border: '2px solid',
+                borderColor: 'var(--darkBlue)',
+                width: '80%',
+              }}
+            >
+              <CardContent sx={{ p: 1 }}>
+                <div className="flex justify-center">
+                  <Typography
+                    sx={{
+                      whiteSpace: 'normal',
+                      wordBreak: 'break-word',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {formatNutrientNameForDisplay(nutrient)}
+                  </Typography>
+                </div>
+
+                <div className="ml-1">
+                  <StatRow
+                    label={`${getTotalLoggedHeaderTitle()}`}
+                    value={`${formatNumberForDisplay(data.totalConsumed)} ${formatUnit(nutrient, foodMassUnit)}`}
+                  />
+                  <StatRow
+                    label={`${getGoalTotalHeaderTitle()}`}
+                    value={`${formatNumberForDisplay(data.totalGoal)} ${formatUnit(nutrient, foodMassUnit)}`}
+                  />
+                  <StatRow
+                    label={`${getProgressHeaderTitle()}`}
+                    value={`${formatNumberForDisplay(data.percentageOfGoal)}%`}
+                  />
+                  <StatRow
+                    label={`${getAverageHeaderTitle()}`}
+                    value={`${formatNumberForDisplay(data.averageConsumed)} ${formatUnit(nutrient, foodMassUnit)}`}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      })}
     </>
   );
 };
