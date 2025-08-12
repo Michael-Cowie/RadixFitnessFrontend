@@ -28,7 +28,7 @@ const PageContent = () => {
 
   useEffect(() => {
     getMacronutrientWeeklySummary(weekStart).then(setSummary).catch(Sentry.captureException);
-  }, [weekStart, getMacronutrientWeeklySummary]);
+  }, [selectedView.type, weekStart, getMacronutrientWeeklySummary]);
 
   if (isLoading || !summary) {
     return (

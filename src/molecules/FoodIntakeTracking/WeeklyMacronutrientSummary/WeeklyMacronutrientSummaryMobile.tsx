@@ -60,7 +60,7 @@ const WeeklyMacroNutrientSummaryMobile: React.FC<Props> = ({ summary, foodMassUn
     <>
       <div className="flex justify-center">
         <Typography sx={{ fontWeight: 'bold', mt: 1 }}>
-          {`Weekly Summary - ${summary.daysWithLogs} Days Logged`}
+          {`Weekly Summary - ${summary.daysWithLogs} Day${summary.daysWithLogs > 1 ? 's' : ''} Logged`}
         </Typography>
       </div>
       {cards}

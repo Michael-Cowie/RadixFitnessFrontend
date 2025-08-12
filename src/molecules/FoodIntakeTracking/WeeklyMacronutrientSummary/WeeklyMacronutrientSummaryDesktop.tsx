@@ -25,7 +25,7 @@ const WeeklyMacroNutrientSummaryDesktop: React.FC<Props> = ({ summary, foodMassU
   return (
     <TableContainer sx={{ boxShadow: 'none' }} className="w-full">
       <Typography className="text-center" sx={{ fontWeight: 'bold' }}>
-        {`Weekly Summary - ${summary.daysWithLogs} Days Logged`}
+        {`Weekly Summary - ${summary.daysWithLogs} Day${summary.daysWithLogs > 1 ? 's' : ''} Logged`}
       </Typography>
 
       <Table sx={{ minWidth: 650, tableLayout: 'fixed' }} size="small">
