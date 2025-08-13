@@ -4,9 +4,10 @@ import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
 
 import { Card, CardContent, IconButton, Typography } from '@mui/material';
 
-import { TableProps } from './interfaces';
+import { TableProps } from './FoodIntakeinterfaces';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
-import { formatToDisplayPrecision } from 'lib/display';
+import { borderThickness, formatNumberToDisplayPrecision, getEnergyUnit } from 'lib/display';
+import { caloriesLabel, carbsLabel, fatsLabel, proteinLabel } from './FoodIntakeUtils';
 
 interface FoodCellProps {
   label: string;
@@ -24,7 +25,7 @@ const FoodCell: React.FC<FoodCellProps> = ({ label, amount }) => {
   );
 };
 
-const MobileTable: React.FC<TableProps> = ({ entries }) => {
+const FoodIntakeMobileTable: React.FC<TableProps> = ({ entries, foodMassUnit }) => {
   const { deleteFoodEntryWithID } = useFoodIntakeTrackingContext();
 
   const rows = [];
@@ -35,7 +36,7 @@ const MobileTable: React.FC<TableProps> = ({ entries }) => {
         <Card
           sx={{
             margin: 2,
-            border: '1px solid',
+            border: `${borderThickness} solid`,
             borderColor: 'var(--darkBlue)',
             width: '80%',
           }}
@@ -54,15 +55,21 @@ const MobileTable: React.FC<TableProps> = ({ entries }) => {
 
             <div className="ml-1">
               <FoodCell
-                label="Calories:"
-                amount={`${formatToDisplayPrecision(entry.totalCalories)}`}
+                label={caloriesLabel}
+                amount={`${formatNumberToDisplayPrecision(entry.totalCalories)} ${getEnergyUnit()}`}
               />
               <FoodCell
-                label="Protein:"
-                amount={`${formatToDisplayPrecision(entry.totalProtein)} g`}
+                label={proteinLabel}
+                amount={`${formatNumberToDisplayPrecision(entry.totalProtein)} ${foodMassUnit}`}
               />
-              <FoodCell label="Fats:" amount={`${formatToDisplayPrecision(entry.totalFats)} g`} />
-              <FoodCell label="Carbs:" amount={`${formatToDisplayPrecision(entry.totalCarbs)} g`} />
+              <FoodCell
+                label={fatsLabel}
+                amount={`${formatNumberToDisplayPrecision(entry.totalFats)} ${foodMassUnit}`}
+              />
+              <FoodCell
+                label={carbsLabel}
+                amount={`${formatNumberToDisplayPrecision(entry.totalCarbs)} ${foodMassUnit}`}
+              />
             </div>
             <div className="flex justify-end">
               <IconButton
@@ -81,4 +88,4 @@ const MobileTable: React.FC<TableProps> = ({ entries }) => {
   return <>{rows}</>;
 };
 
-export default MobileTable;
+export default FoodIntakeMobileTable;

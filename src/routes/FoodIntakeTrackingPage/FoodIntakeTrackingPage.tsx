@@ -24,6 +24,7 @@ const PageContent = () => {
     useFoodIntakeTrackingContext();
   const { measurementSystem } = useProfileContext();
   const [summary, setSummary] = useState<MacronutrientAnalyticsSummary | null>(null);
+
   const foodMassUnit = userMeasureSystemToFoodUnit(measurementSystem);
 
   useEffect(() => {

@@ -3,15 +3,14 @@ import { AvailableFoodWeightUnits } from 'lib/foodTranslations';
 import React from 'react';
 import { MacronutrientAnalyticsSummary } from 'services/Analytics/analyticsServiceInterfaces';
 import {
-  formatNumberForDisplay,
+  averageHeaderTitle,
   formatNutrientNameForDisplay,
-  formatUnit,
-  getAverageHeaderTitle,
-  getGoalTotalHeaderTitle,
-  getProgressHeaderTitle,
-  getTotalLoggedHeaderTitle,
+  goalTotalHeaderTitle,
+  progressHeaderTitle,
+  totalLoggedHeaderTitle,
 } from './WeeklyMacronutrientSummaryUtils';
 import { SummaryTitle } from './WeeklyMacronutrientSummarySharedComponents';
+import { formatNumberToDisplayPrecision, getEnergyUnit } from 'lib/display';
 
 type Props = {
   summary: MacronutrientAnalyticsSummary;
@@ -34,16 +33,16 @@ const WeeklyMacroNutrientSummaryDesktop: React.FC<Props> = ({ summary, foodMassU
             <TableRow>
               <TableCell sx={CellStyle}></TableCell>
               <TableCell sx={CellStyle} align="right">
-                {getTotalLoggedHeaderTitle()}
+                {totalLoggedHeaderTitle}
               </TableCell>
               <TableCell sx={CellStyle} align="right">
-                {getGoalTotalHeaderTitle()}
+                {goalTotalHeaderTitle}
               </TableCell>
               <TableCell sx={CellStyle} align="right">
-                {getProgressHeaderTitle()}
+                {progressHeaderTitle}
               </TableCell>
               <TableCell sx={CellStyle} align="right">
-                {getAverageHeaderTitle()}
+                {averageHeaderTitle}
               </TableCell>
             </TableRow>
           </TableHead>
@@ -54,18 +53,16 @@ const WeeklyMacroNutrientSummaryDesktop: React.FC<Props> = ({ summary, foodMassU
                 <TableRow key={nutrient} sx={CellStyle}>
                   <TableCell>{formatNutrientNameForDisplay(nutrient)}</TableCell>
                   <TableCell align="right">
-                    {formatNumberForDisplay(data.totalConsumed)}{' '}
-                    {formatUnit(nutrient, foodMassUnit)}
+                    {formatNumberToDisplayPrecision(data.totalConsumed)} {getEnergyUnit()}
                   </TableCell>
                   <TableCell align="right">
-                    {formatNumberForDisplay(data.totalGoal)} {formatUnit(nutrient, foodMassUnit)}
+                    {formatNumberToDisplayPrecision(data.totalGoal)} {foodMassUnit}
                   </TableCell>
                   <TableCell align="right">
-                    {formatNumberForDisplay(data.percentageOfGoal)}%
+                    {formatNumberToDisplayPrecision(data.percentageOfGoal)}%
                   </TableCell>
                   <TableCell align="right">
-                    {formatNumberForDisplay(data.averageConsumed)}{' '}
-                    {formatUnit(nutrient, foodMassUnit)}
+                    {formatNumberToDisplayPrecision(data.averageConsumed)} {foodMassUnit}
                   </TableCell>
                 </TableRow>
               );

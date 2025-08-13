@@ -4,7 +4,7 @@ import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
 import TextField from '@mui/material/TextField';
-import { formatToDisplayPrecision } from 'lib/display';
+import { formatNumberToDisplayPrecision } from 'lib/display';
 
 interface CustomLinearProgressProps {
   value: number;
@@ -54,7 +54,7 @@ const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({
   const goalDisplay = isEditing ? (
     <TextField
       autoFocus
-      defaultValue={formatToDisplayPrecision(goalValue)}
+      defaultValue={formatNumberToDisplayPrecision(goalValue)}
       onBlur={handleBlur}
       onKeyDown={handleKeyPress}
       type="number"
@@ -73,7 +73,7 @@ const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({
     />
   ) : (
     <div className="flex items-center cursor-pointer" onClick={handleClick}>
-      <span className="flex-1">{formatToDisplayPrecision(goalValue)}</span>
+      <span className="flex-1">{formatNumberToDisplayPrecision(goalValue)}</span>
       <CreateRoundedIcon sx={{ fontSize: 16, marginRight: '10px' }} />
     </div>
   );
@@ -98,7 +98,7 @@ const ProgressBarWithCenteredText: React.FC<CustomLinearProgressProps> = ({
       />
 
       <Box className="absolute inset-0 flex items-center justify-center font-bold">
-        <Box className="flex-1 text-right">{formatToDisplayPrecision(value)}</Box>
+        <Box className="flex-1 text-right">{formatNumberToDisplayPrecision(value)}</Box>
 
         <Box className="w-8 text-center">/</Box>
 

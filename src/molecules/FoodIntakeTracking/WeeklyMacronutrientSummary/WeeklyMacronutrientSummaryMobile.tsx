@@ -3,15 +3,14 @@ import { Card, CardContent, Typography } from '@mui/material';
 import { AvailableFoodWeightUnits } from 'lib/foodTranslations';
 import { MacronutrientAnalyticsSummary } from 'services/Analytics/analyticsServiceInterfaces';
 import {
-  formatNumberForDisplay,
+  averageHeaderTitle,
   formatNutrientNameForDisplay,
-  formatUnit,
-  getAverageHeaderTitle,
-  getGoalTotalHeaderTitle,
-  getProgressHeaderTitle,
-  getTotalLoggedHeaderTitle,
+  goalTotalHeaderTitle,
+  progressHeaderTitle,
+  totalLoggedHeaderTitle,
 } from './WeeklyMacronutrientSummaryUtils';
 import { SummaryTitle } from './WeeklyMacronutrientSummarySharedComponents';
+import { borderThickness, formatNumberToDisplayPrecision, getEnergyUnit } from 'lib/display';
 
 interface Props {
   summary: MacronutrientAnalyticsSummary;
@@ -38,7 +37,7 @@ const WeeklyMacroNutrientSummaryMobile: React.FC<Props> = ({ summary, foodMassUn
             <Card
               sx={{
                 margin: 1,
-                border: '2px solid',
+                border: `${borderThickness} solid`,
                 borderColor: 'var(--darkBlue)',
                 width: '80%',
               }}
@@ -58,20 +57,20 @@ const WeeklyMacroNutrientSummaryMobile: React.FC<Props> = ({ summary, foodMassUn
 
                 <div className="ml-1">
                   <StatRow
-                    label={`${getTotalLoggedHeaderTitle()}`}
-                    value={`${formatNumberForDisplay(data.totalConsumed)} ${formatUnit(nutrient, foodMassUnit)}`}
+                    label={`${totalLoggedHeaderTitle}`}
+                    value={`${formatNumberToDisplayPrecision(data.totalConsumed)} ${getEnergyUnit()}`}
                   />
                   <StatRow
-                    label={`${getGoalTotalHeaderTitle()}`}
-                    value={`${formatNumberForDisplay(data.totalGoal)} ${formatUnit(nutrient, foodMassUnit)}`}
+                    label={`${goalTotalHeaderTitle}`}
+                    value={`${formatNumberToDisplayPrecision(data.totalGoal)} ${foodMassUnit}`}
                   />
                   <StatRow
-                    label={`${getProgressHeaderTitle()}`}
-                    value={`${formatNumberForDisplay(data.percentageOfGoal)}%`}
+                    label={`${progressHeaderTitle}`}
+                    value={`${formatNumberToDisplayPrecision(data.percentageOfGoal)}%`}
                   />
                   <StatRow
-                    label={`${getAverageHeaderTitle()}`}
-                    value={`${formatNumberForDisplay(data.averageConsumed)} ${formatUnit(nutrient, foodMassUnit)}`}
+                    label={`${averageHeaderTitle}`}
+                    value={`${formatNumberToDisplayPrecision(data.averageConsumed)} ${foodMassUnit}`}
                   />
                 </div>
               </CardContent>

@@ -3,18 +3,23 @@ import { useEffect, useState } from 'react';
 
 import { Box } from '@mui/material';
 import TablePagination from '@mui/material/TablePagination';
-import DesktopTable from './DesktopTable';
-import { pageSize } from './interfaces';
-import MobileTable from './MobileTable';
+import FoodIntakeDesktopTable from './FoodIntakeDesktopTable';
+import { pageSize } from './FoodIntakeinterfaces';
+import FoodIntakeMobileTable from './FoodIntakeMobileTable';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
 import AddFoodEntryModal from '../CreateFoodEntry/AddFoodEntryModal';
 import { assertDayView } from 'context/FoodIntakeTracking/FoodIntakeTrackingUtils';
+import useProfileContext from 'context/ProfileContext/hooks';
+import { userMeasureSystemToFoodUnit } from 'lib/foodTranslations';
 
 export default function FoodIntakeTable() {
   const [createFoodEntry, setCreateFoodEntry] = useState<boolean>(false);
   const [currentUserTablePage, setCurrentUserTablePage] = useState(0);
 
   const { foodEntries, selectedView } = useFoodIntakeTrackingContext();
+  const { measurementSystem } = useProfileContext();
+
+  const foodMassUnit = userMeasureSystemToFoodUnit(measurementSystem);
 
   assertDayView(selectedView);
 
@@ -61,11 +66,11 @@ export default function FoodIntakeTable() {
       </div>
 
       <div className="block sm:hidden">
-        <MobileTable entries={paginatedEntries} />
+        <FoodIntakeMobileTable entries={paginatedEntries} foodMassUnit={foodMassUnit} />
       </div>
 
       <div className="hidden sm:block">
-        <DesktopTable entries={paginatedEntries} />
+        <FoodIntakeDesktopTable entries={paginatedEntries} foodMassUnit={foodMassUnit} />
       </div>
 
       {createFoodEntry && <AddFoodEntryModal closeModalWindow={() => setCreateFoodEntry(false)} />}

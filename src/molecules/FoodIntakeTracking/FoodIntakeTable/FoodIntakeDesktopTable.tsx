@@ -9,10 +9,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-import { TableProps } from './interfaces';
-import { formatToDisplayPrecision } from 'lib/display';
+import { TableProps } from './FoodIntakeinterfaces';
+import { formatNumberToDisplayPrecision } from 'lib/display';
 import { IconButton, Typography } from '@mui/material';
 import useFoodIntakeTrackingContext from 'context/FoodIntakeTracking/hooks';
+import { caloriesLabel, carbsLabel, fatsLabel, proteinLabel } from './FoodIntakeUtils';
 
 const numberOfFoodColumns = 4;
 
@@ -32,7 +33,7 @@ const foodCellStyle = {
   height: rowHeight,
 };
 
-const DesktopTable: React.FC<TableProps> = ({ entries }) => {
+const FoodIntakeDesktopTable: React.FC<TableProps> = ({ entries, foodMassUnit }) => {
   const { deleteFoodEntryWithID } = useFoodIntakeTrackingContext();
 
   return (
@@ -43,16 +44,16 @@ const DesktopTable: React.FC<TableProps> = ({ entries }) => {
             <TableRow sx={{ height: rowHeight }}>
               <TableCell align="left" sx={labelCellStyle} />
               <TableCell align="right" sx={foodCellStyle}>
-                Calories
+                {caloriesLabel}
               </TableCell>
               <TableCell align="right" sx={foodCellStyle}>
-                Fat (g)
+                {proteinLabel}
               </TableCell>
               <TableCell align="right" sx={foodCellStyle}>
-                Carbs (g)
+                {fatsLabel}
               </TableCell>
               <TableCell align="right" sx={foodCellStyle}>
-                Protein (g)
+                {carbsLabel}
               </TableCell>
               <TableCell align="right" sx={{ width: `${trashCanWidth}%` }}></TableCell>
             </TableRow>
@@ -71,10 +72,12 @@ const DesktopTable: React.FC<TableProps> = ({ entries }) => {
                     {row.foodName}
                   </Typography>
                 </TableCell>
-                <TableCell align="right">{formatToDisplayPrecision(row.totalCalories)}</TableCell>
-                <TableCell align="right">{formatToDisplayPrecision(row.totalFats)}</TableCell>
-                <TableCell align="right">{formatToDisplayPrecision(row.totalCarbs)}</TableCell>
-                <TableCell align="right">{formatToDisplayPrecision(row.totalProtein)}</TableCell>
+                <TableCell align="right">
+                  {`${formatNumberToDisplayPrecision(row.totalCalories)} kcal`}
+                </TableCell>
+                <TableCell align="right">{`${formatNumberToDisplayPrecision(row.totalProtein)} ${foodMassUnit}`}</TableCell>
+                <TableCell align="right">{`${formatNumberToDisplayPrecision(row.totalFats)} ${foodMassUnit}`}</TableCell>
+                <TableCell align="right">{`${formatNumberToDisplayPrecision(row.totalCarbs)} ${foodMassUnit}`}</TableCell>
 
                 <TableCell align="right">
                   <IconButton
@@ -94,4 +97,4 @@ const DesktopTable: React.FC<TableProps> = ({ entries }) => {
   );
 };
 
-export default DesktopTable;
+export default FoodIntakeDesktopTable;
