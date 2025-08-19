@@ -53,9 +53,8 @@ export const LoginForm = () => {
         {loginError && <ErrorMessage errorMessage="Invalid Email or Password" />}
 
         <SubmitButtonWithProgress
-          buttonText="Log in"
+          buttonText="YOU'RE ON FEATURE BRANCH Feature/Login-form"
           displayLoadingAnimation={isLoading}
-          iconSrc={'/flexing_arm.svg'}
         />
       </form>
     </div>
