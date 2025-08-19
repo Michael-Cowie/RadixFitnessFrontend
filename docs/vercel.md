@@ -155,3 +155,78 @@ dist/
 #### 5. Cache and Incremental Deploys
 
 Vercel caches dependencies between builds, significantly reducing build time. Only the affected files and pages are redeployed, improving deployment efficiency.
+
+<div align='center'>
+    <h1> Development Environment </h1>
+</div>
+
+<div align='center'>
+    <img src='images/vercel_environments_diagram.svg'/>
+</div>
+
+## Development Environment
+
+The **Development** environment represents the application running **locally** on a developers machine. It is unpublished and intended for rapid local iteration.
+
+- It is ran locally via `npm run dev`. It provides hot-reloading and fast feedback cycles.
+- The development environment has no public access. It is only accessed via `http://localhost:<port>`.
+- The environment variables are limited to the local `.env` file
+- The backend is configured to get local services (`http://localhost:3000`) or the Dev API.
+
+The primary use of the development environment is for feature development, unit and integration testing again local or containerized backends or experimentation without impacting shared resources.
+
+## Staging Environment (Preview)
+
+The **Staging** environment on Vercel is implemented through **Preview Deployments**. Each push to a branch (other than the designated production branch) results in an isolated build with a unique URL.
+
+- It is triggered automatically on `git push` for feature branches.
+- The scope of the environment variables are those under the **Preview** category in Vercel project settings.
+- Used for pointing to staging APIs, sandbox keys or feature-flagged settings.
+- The backend should be configured to consume the staging backend services such as `https://api-staging.example.com`, this ensures QA/testing does not affect production data.
+
+Staging environments can be useful for QA validation, end-to-end testing, stakeholder demonstrations and cross-functional review before production release.
+
+## Production Environment
+
+The **Production** environment represents the live deployment of the application. It is publicly accessible and intended for end users.
+
+- It is triggered automatically on push/merge to the **Production Branch**.
+- The environment variables used will be configured to point to the production API endpoints, keys and secrets.
+
+<div align="center">
+    <h1> Deployment Workflows </h1>
+</div>
+
+Vercels default setup is simple, a single project connected to a Git repository where every push to the production branch (usually `main`) results in a live deployment. This models works well for personal or hobby projects, but in a professional environment, teams typically require more structure. They need to separate feature development, testings/staging and production releases while maintaining reliable deployment pipelines.
+
+## Feature Branch Deployments
+
+Every pull request from a non-production branch to the production branch in the repository automatically triggers are **Preview Deployment** in Vercel. These deployments are immutable snapshots of the application at a specific commit, each with its own unique URL.
+
+Below is a feature branch called `Feature/login-form`. Once a pull request was made to `main`, Vercel has created the URL `https://radix-fitness-frontend-git-featur-35292d-michaelcowies-projects.vercel.app/login` for use.
+
+<div align="center">
+    <img src='images/feature_form.png'>
+</div>
+
+<div align="center">
+    <img src='images/feature_form_dashboard.png'>
+</div>
+
+These preview URLs allow developers and reviewers to interact with the feature exactly as it would run in production, without merging the code. They are also invaluable for running automated integration or end-to-end tests, as the preview environment faithfully reproduces the production build pipeline.
+
+Vercel builds the application in the same way it would for production, but marks the deployment as Preview. **Environment variables scoped to** `Preview` **are injected**, allowing developers to connect to staging APIs or databases rather than production resources.
+
+In the below example, `PREVIEW_ENV_VAR` was created and only available for a Preview settings.
+
+<div align="center">
+    <img src='images/preview_env_variables.png'>
+</div>
+
+When the feature branch is landed into the production branch, redeployment of the production branch will now have the feature development code and the environment variables should now point to the production databases.
+
+## Production Deployments
+
+The production branch, usually `main`, is reserved for code that has been reviewed, tested and approved. Vercel treats this branch specially, every successful commit triggers a **Production Deployment** and updates the production domain.
+
+Unlike previews, production deployments use environment variables scoped to "Production", pointing to live resources. The deployment process is atomic, a new production deployment becomes active only when the build succeeds and rollbacks can be triggered instantly by selecting a previous deployment in the Vercel dashboard. This ensures high availability and quick recovery if issues are discovered.
