@@ -74,7 +74,12 @@ Additionally,
 
 ## Routing Configuration with `vercel.json`
 
-React applications built as SPAs (Single Page Applications) rely on **client-side routing**. This causes issues when a user directly accesses a nested route, e.g. `/dashboard`. This occurs because the server (Vercel) does not recognize this path and may return a 404 error.
+React applications built as SPAs (Single Page Applications) rely on **client-side routing**. SPAs routed client-side work perfectly when navigating within the app, but if you refresh or access a nested URL, Vercel will return a `404 error`. This happens, **by default, Vercel serves only existing static files** and doesn't automatically fallback to `index.html` for client-side routes. Therefore the following occurs,
+
+1. We enter `https://radix.fitness/profile/settings`.
+2. Vercel (server) looks for a real file at `/profile/settings/index.html`. This occurs because Vercel is a static file host by default.
+3. In an SPA there is only `index.html` at `/`, so Vercel returns `404`.
+4. The client router (React Router) never gets a chance to run and map `/profile/settings` to `<ProfileSettings />`.
 
 To resolve this, a `vercel.json` file is added to the project root.
 
@@ -88,7 +93,17 @@ To resolve this, a `vercel.json` file is added to the project root.
 - The `dest: "/"` redirects all such requests to the `index.html` file.
 - The `status: 200` ensures a valid HTTP success response.
 
-This allows React Router to take over and resolve the path within the browser, preserving expected navigation behaviour and supporting deep linking. Without this configuration, users would encounter broken pages on refresh or direct linking to non-root routes.
+After `vercel.json`,
+
+1. The browser requests `GET /profile/settings`
+2. The server applies the Vercel rule and serves `/index.html` with status `200`.
+3. The browser loads `index.html` and the JS bundle often from a cache or CDN.
+4. Client routing is now done through React Router now reads `window.location.pathname === /profile/settings` and matches the route. This will then render `<ProfileSettings />`.
+5. At this point, moving around the app uses the history API and does not hit the server, only API/data requests do.
+
+This means, for any request that doesn't match a real file like `.js`, `.css` or API routes, always serve `/index.html`. Once `index.html` is served the bundled React app runs. React Router looks at the URL shown in the browser `/profile/settings` and decides which component to render.
+
+In summary, the server always hands back the SPA shell and then routing is handled entirely client-side by React Router. The server gives `index.html`, SPA boots and finally client router renders.
 
 ## Vercels Build Process for Vite Projects
 
